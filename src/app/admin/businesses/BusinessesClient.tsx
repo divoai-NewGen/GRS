@@ -57,7 +57,9 @@ export function BusinessesClient() {
       if (typeFilter) params.set("type", typeFilter);
       if (statusFilter) params.set("status", statusFilter);
 
-      const res = await fetch(`/api/businesses?${params.toString()}`);
+      const res = await fetch(`/api/businesses?${params.toString()}`, {
+        cache: "no-store",
+      });
       if (res.ok) {
         const data = await res.json();
         setBusinesses(data.businesses || []);
