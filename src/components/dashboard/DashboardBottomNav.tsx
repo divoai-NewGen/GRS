@@ -39,7 +39,7 @@ function BottomNavContent() {
   return (
     <nav
       aria-label="Business Mobile Navigation"
-      className="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#050505]/95 backdrop-blur-2xl border-t border-[#006B21]/40 px-2 py-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom))] shadow-[0_-10px_25px_rgba(0,0,0,0.7)]"
+      className="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-2xl border-t border-[#006B21]/20 px-2 py-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom))] shadow-[0_-5px_20px_rgba(0,107,33,0.08)]"
     >
       <div className="flex items-center justify-around max-w-md mx-auto">
         {tabs.map((tab) => {
@@ -50,24 +50,24 @@ function BottomNavContent() {
               key={tab.id}
               href={tab.href}
               className={`relative flex flex-col items-center justify-center flex-1 py-1 px-1 rounded-2xl transition-all ${
-                isActive ? "text-[#39E900]" : "text-white/50 hover:text-white"
+                isActive ? "text-[#006B21]" : "text-[#050505]/60 hover:text-[#050505]"
               }`}
             >
               {isActive && (
-                <span className="absolute -top-1.5 w-7 h-1 rounded-full bg-[#39E900] shadow-[0_0_8px_#39E900]" />
+                <span className="absolute -top-1.5 w-7 h-1 rounded-full bg-[#006B21] shadow-[0_0_8px_rgba(0,107,33,0.4)]" />
               )}
               <div
                 className={`p-1.5 rounded-xl transition-all ${
                   isActive
-                    ? "bg-[#10251A] scale-110 border border-[#006B21]/60 text-[#39E900]"
-                    : "hover:bg-white/5"
+                    ? "bg-[#E9F8E9] scale-105 border border-[#006B21]/30 text-[#006B21]"
+                    : "hover:bg-[#E9F8E9]/50"
                 }`}
               >
                 <Icon className="w-5 h-5" />
               </div>
               <span
                 className={`text-[10px] mt-0.5 tracking-tight truncate ${
-                  isActive ? "font-bold text-[#39E900]" : "font-medium"
+                  isActive ? "font-bold text-[#006B21]" : "font-medium text-[#050505]/70"
                 }`}
               >
                 {tab.label}

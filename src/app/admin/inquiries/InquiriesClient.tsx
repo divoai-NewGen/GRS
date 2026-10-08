@@ -92,11 +92,11 @@ export function InquiriesClient() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-white tracking-tight flex items-center gap-2.5">
-            <Inbox className="w-6 h-6 text-[#39E900]" />
+          <h1 className="text-2xl font-black text-[#050505] tracking-tight flex items-center gap-2.5">
+            <Inbox className="w-6 h-6 text-[#006B21]" />
             Customer Inquiries & Leads
           </h1>
-          <p className="text-xs sm:text-sm text-white/60 mt-1">
+          <p className="text-xs sm:text-sm text-[#050505]/60 mt-1 font-medium">
             Website contact form submissions from prospective business clients.
           </p>
         </div>
@@ -106,7 +106,7 @@ export function InquiriesClient() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-3.5 py-2 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs font-semibold text-white focus:outline-none"
+            className="px-3.5 py-2 rounded-xl border border-[#006B21]/20 bg-white text-xs font-semibold text-[#050505] shadow-sm focus:outline-none"
           >
             <option value="">All Statuses</option>
             <option value="NEW">New Inquiries</option>
@@ -117,24 +117,24 @@ export function InquiriesClient() {
       </div>
 
       {/* Table Container */}
-      <div className="bg-[#050505] rounded-2xl border border-[#006B21]/30 shadow-md overflow-hidden">
+      <div className="bg-white rounded-2xl border border-[#006B21]/15 shadow-sm overflow-hidden">
         {loading ? (
-          <div className="py-20 flex flex-col items-center justify-center gap-3 text-white/50">
-            <Loader2 className="w-8 h-8 animate-spin text-[#39E900]" />
-            <span className="text-xs">Loading customer inquiries...</span>
+          <div className="py-20 flex flex-col items-center justify-center gap-3 text-[#050505]/50">
+            <Loader2 className="w-8 h-8 animate-spin text-[#006B21]" />
+            <span className="text-xs font-medium">Loading customer inquiries...</span>
           </div>
         ) : inquiries.length === 0 ? (
-          <div className="py-16 text-center text-white/50 space-y-2">
+          <div className="py-16 text-center text-[#050505]/50 space-y-2">
             <Inbox className="w-10 h-10 mx-auto text-[#006B21]" />
-            <div className="text-sm font-bold text-white">No inquiries found</div>
-            <div className="text-xs text-white/40">
+            <div className="text-sm font-bold text-[#050505]">No inquiries found</div>
+            <div className="text-xs text-[#050505]/60 font-medium">
               When prospective clients submit the Contact Us form, they will appear here.
             </div>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-[#10251A] text-white/60 uppercase tracking-wider font-semibold border-b border-[#006B21]/30">
+              <thead className="bg-[#E9F8E9] text-[#006B21] uppercase tracking-wider font-bold border-b border-[#006B21]/15">
                 <tr>
                   <th className="py-3.5 px-4">Client & Business</th>
                   <th className="py-3.5 px-4">Selected Plan</th>
@@ -144,21 +144,21 @@ export function InquiriesClient() {
                   <th className="py-3.5 px-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#006B21]/20">
+              <tbody className="divide-y divide-[#006B21]/10">
                 {inquiries.map((inq) => {
                   const phoneNum = cleanPhone(inq.phone);
                   return (
-                    <tr key={inq.id} className="hover:bg-[#10251A]/40 transition-colors">
+                    <tr key={inq.id} className="hover:bg-[#E9F8E9]/40 transition-colors">
                       {/* Client details */}
                       <td className="py-4 px-4">
-                        <div className="font-bold text-white text-sm">
+                        <div className="font-bold text-[#050505] text-sm">
                           {inq.name}
                         </div>
-                        <div className="text-xs text-[#39E900] font-medium flex items-center gap-1 mt-0.5">
-                          <Building className="w-3 h-3 text-[#39E900]" />
+                        <div className="text-xs text-[#006B21] font-semibold flex items-center gap-1 mt-0.5">
+                          <Building className="w-3 h-3 text-[#006B21]" />
                           {inq.businessName || "Business not specified"}
                         </div>
-                        <div className="text-[10px] text-white/40 mt-1">
+                        <div className="text-[10px] text-[#050505]/50 mt-1 font-mono">
                           {new Date(inq.createdAt).toLocaleString()}
                         </div>
                       </td>
@@ -166,13 +166,13 @@ export function InquiriesClient() {
                       {/* Plan */}
                       <td className="py-4 px-4">
                         {inq.plan === "PREMIUM" ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-black bg-[#006B21] text-[#39E900] border border-[#39E900]/50 shadow-sm">
-                            <Sparkles className="w-3 h-3 text-[#39E900]" />
+                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-black bg-[#006B21] text-white border border-[#006B21]/30 shadow-sm">
+                            <Sparkles className="w-3 h-3 text-[#E9F8E9]" />
                             PREMIUM PLAN
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-[#10251A] text-white/80 border border-[#006B21]/40">
-                            <Zap className="w-3 h-3 text-[#39E900]" />
+                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#E9F8E9] text-[#050505] border border-[#006B21]/20">
+                            <Zap className="w-3 h-3 text-[#006B21]" />
                             BASIC PLAN
                           </span>
                         )}
@@ -181,7 +181,7 @@ export function InquiriesClient() {
                       {/* Contact */}
                       <td className="py-4 px-4 space-y-1">
                         <div className="flex items-center gap-2">
-                          <span className="text-white font-mono text-xs font-semibold">
+                          <span className="text-[#050505] font-mono text-xs font-semibold">
                             {inq.phone}
                           </span>
                           {phoneNum && (
@@ -189,18 +189,18 @@ export function InquiriesClient() {
                               href={`https://wa.me/${phoneNum}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="p-1 rounded-md bg-[#006B21]/40 hover:bg-[#006B21] text-[#39E900] hover:text-white transition-colors"
+                              className="p-1 rounded-md bg-[#E9F8E9] hover:bg-[#006B21] text-[#006B21] hover:text-white transition-colors"
                               title="Chat on WhatsApp"
                             >
                               <MessageCircle className="w-3 h-3" />
                             </a>
                           )}
                         </div>
-                        <div className="flex items-center gap-1.5 text-[11px] text-white/60 font-mono">
-                          <Mail className="w-3 h-3 text-white/40" />
+                        <div className="flex items-center gap-1.5 text-[11px] text-[#050505]/70 font-mono font-medium">
+                          <Mail className="w-3 h-3 text-[#006B21]" />
                           <a
                             href={`mailto:${inq.email}`}
-                            className="hover:underline hover:text-[#39E900]"
+                            className="hover:underline hover:text-[#006B21]"
                           >
                             {inq.email}
                           </a>
@@ -210,11 +210,11 @@ export function InquiriesClient() {
                       {/* Message */}
                       <td className="py-4 px-4 max-w-xs">
                         {inq.message ? (
-                          <p className="text-xs text-white/70 truncate" title={inq.message}>
+                          <p className="text-xs text-[#050505]/80 truncate font-medium" title={inq.message}>
                             {inq.message}
                           </p>
                         ) : (
-                          <span className="text-white/30 italic text-xs">No notes</span>
+                          <span className="text-[#050505]/40 italic text-xs font-medium">No notes</span>
                         )}
                       </td>
 
@@ -223,12 +223,12 @@ export function InquiriesClient() {
                         <select
                           value={inq.status}
                           onChange={(e) => handleStatusChange(inq.id, e.target.value)}
-                          className={`px-2.5 py-1 rounded-lg text-xs font-bold border focus:outline-none transition-colors ${
+                          className={`px-2.5 py-1 rounded-lg text-xs font-bold border focus:outline-none transition-colors shadow-sm ${
                             inq.status === "NEW"
-                              ? "bg-amber-950/70 border-amber-800 text-amber-300"
+                              ? "bg-amber-50 border-amber-200 text-amber-800"
                               : inq.status === "CONTACTED"
-                              ? "bg-[#10251A] border-[#006B21] text-[#39E900]"
-                              : "bg-[#006B21] border-[#39E900]/50 text-white"
+                              ? "bg-[#E9F8E9] border-[#006B21]/30 text-[#006B21]"
+                              : "bg-[#006B21] border-[#006B21]/40 text-white"
                           }`}
                         >
                           <option value="NEW">NEW</option>
@@ -245,13 +245,13 @@ export function InquiriesClient() {
                             className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#006B21] hover:bg-[#005219] text-white text-xs font-bold shadow-sm transition-all"
                             title="Generate User Account for this lead"
                           >
-                            <UserPlus className="w-3 h-3 text-[#39E900]" />
+                            <UserPlus className="w-3 h-3 text-white" />
                             <span>Create Account</span>
                           </Link>
 
                           <button
                             onClick={() => handleDelete(inq.id, inq.name)}
-                            className="p-1.5 rounded-lg text-rose-400/70 hover:text-rose-300 hover:bg-rose-950/40 transition-colors"
+                            className="p-1.5 rounded-lg text-[#050505]/40 hover:text-rose-600 hover:bg-rose-50 transition-colors"
                             title="Delete"
                           >
                             <Trash2 className="w-3.5 h-3.5" />

@@ -75,10 +75,10 @@ export function PrintableClient() {
       {/* Top Banner (Hidden in Print) */}
       <div className="print:hidden flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-white tracking-tight">
+          <h1 className="text-2xl font-black text-[#050505] tracking-tight">
             Printable Card Template Designer
           </h1>
-          <p className="text-xs sm:text-sm text-white/60 mt-1">
+          <p className="text-xs sm:text-sm text-[#050505]/60 mt-1">
             Standard CR-80 physical card preview with neutral, policy-compliant feedback messaging.
           </p>
         </div>
@@ -87,21 +87,21 @@ export function PrintableClient() {
           onClick={handlePrint}
           className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#006B21] hover:bg-[#005219] text-white font-bold text-xs shadow-md shadow-[#006B21]/20 transition-all self-start sm:self-auto"
         >
-          <Printer className="w-4 h-4 text-[#39E900]" />
+          <Printer className="w-4 h-4 text-white" />
           Print / Save PDF
         </button>
       </div>
 
       {/* Configuration Controls (Hidden in Print) */}
-      <div className="print:hidden p-6 rounded-3xl bg-[#050505] border border-[#006B21]/30 shadow-md grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="print:hidden p-6 rounded-3xl bg-white border border-[#006B21]/15 shadow-sm grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div>
-          <label className="block text-xs font-bold text-white/80 mb-1">
+          <label className="block text-xs font-bold text-[#050505]/80 mb-1">
             Selected Card
           </label>
           <select
             value={selectedCardId}
             onChange={(e) => setSelectedCardId(e.target.value)}
-            className="w-full px-3 py-2 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs text-white focus:outline-none"
+            className="w-full px-3 py-2 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/40 text-xs text-[#050505] focus:outline-none"
           >
             {cards.map((c) => (
               <option key={c.id} value={c.id}>
@@ -112,26 +112,26 @@ export function PrintableClient() {
         </div>
 
         <div>
-          <label className="block text-xs font-bold text-white/80 mb-1">
+          <label className="block text-xs font-bold text-[#050505]/80 mb-1">
             Card Front Headline
           </label>
           <input
             type="text"
             value={headline}
             onChange={(e) => setHeadline(e.target.value)}
-            className="w-full px-3 py-2 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs text-white focus:outline-none"
+            className="w-full px-3 py-2 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/40 text-xs text-[#050505] focus:outline-none"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-bold text-white/80 mb-1">
+          <label className="block text-xs font-bold text-[#050505]/80 mb-1">
             Card Subtitle
           </label>
           <input
             type="text"
             value={subline}
             onChange={(e) => setSubline(e.target.value)}
-            className="w-full px-3 py-2 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs text-white focus:outline-none"
+            className="w-full px-3 py-2 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/40 text-xs text-[#050505] focus:outline-none"
           />
         </div>
       </div>
@@ -140,7 +140,7 @@ export function PrintableClient() {
       <div className="flex flex-col lg:flex-row items-center justify-center gap-8 py-6">
         {/* FRONT SIDE */}
         <div className="flex flex-col items-center">
-          <span className="print:hidden text-xs font-bold uppercase tracking-wider text-white/60 mb-3">
+          <span className="print:hidden text-xs font-bold uppercase tracking-wider text-[#050505]/60 mb-3">
             Card Front (Customer Facing)
           </span>
 

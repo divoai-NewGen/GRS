@@ -370,10 +370,10 @@ export function CardsClient() {
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+          <h1 className="text-2xl font-black text-[#050505] tracking-tight">
             Cards Inventory
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1">
+          <p className="text-xs sm:text-sm text-[#050505]/60 mt-1">
             Physical QR cards pre-printed with permanent redirect tokens.
           </p>
         </div>
@@ -381,17 +381,17 @@ export function CardsClient() {
         <div className="flex items-center gap-2 flex-wrap">
           <button
             onClick={() => setImportModalOpen(true)}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl border border-[#006B21]/40 bg-[#10251A] hover:bg-[#153322] text-xs font-bold text-white shadow-sm transition-colors"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl border border-[#006B21]/20 bg-white hover:bg-[#E9F8E9] text-xs font-bold text-[#050505] shadow-xs transition-colors"
           >
-            <Upload className="w-4 h-4 text-[#39E900]" />
+            <Upload className="w-4 h-4 text-[#006B21]" />
             Import CSV
           </button>
 
           <Link
             href="/admin/printable"
-            className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl border border-[#006B21]/40 bg-[#10251A] hover:bg-[#153322] text-xs font-bold text-white shadow-sm transition-colors"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl border border-[#006B21]/20 bg-white hover:bg-[#E9F8E9] text-xs font-bold text-[#050505] shadow-xs transition-colors"
           >
-            <Printer className="w-4 h-4 text-[#39E900]" />
+            <Printer className="w-4 h-4 text-[#006B21]" />
             Print Template
           </Link>
 
@@ -399,22 +399,22 @@ export function CardsClient() {
             onClick={() => setCreateModalOpen(true)}
             className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#006B21] hover:bg-[#005219] text-white font-bold text-xs shadow-md shadow-[#006B21]/20 transition-all"
           >
-            <Plus className="w-4 h-4 text-[#39E900]" />
+            <Plus className="w-4 h-4 text-white" />
             Generate Cards
           </button>
         </div>
       </div>
 
       {/* Filter, Search, Bulk Actions Bar */}
-      <div className="p-4 rounded-2xl bg-[#050505] border border-[#006B21]/30 shadow-sm flex flex-col md:flex-row gap-3 items-center justify-between">
+      <div className="p-4 rounded-2xl bg-white border border-[#006B21]/15 shadow-xs flex flex-col md:flex-row gap-3 items-center justify-between">
         <form onSubmit={handleSearch} className="flex-1 w-full relative">
-          <Search className="w-4 h-4 text-white/50 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-[#006B21] absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search by CARD0001, token, business name, or label..."
-            className="w-full pl-10 pr-4 py-2 bg-[#10251A] border border-[#006B21]/40 rounded-xl text-xs text-white placeholder-white/40 focus:outline-none focus:border-[#39E900]"
+            placeholder="Search by CARD001, token, business name, or label..."
+            className="w-full pl-10 pr-4 py-2 bg-[#E9F8E9]/60 border border-[#006B21]/20 rounded-xl text-xs text-[#050505] placeholder-[#050505]/40 focus:outline-none focus:border-[#006B21] focus:bg-white"
           />
         </form>
 
@@ -425,15 +425,15 @@ export function CardsClient() {
                 onClick={() => setBulkAssignModalOpen(true)}
                 className="px-3.5 py-2 rounded-xl bg-[#006B21] hover:bg-[#005219] text-white text-xs font-bold shadow-sm transition-colors flex items-center gap-1.5"
               >
-                <Building2 className="w-3.5 h-3.5 text-[#39E900]" />
+                <Building2 className="w-3.5 h-3.5 text-white" />
                 Assign ({selectedCardIds.length}) to Business
               </button>
 
               <button
                 onClick={() => setBulkDeleteModalOpen(true)}
-                className="px-3.5 py-2 rounded-xl bg-rose-950/80 hover:bg-rose-900 border border-rose-800 text-rose-200 text-xs font-bold shadow-sm transition-colors flex items-center gap-1.5"
+                className="px-3.5 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 text-xs font-bold shadow-xs transition-colors flex items-center gap-1.5"
               >
-                <Trash2 className="w-3.5 h-3.5 text-rose-400" />
+                <Trash2 className="w-3.5 h-3.5 text-rose-600" />
                 Delete ({selectedCardIds.length})
               </button>
             </>
@@ -442,7 +442,7 @@ export function CardsClient() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-3 py-2 bg-[#10251A] border border-[#006B21]/40 rounded-xl text-xs text-white font-medium focus:outline-none"
+            className="px-3 py-2 bg-white border border-[#006B21]/20 rounded-xl text-xs text-[#050505] font-medium focus:outline-none"
           >
             <option value="ALL">All Statuses</option>
             <option value="ASSIGNED">Assigned Only</option>
@@ -453,7 +453,7 @@ export function CardsClient() {
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value)}
-            className="px-3 py-2 bg-[#10251A] border border-[#006B21]/40 rounded-xl text-xs text-white font-medium focus:outline-none"
+            className="px-3 py-2 bg-white border border-[#006B21]/20 rounded-xl text-xs text-[#050505] font-medium focus:outline-none"
           >
             <option value="newest">Newest First</option>
             <option value="oldest">Oldest First</option>
@@ -465,19 +465,19 @@ export function CardsClient() {
       </div>
 
       {/* Cards Table */}
-      <div className="bg-[#050505] rounded-2xl border border-[#006B21]/30 shadow-md overflow-hidden">
+      <div className="bg-white rounded-2xl border border-[#006B21]/15 shadow-xs overflow-hidden">
         {loading ? (
-          <div className="py-20 flex flex-col items-center justify-center gap-3 text-white/50">
-            <Loader2 className="w-8 h-8 animate-spin text-[#39E900]" />
+          <div className="py-20 flex flex-col items-center justify-center gap-3 text-[#050505]/50">
+            <Loader2 className="w-8 h-8 animate-spin text-[#006B21]" />
             <span className="text-xs">Loading cards inventory...</span>
           </div>
         ) : cards.length === 0 ? (
           <div className="py-20 text-center px-4">
             <CreditCard className="w-12 h-12 text-[#006B21] mx-auto mb-3" />
-            <h3 className="text-base font-bold text-white">
+            <h3 className="text-base font-bold text-[#050505]">
               No cards created yet
             </h3>
-            <p className="text-xs text-white/60 max-w-sm mx-auto mt-1 mb-6">
+            <p className="text-xs text-[#050505]/60 max-w-sm mx-auto mt-1 mb-6">
               Generate a batch of physical card codes to begin assigning them to local businesses.
             </p>
             <button
@@ -490,12 +490,12 @@ export function CardsClient() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-[#10251A] text-white/60 uppercase tracking-wider font-semibold border-b border-[#006B21]/30">
+              <thead className="bg-[#E9F8E9]/80 text-[#050505]/75 uppercase tracking-wider font-bold border-b border-[#006B21]/15">
                 <tr>
                   <th className="py-3.5 px-4 w-10">
-                    <button onClick={handleSelectAll} className="text-white/40 hover:text-white">
+                    <button onClick={handleSelectAll} className="text-[#050505]/40 hover:text-[#006B21]">
                       {selectedCardIds.length === cards.length ? (
-                        <CheckSquare className="w-4 h-4 text-[#39E900]" />
+                        <CheckSquare className="w-4 h-4 text-[#006B21]" />
                       ) : (
                         <Square className="w-4 h-4" />
                       )}
@@ -510,30 +510,30 @@ export function CardsClient() {
                   <th className="py-3.5 px-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#006B21]/20">
+              <tbody className="divide-y divide-[#006B21]/10">
                 {cards.map((card) => {
                   const isSelected = selectedCardIds.includes(card.id);
-                  let badge = "bg-[#10251A] text-white/70 border border-[#006B21]/30";
+                  let badge = "bg-gray-100 text-gray-700 border border-gray-200";
                   if (card.status === "ASSIGNED") {
-                    badge = "bg-[#006B21]/40 text-[#39E900] border border-[#39E900]/40";
+                    badge = "bg-[#006B21]/10 text-[#006B21] border border-[#006B21]/30 font-bold";
                   } else if (card.status === "DISABLED") {
-                    badge = "bg-rose-950/60 text-rose-300 border border-rose-900";
+                    badge = "bg-rose-50 text-rose-700 border border-rose-200 font-bold";
                   }
 
                   return (
                     <tr
                       key={card.id}
-                      className={`hover:bg-[#10251A]/50 transition-colors ${
-                        isSelected ? "bg-[#006B21]/15" : ""
+                      className={`hover:bg-[#E9F8E9]/40 transition-colors ${
+                        isSelected ? "bg-[#E9F8E9]/80" : ""
                       }`}
                     >
                       <td className="py-3.5 px-4">
                         <button
                           onClick={() => toggleSelectCard(card.id)}
-                          className="text-white/40 hover:text-white"
+                          className="text-[#050505]/40 hover:text-[#006B21]"
                         >
                           {isSelected ? (
-                            <CheckSquare className="w-4 h-4 text-[#39E900]" />
+                            <CheckSquare className="w-4 h-4 text-[#006B21]" />
                           ) : (
                             <Square className="w-4 h-4" />
                           )}
@@ -541,18 +541,18 @@ export function CardsClient() {
                       </td>
 
                       <td className="py-3.5 px-4">
-                        <div className="font-mono font-bold text-white">
-                          <Link href={`/admin/cards/${card.id}`} className="hover:text-[#39E900]">
+                        <div className="font-mono font-bold text-[#050505]">
+                          <Link href={`/admin/cards/${card.id}`} className="hover:text-[#006B21]">
                             {card.cardCode}
                           </Link>
                         </div>
-                        <div className="text-[11px] text-white/50">
+                        <div className="text-[11px] text-[#050505]/50">
                           {card.label || "No label"}
                         </div>
                       </td>
 
                       <td className="py-3.5 px-4">
-                        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${badge}`}>
+                        <span className={`px-2.5 py-0.5 rounded-full text-[10px] ${badge}`}>
                           {card.status}
                         </span>
                       </td>
@@ -561,36 +561,36 @@ export function CardsClient() {
                         {card.business ? (
                           <Link
                             href={`/admin/businesses/${card.business.id}`}
-                            className="font-bold text-white hover:text-[#39E900] flex items-center gap-1.5"
+                            className="font-bold text-[#050505] hover:text-[#006B21] flex items-center gap-1.5"
                           >
-                            <Building2 className="w-3.5 h-3.5 text-[#39E900]" />
+                            <Building2 className="w-3.5 h-3.5 text-[#006B21]" />
                             {card.business.name}
                           </Link>
                         ) : (
-                          <span className="text-white/40 italic">None (Unassigned)</span>
+                          <span className="text-[#050505]/40 italic">None (Unassigned)</span>
                         )}
                       </td>
 
-                      <td className="py-3.5 px-4 font-mono text-[11px] text-white/60">
+                      <td className="py-3.5 px-4 font-mono text-[11px] text-[#050505]/60">
                         <a
                           href={`/r/${card.publicToken}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="hover:text-[#39E900] hover:underline flex items-center gap-1"
+                          className="hover:text-[#006B21] hover:underline flex items-center gap-1"
                         >
                           /r/{card.publicToken}
-                          <ExternalLink className="w-3 h-3 text-white/40" />
+                          <ExternalLink className="w-3 h-3 text-[#050505]/40" />
                         </a>
                       </td>
 
                       <td className="py-3.5 px-4">
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#10251A] text-[#39E900] border border-[#006B21]/40 font-mono font-bold text-xs">
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#E9F8E9] text-[#006B21] border border-[#006B21]/20 font-mono font-bold text-xs">
                           <Eye className="w-3 h-3" />
                           {card._count?.scans || 0}
                         </span>
                       </td>
 
-                      <td className="py-3.5 px-4 text-white/50">
+                      <td className="py-3.5 px-4 text-[#050505]/60">
                         {new Date(card.createdAt).toLocaleDateString()}
                       </td>
 
@@ -598,7 +598,7 @@ export function CardsClient() {
                         <div className="flex items-center justify-end gap-1.5">
                           <Link
                             href={`/admin/cards/${card.id}`}
-                            className="p-1.5 rounded-lg text-white/60 hover:text-[#39E900] hover:bg-[#10251A] transition-colors"
+                            className="p-1.5 rounded-lg text-[#050505]/50 hover:text-[#006B21] hover:bg-[#E9F8E9] transition-colors"
                             title="Inspect QR Code"
                           >
                             <QrCode className="w-4 h-4" />
@@ -611,7 +611,7 @@ export function CardsClient() {
                               setTargetBusinessId(card.businessId || "");
                               setReassignModalOpen(true);
                             }}
-                            className="px-2.5 py-1 rounded-lg bg-[#10251A] border border-[#006B21]/40 hover:bg-[#006B21] text-[11px] font-bold text-white transition-colors"
+                            className="px-2.5 py-1 rounded-lg bg-[#E9F8E9] hover:bg-[#006B21] hover:text-white border border-[#006B21]/25 text-[11px] font-bold text-[#006B21] transition-colors"
                           >
                             {card.businessId ? "Reassign" : "Assign"}
                           </button>
@@ -621,8 +621,8 @@ export function CardsClient() {
                             onClick={() => handleToggleCardStatus(card)}
                             className={`p-1.5 rounded-lg transition-colors ${
                               card.status === "DISABLED"
-                                ? "text-[#39E900] hover:bg-[#10251A]"
-                                : "text-white/40 hover:text-amber-400 hover:bg-amber-950/40"
+                                ? "text-[#006B21] hover:bg-[#E9F8E9]"
+                                : "text-[#050505]/40 hover:text-amber-600 hover:bg-amber-50"
                             }`}
                             title={card.status === "DISABLED" ? "Enable Card" : "Disable Card"}
                           >
@@ -635,7 +635,7 @@ export function CardsClient() {
                               setCardToDelete(card);
                               setDeleteModalOpen(true);
                             }}
-                            className="p-1.5 rounded-lg text-white/40 hover:text-rose-400 hover:bg-rose-950/40 transition-colors"
+                            className="p-1.5 rounded-lg text-[#050505]/40 hover:text-rose-600 hover:bg-rose-50 transition-colors"
                             title="Delete Card"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -653,19 +653,19 @@ export function CardsClient() {
 
       {/* Batch Create Cards Modal */}
       {createModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-md bg-[#050505] rounded-3xl p-6 shadow-2xl border border-[#006B21]/50 space-y-4">
-            <h3 className="text-base font-black text-white">
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-md bg-white rounded-3xl p-6 shadow-2xl border border-[#006B21]/20 space-y-4 text-[#050505]">
+            <h3 className="text-base font-black text-[#050505]">
               Generate Batch QR Cards
             </h3>
-            <p className="text-xs text-white/60">
+            <p className="text-xs text-[#050505]/60">
               Creates physical QR card records with permanent public redirect tokens ready for factory printing.
             </p>
 
             <form onSubmit={handleBatchGenerate} className="space-y-4">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-white/80 mb-1">
+                  <label className="block text-xs font-bold text-[#050505]/80 mb-1">
                     Quantity *
                   </label>
                   <input
@@ -675,12 +675,12 @@ export function CardsClient() {
                     required
                     value={batchCount}
                     onChange={(e) => setBatchCount(parseInt(e.target.value, 10))}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs text-white focus:outline-none focus:border-[#39E900]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/25 bg-[#E9F8E9]/50 text-xs text-[#050505] focus:outline-none focus:border-[#006B21] focus:bg-white"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-white/80 mb-1">
+                  <label className="block text-xs font-bold text-[#050505]/80 mb-1">
                     Card Prefix *
                   </label>
                   <input
@@ -689,14 +689,14 @@ export function CardsClient() {
                     value={batchPrefix}
                     onChange={(e) => setBatchPrefix(e.target.value)}
                     placeholder="CARD"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs text-white uppercase font-mono focus:outline-none focus:border-[#39E900]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/25 bg-[#E9F8E9]/50 text-xs text-[#050505] uppercase font-mono focus:outline-none focus:border-[#006B21] focus:bg-white"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-white/80 mb-1">
+                  <label className="block text-xs font-bold text-[#050505]/80 mb-1">
                     Start Number
                   </label>
                   <input
@@ -705,18 +705,18 @@ export function CardsClient() {
                     value={batchStartNum}
                     onChange={(e) => setBatchStartNum(e.target.value)}
                     placeholder="Auto (Next available)"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs text-white placeholder-white/30 focus:outline-none focus:border-[#39E900]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/25 bg-[#E9F8E9]/50 text-xs text-[#050505] placeholder-[#050505]/35 focus:outline-none focus:border-[#006B21] focus:bg-white"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-white/80 mb-1">
+                  <label className="block text-xs font-bold text-[#050505]/80 mb-1">
                     Code Padding
                   </label>
                   <select
                     value={batchDigits}
                     onChange={(e) => setBatchDigits(parseInt(e.target.value, 10))}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs text-white focus:outline-none focus:border-[#39E900]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/25 bg-[#E9F8E9]/50 text-xs text-[#050505] focus:outline-none focus:border-[#006B21] focus:bg-white"
                   >
                     <option value={3}>3 Digits (CARD001, CARD002)</option>
                     <option value={4}>4 Digits (CARD0001, CARD0002)</option>
@@ -726,19 +726,19 @@ export function CardsClient() {
               </div>
 
               {/* Live Preview Box */}
-              <div className="p-3.5 rounded-2xl bg-[#10251A]/80 border border-[#39E900]/30 space-y-1">
+              <div className="p-3.5 rounded-2xl bg-[#E9F8E9] border border-[#006B21]/20 space-y-1">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] uppercase font-bold text-[#39E900] tracking-wider">
+                  <span className="text-[10px] uppercase font-bold text-[#006B21] tracking-wider">
                     Generated Codes Preview
                   </span>
-                  <span className="text-[10px] text-white/40">
+                  <span className="text-[10px] text-[#050505]/45">
                     Total {batchCount || 0} cards
                   </span>
                 </div>
-                <div className="text-xs font-mono font-bold text-[#39E900] tracking-wide truncate">
+                <div className="text-xs font-mono font-bold text-[#006B21] tracking-wide truncate">
                   {getBatchPreview()}
                 </div>
-                <div className="text-[10px] text-white/40">
+                <div className="text-[10px] text-[#050505]/50">
                   Cards will be generated in clean sequential order: CARD001, CARD002, CARD003...
                 </div>
               </div>
@@ -747,7 +747,7 @@ export function CardsClient() {
                 <button
                   type="button"
                   onClick={() => setCreateModalOpen(false)}
-                  className="px-4 py-2 rounded-xl text-xs font-medium text-white/60 hover:text-white hover:bg-[#10251A]"
+                  className="px-4 py-2 rounded-xl text-xs font-medium text-[#050505]/60 hover:text-[#050505] hover:bg-[#E9F8E9]"
                 >
                   Cancel
                 </button>
@@ -756,7 +756,7 @@ export function CardsClient() {
                   disabled={submitting}
                   className="px-4 py-2 rounded-xl bg-[#006B21] hover:bg-[#005219] text-white font-bold text-xs shadow-md shadow-[#006B21]/20 disabled:opacity-50 flex items-center gap-2"
                 >
-                  {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin text-[#39E900]" />}
+                  {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin text-white" />}
                   Generate Cards
                 </button>
               </div>
@@ -767,45 +767,45 @@ export function CardsClient() {
 
       {/* Reassign / Assign Modal with Explicit Notice */}
       {reassignModalOpen && selectedCardForAction && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-lg bg-[#050505] rounded-3xl p-6 shadow-2xl border border-[#006B21]/50 space-y-4">
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-lg bg-white rounded-3xl p-6 shadow-2xl border border-[#006B21]/20 space-y-4 text-[#050505]">
             <div className="flex items-start gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-[#10251A] text-[#39E900] border border-[#006B21]/40 flex items-center justify-center shrink-0">
-                <AlertTriangle className="w-5 h-5 text-[#39E900]" />
+              <div className="w-10 h-10 rounded-2xl bg-[#E9F8E9] text-[#006B21] border border-[#006B21]/25 flex items-center justify-center shrink-0">
+                <AlertTriangle className="w-5 h-5 text-[#006B21]" />
               </div>
               <div>
-                <h3 className="text-base font-black text-white">
+                <h3 className="text-base font-black text-[#050505]">
                   {selectedCardForAction.businessId ? "Reassign QR Card" : "Assign QR Card"}
                 </h3>
-                <p className="text-xs text-white/60 mt-0.5">
-                  Card Code: <span className="font-mono font-bold text-[#39E900]">{selectedCardForAction.cardCode}</span>
+                <p className="text-xs text-[#050505]/60 mt-0.5">
+                  Card Code: <span className="font-mono font-bold text-[#006B21]">{selectedCardForAction.cardCode}</span>
                 </p>
               </div>
             </div>
 
             {selectedCardForAction.businessId && (
-              <div className="p-3 bg-[#10251A] border border-[#006B21]/50 rounded-xl text-xs text-white/80">
-                ⚠️ <strong className="text-[#39E900]">Important Notice:</strong> Customers scanning this physical QR card will be redirected to the new business after reassignment. The physical QR code remains unchanged.
+              <div className="p-3 bg-[#E9F8E9] border border-[#006B21]/25 rounded-xl text-xs text-[#050505]/80">
+                ⚠️ <strong className="text-[#006B21]">Important Notice:</strong> Customers scanning this physical QR card will be redirected to the new business after reassignment. The physical QR code remains unchanged.
               </div>
             )}
 
             <div className="space-y-3 pt-2">
               <div className="text-xs">
-                <span className="text-white/50">Current Business: </span>
-                <span className="font-bold text-white">
+                <span className="text-[#050505]/50">Current Business: </span>
+                <span className="font-bold text-[#050505]">
                   {selectedCardForAction.business ? selectedCardForAction.business.name : "Unassigned"}
                 </span>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-white/80 mb-1">
+                <label className="block text-xs font-bold text-[#050505]/80 mb-1">
                   Select New Business Destination *
                 </label>
                 <select
                   required
                   value={targetBusinessId}
                   onChange={(e) => setTargetBusinessId(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs text-white focus:outline-none"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/25 bg-[#E9F8E9]/50 text-xs text-[#050505] focus:outline-none focus:border-[#006B21] focus:bg-white"
                 >
                   <option value="">Choose a destination business...</option>
                   {businesses.map((b) => (
@@ -817,11 +817,11 @@ export function CardsClient() {
               </div>
             </div>
 
-            <div className="flex justify-end gap-3 pt-4 border-t border-[#006B21]/30">
+            <div className="flex justify-end gap-3 pt-4 border-t border-[#006B21]/15">
               <button
                 type="button"
                 onClick={() => setReassignModalOpen(false)}
-                className="px-4 py-2 rounded-xl text-xs font-medium text-white/60 hover:text-white hover:bg-[#10251A]"
+                className="px-4 py-2 rounded-xl text-xs font-medium text-[#050505]/60 hover:text-[#050505] hover:bg-[#E9F8E9]"
               >
                 Cancel
               </button>
@@ -831,7 +831,7 @@ export function CardsClient() {
                 onClick={handleConfirmReassign}
                 className="px-4 py-2 rounded-xl bg-[#006B21] hover:bg-[#005219] text-white font-bold text-xs shadow-md shadow-[#006B21]/20 disabled:opacity-50 flex items-center gap-2"
               >
-                {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin text-[#39E900]" />}
+                {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin text-white" />}
                 Confirm Assignment
               </button>
             </div>
@@ -841,24 +841,24 @@ export function CardsClient() {
 
       {/* Bulk Assign Modal */}
       {bulkAssignModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-md bg-[#050505] rounded-3xl p-6 shadow-2xl border border-[#006B21]/50 space-y-4">
-            <h3 className="text-base font-black text-white">
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-md bg-white rounded-3xl p-6 shadow-2xl border border-[#006B21]/20 space-y-4 text-[#050505]">
+            <h3 className="text-base font-black text-[#050505]">
               Bulk Assign {selectedCardIds.length} Cards
             </h3>
-            <p className="text-xs text-white/60">
+            <p className="text-xs text-[#050505]/60">
               Assign all {selectedCardIds.length} selected physical QR cards to a single business destination.
             </p>
 
             <div>
-              <label className="block text-xs font-bold text-white/80 mb-1">
+              <label className="block text-xs font-bold text-[#050505]/80 mb-1">
                 Target Business *
               </label>
               <select
                 required
                 value={targetBusinessId}
                 onChange={(e) => setTargetBusinessId(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs text-white focus:outline-none"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/25 bg-[#E9F8E9]/50 text-xs text-[#050505] focus:outline-none focus:border-[#006B21] focus:bg-white"
               >
                 <option value="">Choose a business...</option>
                 {businesses.map((b) => (
@@ -869,11 +869,11 @@ export function CardsClient() {
               </select>
             </div>
 
-            <div className="flex justify-end gap-3 pt-4 border-t border-[#006B21]/30">
+            <div className="flex justify-end gap-3 pt-4 border-t border-[#006B21]/15">
               <button
                 type="button"
                 onClick={() => setBulkAssignModalOpen(false)}
-                className="px-4 py-2 rounded-xl text-xs font-medium text-white/60 hover:text-white hover:bg-[#10251A]"
+                className="px-4 py-2 rounded-xl text-xs font-medium text-[#050505]/60 hover:text-[#050505] hover:bg-[#E9F8E9]"
               >
                 Cancel
               </button>
@@ -883,7 +883,7 @@ export function CardsClient() {
                 onClick={handleBulkAssign}
                 className="px-4 py-2 rounded-xl bg-[#006B21] hover:bg-[#005219] text-white font-bold text-xs shadow-md shadow-[#006B21]/20 disabled:opacity-50 flex items-center gap-2"
               >
-                {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin text-[#39E900]" />}
+                {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin text-white" />}
                 Confirm Bulk Assignment
               </button>
             </div>
@@ -893,18 +893,18 @@ export function CardsClient() {
 
       {/* CSV Import Modal */}
       {importModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-lg bg-[#050505] rounded-3xl p-6 shadow-2xl border border-[#006B21]/50 space-y-4">
-            <h3 className="text-base font-black text-white">
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-lg bg-white rounded-3xl p-6 shadow-2xl border border-[#006B21]/20 space-y-4 text-[#050505]">
+            <h3 className="text-base font-black text-[#050505]">
               Import Cards (CSV)
             </h3>
-            <p className="text-xs text-white/60">
+            <p className="text-xs text-[#050505]/60">
               Paste card codes line by line. System will reject duplicates and validate existing inventory.
             </p>
 
             <form onSubmit={handleImportCsv} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-white/80 mb-1">
+                <label className="block text-xs font-bold text-[#050505]/80 mb-1">
                   Card Codes (One per line)
                 </label>
                 <textarea
@@ -912,8 +912,8 @@ export function CardsClient() {
                   required
                   value={csvText}
                   onChange={(e) => setCsvText(e.target.value)}
-                  placeholder={"CARD0101\nCARD0102\nCARD0103"}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs font-mono text-white focus:outline-none"
+                  placeholder={"CARD001\nCARD002\nCARD003"}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/25 bg-[#E9F8E9]/50 text-xs font-mono text-[#050505] focus:outline-none focus:border-[#006B21] focus:bg-white"
                 />
               </div>
 
@@ -921,7 +921,7 @@ export function CardsClient() {
                 <button
                   type="button"
                   onClick={() => setImportModalOpen(false)}
-                  className="px-4 py-2 rounded-xl text-xs font-medium text-white/60 hover:text-white hover:bg-[#10251A]"
+                  className="px-4 py-2 rounded-xl text-xs font-medium text-[#050505]/60 hover:text-[#050505] hover:bg-[#E9F8E9]"
                 >
                   Cancel
                 </button>
@@ -930,7 +930,7 @@ export function CardsClient() {
                   disabled={submitting}
                   className="px-4 py-2 rounded-xl bg-[#006B21] hover:bg-[#005219] text-white font-bold text-xs shadow-md shadow-[#006B21]/20 disabled:opacity-50 flex items-center gap-2"
                 >
-                  {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin text-[#39E900]" />}
+                  {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin text-white" />}
                   Import and Validate
                 </button>
               </div>
@@ -941,44 +941,44 @@ export function CardsClient() {
 
       {/* Single Card Delete Confirmation Modal */}
       {deleteModalOpen && cardToDelete && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="w-full max-w-md bg-[#050505] rounded-3xl p-6 shadow-2xl border border-rose-900/60 space-y-4">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="w-full max-w-md bg-white rounded-3xl p-6 shadow-2xl border border-rose-200 space-y-4 text-[#050505]">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-rose-950/80 border border-rose-800 flex items-center justify-center text-rose-400">
+              <div className="w-10 h-10 rounded-2xl bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-600">
                 <AlertTriangle className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-base font-black text-white">Delete QR Card</h3>
-                <p className="text-xs text-white/60">This action is permanent and cannot be undone.</p>
+                <h3 className="text-base font-black text-[#050505]">Delete QR Card</h3>
+                <p className="text-xs text-[#050505]/60">This action is permanent and cannot be undone.</p>
               </div>
             </div>
 
-            <div className="p-4 rounded-2xl bg-[#10251A] border border-[#006B21]/30 space-y-2 text-xs">
+            <div className="p-4 rounded-2xl bg-gray-50 border border-gray-200 space-y-2 text-xs">
               <div className="flex items-center justify-between">
-                <span className="text-white/60">Card Code:</span>
-                <span className="font-mono font-bold text-white">{cardToDelete.cardCode}</span>
+                <span className="text-[#050505]/60">Card Code:</span>
+                <span className="font-mono font-bold text-[#050505]">{cardToDelete.cardCode}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-white/60">Public Token:</span>
-                <span className="font-mono text-[#39E900]">/r/{cardToDelete.publicToken}</span>
+                <span className="text-[#050505]/60">Public Token:</span>
+                <span className="font-mono font-bold text-[#006B21]">/r/{cardToDelete.publicToken}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-white/60">Assigned Business:</span>
-                <span className="text-white font-medium">
+                <span className="text-[#050505]/60">Assigned Business:</span>
+                <span className="text-[#050505] font-medium">
                   {cardToDelete.business?.name || "None (Unassigned)"}
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-white/60">Total Scans:</span>
-                <span className="text-white font-bold">{cardToDelete._count?.scans || 0}</span>
+                <span className="text-[#050505]/60">Total Scans:</span>
+                <span className="text-[#050505] font-bold">{cardToDelete._count?.scans || 0}</span>
               </div>
             </div>
 
-            <p className="text-xs text-rose-300/90 leading-relaxed bg-rose-950/30 p-3 rounded-xl border border-rose-900/40">
+            <p className="text-xs text-rose-700 leading-relaxed bg-rose-50 p-3 rounded-xl border border-rose-200">
               ⚠️ Warning: Deleting this card will permanently wipe its redirect routing and all recorded scan analytics. Any physical card already printed with this QR code will stop working.
             </p>
 
-            <div className="flex justify-end gap-3 pt-3 border-t border-[#006B21]/20">
+            <div className="flex justify-end gap-3 pt-3 border-t border-gray-200">
               <button
                 type="button"
                 onClick={() => {
@@ -986,7 +986,7 @@ export function CardsClient() {
                   setCardToDelete(null);
                 }}
                 disabled={deleting}
-                className="px-4 py-2 rounded-xl text-xs font-medium text-white/60 hover:text-white hover:bg-[#10251A] transition-colors"
+                className="px-4 py-2 rounded-xl text-xs font-medium text-[#050505]/60 hover:text-[#050505] hover:bg-gray-100 transition-colors"
               >
                 Cancel
               </button>
@@ -994,7 +994,7 @@ export function CardsClient() {
                 type="button"
                 onClick={handleConfirmDelete}
                 disabled={deleting}
-                className="px-4 py-2 rounded-xl bg-rose-700 hover:bg-rose-600 text-white font-bold text-xs shadow-md shadow-rose-900/40 disabled:opacity-50 flex items-center gap-2 transition-colors"
+                className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-md shadow-rose-600/30 disabled:opacity-50 flex items-center gap-2 transition-colors"
               >
                 {deleting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                 Confirm Delete
@@ -1006,31 +1006,31 @@ export function CardsClient() {
 
       {/* Bulk Delete Confirmation Modal */}
       {bulkDeleteModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="w-full max-w-md bg-[#050505] rounded-3xl p-6 shadow-2xl border border-rose-900/60 space-y-4">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="w-full max-w-md bg-white rounded-3xl p-6 shadow-2xl border border-rose-200 space-y-4 text-[#050505]">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-rose-950/80 border border-rose-800 flex items-center justify-center text-rose-400">
+              <div className="w-10 h-10 rounded-2xl bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-600">
                 <Trash2 className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-base font-black text-white">Bulk Delete Cards</h3>
-                <p className="text-xs text-white/60">
+                <h3 className="text-base font-black text-[#050505]">Bulk Delete Cards</h3>
+                <p className="text-xs text-[#050505]/60">
                   Delete {selectedCardIds.length} selected card{selectedCardIds.length > 1 ? "s" : ""}
                 </p>
               </div>
             </div>
 
-            <p className="text-xs text-rose-300/90 leading-relaxed bg-rose-950/30 p-3 rounded-xl border border-rose-900/40">
+            <p className="text-xs text-rose-700 leading-relaxed bg-rose-50 p-3 rounded-xl border border-rose-200">
               ⚠️ Are you sure you want to permanently delete all{" "}
-              <strong className="text-rose-100">{selectedCardIds.length}</strong> selected QR cards? All redirect tokens and scan history records will be erased immediately. Physical cards with these tokens will cease to function.
+              <strong className="text-rose-900">{selectedCardIds.length}</strong> selected QR cards? All redirect tokens and scan history records will be erased immediately. Physical cards with these tokens will cease to function.
             </p>
 
-            <div className="flex justify-end gap-3 pt-3 border-t border-[#006B21]/20">
+            <div className="flex justify-end gap-3 pt-3 border-t border-gray-200">
               <button
                 type="button"
                 onClick={() => setBulkDeleteModalOpen(false)}
                 disabled={deleting}
-                className="px-4 py-2 rounded-xl text-xs font-medium text-white/60 hover:text-white hover:bg-[#10251A] transition-colors"
+                className="px-4 py-2 rounded-xl text-xs font-medium text-[#050505]/60 hover:text-[#050505] hover:bg-gray-100 transition-colors"
               >
                 Cancel
               </button>
@@ -1038,7 +1038,7 @@ export function CardsClient() {
                 type="button"
                 onClick={handleConfirmBulkDelete}
                 disabled={deleting}
-                className="px-4 py-2 rounded-xl bg-rose-700 hover:bg-rose-600 text-white font-bold text-xs shadow-md shadow-rose-900/40 disabled:opacity-50 flex items-center gap-2 transition-colors"
+                className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-md shadow-rose-600/30 disabled:opacity-50 flex items-center gap-2 transition-colors"
               >
                 {deleting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                 Delete {selectedCardIds.length} Cards

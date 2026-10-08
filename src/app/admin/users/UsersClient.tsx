@@ -205,10 +205,10 @@ export function UsersClient() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-white tracking-tight">
+          <h1 className="text-2xl font-black text-[#050505] tracking-tight">
             User Accounts & Client Access
           </h1>
-          <p className="text-xs sm:text-sm text-white/60 mt-1">
+          <p className="text-xs sm:text-sm text-[#050505]/60 mt-1">
             Generate and manage login ID and passwords for Business Owners.
           </p>
         </div>
@@ -220,21 +220,21 @@ export function UsersClient() {
           }}
           className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#006B21] hover:bg-[#005219] text-white font-bold text-xs shadow-md shadow-[#006B21]/20 transition-all self-start sm:self-auto"
         >
-          <Plus className="w-4 h-4 text-[#39E900]" />
+          <Plus className="w-4 h-4 text-white" />
           Generate Business Owner Login
         </button>
       </div>
 
-      <div className="bg-[#050505] rounded-2xl border border-[#006B21]/30 shadow-md overflow-hidden">
+      <div className="bg-white rounded-2xl border border-[#006B21]/15 shadow-sm overflow-hidden">
         {loading ? (
-          <div className="py-20 flex flex-col items-center justify-center gap-3 text-white/50">
-            <Loader2 className="w-8 h-8 animate-spin text-[#39E900]" />
+          <div className="py-20 flex flex-col items-center justify-center gap-3 text-[#050505]/50">
+            <Loader2 className="w-8 h-8 animate-spin text-[#006B21]" />
             <span className="text-xs">Loading user accounts...</span>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-[#10251A] text-white/60 uppercase tracking-wider font-semibold border-b border-[#006B21]/30">
+              <thead className="bg-[#E9F8E9]/60 text-[#050505]/70 uppercase tracking-wider font-semibold border-b border-[#006B21]/15">
                 <tr>
                   <th className="py-3.5 px-4">User Details</th>
                   <th className="py-3.5 px-4">Role</th>
@@ -243,27 +243,27 @@ export function UsersClient() {
                   <th className="py-3.5 px-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#006B21]/20">
+              <tbody className="divide-y divide-[#006B21]/10">
                 {users.map((u) => (
-                  <tr key={u.id} className="hover:bg-[#10251A]/40 transition-colors">
+                  <tr key={u.id} className="hover:bg-[#E9F8E9]/30 transition-colors">
                     <td className="py-4 px-4">
-                      <div className="font-bold text-white text-sm">
+                      <div className="font-bold text-[#050505] text-sm">
                         {u.name}
                       </div>
-                      <div className="text-xs text-white/60 font-mono mt-0.5">
+                      <div className="text-xs text-[#050505]/60 font-mono mt-0.5">
                         {u.email}
                       </div>
                     </td>
 
                     <td className="py-4 px-4">
                       {u.role === "ADMIN" ? (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-[#10251A] text-[#39E900] border border-[#006B21]/50">
-                          <ShieldCheck className="w-3.5 h-3.5 text-[#39E900]" />
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-[#E9F8E9] text-[#006B21] border border-[#006B21]/30">
+                          <ShieldCheck className="w-3.5 h-3.5 text-[#006B21]" />
                           System Admin
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-[#006B21]/30 text-[#39E900] border border-[#39E900]/40">
-                          <Store className="w-3.5 h-3.5 text-[#39E900]" />
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-[#006B21]/10 text-[#006B21] border border-[#006B21]/20">
+                          <Store className="w-3.5 h-3.5 text-[#006B21]" />
                           Business Owner
                         </span>
                       )}
@@ -275,19 +275,19 @@ export function UsersClient() {
                           {u.businesses.map((b: any) => (
                             <span
                               key={b.id}
-                              className="px-2.5 py-1 rounded-lg bg-[#10251A] border border-[#006B21]/40 text-xs font-semibold text-white flex items-center gap-1.5"
+                              className="px-2.5 py-1 rounded-lg bg-[#E9F8E9]/50 border border-[#006B21]/20 text-xs font-semibold text-[#050505] flex items-center gap-1.5"
                             >
-                              <Building className="w-3 h-3 text-[#39E900]" />
+                              <Building className="w-3 h-3 text-[#006B21]" />
                               {b.name}
                             </span>
                           ))}
                         </div>
                       ) : (
-                        <span className="text-white/40 italic text-xs">Unassigned</span>
+                        <span className="text-[#050505]/40 italic text-xs">Unassigned</span>
                       )}
                     </td>
 
-                    <td className="py-4 px-4 text-white/50 text-xs">
+                    <td className="py-4 px-4 text-[#050505]/60 text-xs">
                       {new Date(u.createdAt).toLocaleDateString()}
                     </td>
 
@@ -299,7 +299,7 @@ export function UsersClient() {
                               setNewPassword(generateRandomPassword());
                               setResetModalUser(u);
                             }}
-                            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#10251A] hover:bg-[#006B21] text-[#39E900] hover:text-white border border-[#006B21]/40 transition-all text-xs font-medium"
+                            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#E9F8E9] hover:bg-[#006B21] text-[#006B21] hover:text-white border border-[#006B21]/25 transition-all text-xs font-semibold"
                             title="Reset Password"
                           >
                             <Key className="w-3 h-3" />
@@ -308,7 +308,7 @@ export function UsersClient() {
 
                           <button
                             onClick={() => handleDeleteUser(u)}
-                            className="p-1.5 rounded-lg text-rose-400/80 hover:text-rose-300 hover:bg-rose-950/40 border border-transparent hover:border-rose-800 transition-all"
+                            className="p-1.5 rounded-lg text-rose-600 hover:text-rose-700 hover:bg-rose-50 border border-transparent hover:border-rose-200 transition-all"
                             title="Delete user"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -326,39 +326,39 @@ export function UsersClient() {
 
       {/* Generated Credentials Copy Modal */}
       {createdCredentials && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-md bg-[#050505] rounded-3xl p-6 shadow-2xl border border-[#39E900]/50 space-y-4 animate-in fade-in duration-200">
-            <div className="flex items-center justify-between pb-2 border-b border-[#006B21]/30">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-md bg-white rounded-3xl p-6 shadow-2xl border border-[#006B21]/20 space-y-4 animate-in fade-in duration-200">
+            <div className="flex items-center justify-between pb-2 border-b border-[#006B21]/15">
               <div className="flex items-center gap-2">
-                <CheckCircle className="w-5 h-5 text-[#39E900]" />
-                <h3 className="text-base font-bold text-white">
+                <CheckCircle className="w-5 h-5 text-[#006B21]" />
+                <h3 className="text-base font-bold text-[#050505]">
                   Credentials Generated!
                 </h3>
               </div>
               <button
                 onClick={() => setCreatedCredentials(null)}
-                className="p-1 rounded-lg text-white/50 hover:text-white"
+                className="p-1 rounded-lg text-[#050505]/50 hover:text-[#050505]"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <p className="text-xs text-white/70">
+            <p className="text-xs text-[#050505]/70">
               Aapne ye login credentials generate kiye hain. Inhe copy karke Business Owner ke saath WhatsApp ya Email par share karein:
             </p>
 
-            <div className="bg-[#10251A] p-4 rounded-2xl border border-[#006B21]/40 space-y-2.5 font-mono text-xs">
+            <div className="bg-[#E9F8E9]/60 p-4 rounded-2xl border border-[#006B21]/20 space-y-2.5 font-mono text-xs">
               <div>
-                <span className="text-white/40 block text-[10px] uppercase">Business Owner</span>
-                <span className="text-white font-bold">{createdCredentials.name}</span>
+                <span className="text-[#050505]/50 block text-[10px] uppercase font-bold">Business Owner</span>
+                <span className="text-[#050505] font-bold">{createdCredentials.name}</span>
               </div>
               <div>
-                <span className="text-white/40 block text-[10px] uppercase">Login Email / ID</span>
-                <span className="text-[#39E900] font-bold">{createdCredentials.email}</span>
+                <span className="text-[#050505]/50 block text-[10px] uppercase font-bold">Login Email / ID</span>
+                <span className="text-[#006B21] font-bold">{createdCredentials.email}</span>
               </div>
               <div>
-                <span className="text-white/40 block text-[10px] uppercase">Password</span>
-                <span className="text-[#39E900] font-bold">{createdCredentials.pass}</span>
+                <span className="text-[#050505]/50 block text-[10px] uppercase font-bold">Password</span>
+                <span className="text-[#006B21] font-bold">{createdCredentials.pass}</span>
               </div>
             </div>
 
@@ -367,12 +367,12 @@ export function UsersClient() {
                 onClick={() => copyCredentialsText(createdCredentials)}
                 className="flex-1 py-2.5 px-4 rounded-xl bg-[#006B21] hover:bg-[#005219] text-white font-bold text-xs shadow-md shadow-[#006B21]/30 flex items-center justify-center gap-2 transition-all"
               >
-                <Copy className="w-4 h-4 text-[#39E900]" />
+                <Copy className="w-4 h-4 text-white" />
                 Copy Details for Client
               </button>
               <button
                 onClick={() => setCreatedCredentials(null)}
-                className="py-2.5 px-4 rounded-xl bg-[#10251A] hover:bg-[#10251A]/80 text-white/80 font-medium text-xs border border-[#006B21]/40"
+                className="py-2.5 px-4 rounded-xl bg-[#E9F8E9] hover:bg-[#E9F8E9]/80 text-[#050505] font-semibold text-xs border border-[#006B21]/20"
               >
                 Done
               </button>
@@ -383,16 +383,16 @@ export function UsersClient() {
 
       {/* Reset Password Modal */}
       {resetModalUser && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-md bg-[#050505] rounded-3xl p-6 shadow-2xl border border-[#006B21]/50 space-y-4">
-            <div className="flex items-center justify-between pb-2 border-b border-[#006B21]/30">
-              <h3 className="text-base font-black text-white flex items-center gap-2">
-                <Key className="w-4 h-4 text-[#39E900]" />
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-md bg-white rounded-3xl p-6 shadow-2xl border border-[#006B21]/20 space-y-4">
+            <div className="flex items-center justify-between pb-2 border-b border-[#006B21]/15">
+              <h3 className="text-base font-black text-[#050505] flex items-center gap-2">
+                <Key className="w-4 h-4 text-[#006B21]" />
                 Reset Password for {resetModalUser.name}
               </h3>
               <button
                 onClick={() => setResetModalUser(null)}
-                className="p-1 rounded-lg text-white/50 hover:text-white"
+                className="p-1 rounded-lg text-[#050505]/50 hover:text-[#050505]"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -401,13 +401,13 @@ export function UsersClient() {
             <form onSubmit={handleResetPassword} className="space-y-4">
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <label className="text-xs font-bold text-white/80">
+                  <label className="text-xs font-bold text-[#050505]/80">
                     New Password *
                   </label>
                   <button
                     type="button"
                     onClick={() => setNewPassword(generateRandomPassword())}
-                    className="text-[11px] text-[#39E900] hover:underline flex items-center gap-1 font-semibold"
+                    className="text-[11px] text-[#006B21] hover:underline flex items-center gap-1 font-semibold"
                   >
                     <RefreshCw className="w-3 h-3" />
                     Auto Generate
@@ -418,7 +418,7 @@ export function UsersClient() {
                   required
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs text-[#39E900] font-mono focus:outline-none focus:border-[#39E900]"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/30 bg-[#E9F8E9]/30 text-xs text-[#050505] font-mono focus:outline-none focus:border-[#006B21]"
                 />
               </div>
 
@@ -426,7 +426,7 @@ export function UsersClient() {
                 <button
                   type="button"
                   onClick={() => setResetModalUser(null)}
-                  className="px-4 py-2 rounded-xl text-xs font-medium text-white/60 hover:text-white"
+                  className="px-4 py-2 rounded-xl text-xs font-medium text-[#050505]/60 hover:text-[#050505]"
                 >
                   Cancel
                 </button>
@@ -435,7 +435,7 @@ export function UsersClient() {
                   disabled={resetting}
                   className="px-4 py-2 rounded-xl bg-[#006B21] hover:bg-[#005219] text-white font-bold text-xs shadow-md shadow-[#006B21]/20 disabled:opacity-50 flex items-center gap-2"
                 >
-                  {resetting && <Loader2 className="w-3.5 h-3.5 animate-spin text-[#39E900]" />}
+                  {resetting && <Loader2 className="w-3.5 h-3.5 animate-spin text-white" />}
                   Update & Copy Password
                 </button>
               </div>
@@ -446,20 +446,20 @@ export function UsersClient() {
 
       {/* Create User Modal */}
       {createModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-md bg-[#050505] rounded-3xl p-6 shadow-2xl border border-[#006B21]/50 space-y-4">
-            <div className="flex items-center justify-between pb-2 border-b border-[#006B21]/30">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-md bg-white rounded-3xl p-6 shadow-2xl border border-[#006B21]/20 space-y-4">
+            <div className="flex items-center justify-between pb-2 border-b border-[#006B21]/15">
               <div>
-                <h3 className="text-base font-black text-white">
+                <h3 className="text-base font-black text-[#050505]">
                   Generate User Login
                 </h3>
-                <p className="text-[11px] text-white/60 mt-0.5">
+                <p className="text-[11px] text-[#050505]/60 mt-0.5">
                   Business Owner ke liye ID aur Password generate karein
                 </p>
               </div>
               <button
                 onClick={() => setCreateModalOpen(false)}
-                className="p-1 rounded-lg text-white/50 hover:text-white"
+                className="p-1 rounded-lg text-[#050505]/50 hover:text-[#050505]"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -467,7 +467,7 @@ export function UsersClient() {
 
             <form onSubmit={handleCreateUser} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-white/80 mb-1">
+                <label className="block text-xs font-bold text-[#050505]/80 mb-1">
                   Business Owner Name *
                 </label>
                 <input
@@ -476,12 +476,12 @@ export function UsersClient() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="e.g. Ramesh Patel / Sarah Jenkins"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs text-white focus:outline-none focus:border-[#39E900]"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/30 text-xs text-[#050505] focus:outline-none focus:border-[#006B21]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-white/80 mb-1">
+                <label className="block text-xs font-bold text-[#050505]/80 mb-1">
                   Email Address (Login ID) *
                 </label>
                 <input
@@ -490,19 +490,19 @@ export function UsersClient() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="e.g. owner@royalsalon.com"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs text-white focus:outline-none focus:border-[#39E900]"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/30 text-xs text-[#050505] focus:outline-none focus:border-[#006B21]"
                 />
               </div>
 
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <label className="text-xs font-bold text-white/80">
+                  <label className="text-xs font-bold text-[#050505]/80">
                     Password *
                   </label>
                   <button
                     type="button"
                     onClick={() => setPassword(generateRandomPassword())}
-                    className="text-[11px] text-[#39E900] hover:underline flex items-center gap-1 font-semibold"
+                    className="text-[11px] text-[#006B21] hover:underline flex items-center gap-1 font-semibold"
                   >
                     <RefreshCw className="w-3 h-3" />
                     Auto Generate Strong Pass
@@ -515,12 +515,12 @@ export function UsersClient() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter or generate password"
-                    className="w-full pl-3.5 pr-10 py-2.5 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs text-white font-mono focus:outline-none focus:border-[#39E900]"
+                    className="w-full pl-3.5 pr-10 py-2.5 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/30 text-xs text-[#050505] font-mono focus:outline-none focus:border-[#006B21]"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword((prev) => !prev)}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-white/40 hover:text-[#39E900]"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#050505]/40 hover:text-[#006B21]"
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -528,13 +528,13 @@ export function UsersClient() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-white/80 mb-1">
+                <label className="block text-xs font-bold text-[#050505]/80 mb-1">
                   Assign to Business (Optional)
                 </label>
                 <select
                   value={selectedBusinessId}
                   onChange={(e) => setSelectedBusinessId(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs text-white focus:outline-none focus:border-[#39E900]"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/30 text-xs text-[#050505] focus:outline-none focus:border-[#006B21]"
                 >
                   <option value="">-- None (Assign Later) --</option>
                   {businesses.map((b) => (
@@ -546,13 +546,13 @@ export function UsersClient() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-white/80 mb-1">
+                <label className="block text-xs font-bold text-[#050505]/80 mb-1">
                   Account Role
                 </label>
                 <select
                   value={role}
                   onChange={(e) => setRole(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs text-white focus:outline-none focus:border-[#39E900]"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/30 text-xs text-[#050505] focus:outline-none focus:border-[#006B21]"
                 >
                   <option value="BUSINESS_OWNER">Business Owner (Portal Access)</option>
                   <option value="ADMIN">System Administrator</option>
@@ -563,7 +563,7 @@ export function UsersClient() {
                 <button
                   type="button"
                   onClick={() => setCreateModalOpen(false)}
-                  className="px-4 py-2 rounded-xl text-xs font-medium text-white/60 hover:text-white hover:bg-[#10251A]"
+                  className="px-4 py-2 rounded-xl text-xs font-medium text-[#050505]/60 hover:text-[#050505] hover:bg-[#E9F8E9]/50"
                 >
                   Cancel
                 </button>
@@ -572,7 +572,7 @@ export function UsersClient() {
                   disabled={submitting}
                   className="px-4 py-2 rounded-xl bg-[#006B21] hover:bg-[#005219] text-white font-bold text-xs shadow-md shadow-[#006B21]/20 disabled:opacity-50 flex items-center gap-2"
                 >
-                  {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin text-[#39E900]" />}
+                  {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin text-white" />}
                   Create & Generate
                 </button>
               </div>

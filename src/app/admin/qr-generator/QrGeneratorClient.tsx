@@ -116,24 +116,24 @@ export function QrGeneratorClient() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-black text-white tracking-tight">
+        <h1 className="text-2xl font-black text-[#050505] tracking-tight">
           QR Code Asset Generator
         </h1>
-        <p className="text-xs sm:text-sm text-white/60 mt-1">
+        <p className="text-xs sm:text-sm text-[#050505]/60 mt-1">
           Generate, preview, and download ultra-sharp, high-scannability QR vectors for GrowBroo card printing.
         </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Card Selector Panel */}
-        <div className="p-6 rounded-3xl bg-[#050505] border border-[#006B21]/30 shadow-md space-y-4">
-          <h2 className="text-sm font-bold uppercase tracking-wider text-white/70">
+        <div className="p-6 rounded-3xl bg-white border border-[#006B21]/15 shadow-sm space-y-4">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-[#050505]/80">
             Select Card from Inventory
           </h2>
 
           {loading ? (
-            <div className="py-12 flex justify-center text-white/50">
-              <Loader2 className="w-6 h-6 animate-spin text-[#39E900]" />
+            <div className="py-12 flex justify-center text-[#050505]/50">
+              <Loader2 className="w-6 h-6 animate-spin text-[#006B21]" />
             </div>
           ) : (
             <div className="max-h-[500px] overflow-y-auto space-y-1.5 pr-1">
@@ -145,13 +145,13 @@ export function QrGeneratorClient() {
                     onClick={() => setSelectedCardId(card.id)}
                     className={`w-full p-3 rounded-xl text-left border transition-all flex items-center justify-between ${
                       isSelected
-                        ? "bg-[#10251A] border-[#39E900] text-white"
-                        : "bg-[#10251A]/50 border-[#006B21]/30 hover:bg-[#10251A] text-white/80"
+                        ? "bg-[#E9F8E9] border-[#006B21]/50 text-[#050505]"
+                        : "bg-[#E9F8E9]/30 border-[#006B21]/15 hover:bg-[#E9F8E9]/60 text-[#050505]/80"
                     }`}
                   >
                     <div>
-                      <div className="font-mono font-bold text-xs text-white">{card.cardCode}</div>
-                      <div className="text-[11px] text-white/50 mt-0.5 truncate max-w-[170px]">
+                      <div className="font-mono font-bold text-xs text-[#050505]">{card.cardCode}</div>
+                      <div className="text-[11px] text-[#050505]/60 mt-0.5 truncate max-w-[170px]">
                         {card.business ? card.business.name : "Unassigned"}
                       </div>
                     </div>
@@ -159,10 +159,10 @@ export function QrGeneratorClient() {
                     <span
                       className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                         card.status === "ASSIGNED"
-                          ? "bg-[#006B21]/40 text-[#39E900] border border-[#39E900]/40"
+                          ? "bg-[#E9F8E9] text-[#006B21] border border-[#006B21]/30 font-bold"
                           : card.status === "DISABLED"
-                          ? "bg-rose-950/60 text-rose-300 border border-rose-900"
-                          : "bg-[#10251A] text-white/60 border border-[#006B21]/30"
+                          ? "bg-rose-50 text-rose-700 border border-rose-200 font-bold"
+                          : "bg-[#E9F8E9]/50 text-[#050505]/60 border border-[#006B21]/20 font-bold"
                       }`}
                     >
                       {card.status}
@@ -175,18 +175,18 @@ export function QrGeneratorClient() {
         </div>
 
         {/* Live QR Code Display & Export Actions */}
-        <div className="lg:col-span-2 p-8 rounded-3xl bg-[#050505] border border-[#006B21]/30 shadow-md flex flex-col items-center justify-center text-center">
+        <div className="lg:col-span-2 p-8 rounded-3xl bg-white border border-[#006B21]/15 shadow-sm flex flex-col items-center justify-center text-center">
           {activeCard ? (
             <div className="max-w-md w-full space-y-6">
               {/* Host Mode Selector for Mobile vs Desktop */}
-              <div className="max-w-xs mx-auto mb-4 p-1 rounded-xl bg-[#10251A] border border-[#006B21]/40 flex items-center gap-1">
+              <div className="max-w-xs mx-auto mb-4 p-1 rounded-xl bg-[#E9F8E9]/60 border border-[#006B21]/20 flex items-center gap-1">
                 <button
                   type="button"
                   onClick={() => setHostMode("network")}
                   className={`flex-1 py-1.5 px-2 rounded-lg text-[11px] font-bold transition-all flex items-center justify-center gap-1 ${
                     hostMode === "network"
-                      ? "bg-[#006B21] text-white shadow-sm border border-[#39E900]/40"
-                      : "text-white/60 hover:text-white"
+                      ? "bg-[#006B21] text-white shadow-sm"
+                      : "text-[#050505]/60 hover:text-[#050505]"
                   }`}
                 >
                   <span>📱 Phone Scanner</span>
@@ -196,8 +196,8 @@ export function QrGeneratorClient() {
                   onClick={() => setHostMode("localhost")}
                   className={`flex-1 py-1.5 px-2 rounded-lg text-[11px] font-bold transition-all flex items-center justify-center gap-1 ${
                     hostMode === "localhost"
-                      ? "bg-[#006B21] text-white shadow-sm border border-[#39E900]/40"
-                      : "text-white/60 hover:text-white"
+                      ? "bg-[#006B21] text-white shadow-sm"
+                      : "text-[#050505]/60 hover:text-[#050505]"
                   }`}
                 >
                   <span>💻 Desktop</span>
@@ -205,7 +205,7 @@ export function QrGeneratorClient() {
               </div>
 
               {/* White Canvas Card Preview */}
-              <div className="p-8 bg-white rounded-3xl shadow-2xl border border-white/20 mx-auto max-w-xs flex flex-col items-center">
+              <div className="p-8 bg-white rounded-3xl shadow-xl border border-[#006B21]/15 mx-auto max-w-xs flex flex-col items-center">
                 <div className="text-[11px] font-black uppercase tracking-wider text-[#050505] mb-1">
                   GrowBroo Review Card
                 </div>
@@ -234,15 +234,15 @@ export function QrGeneratorClient() {
               </div>
 
               {/* Destination Metadata */}
-              <div className="p-4 rounded-2xl bg-[#10251A] border border-[#006B21]/40 text-left text-xs space-y-1">
+              <div className="p-4 rounded-2xl bg-[#E9F8E9]/60 border border-[#006B21]/20 text-left text-xs space-y-1">
                 <div className="flex items-center justify-between">
-                  <span className="text-white/60">Assigned Destination:</span>
-                  <span className="font-bold text-white">
+                  <span className="text-[#050505]/60">Assigned Destination:</span>
+                  <span className="font-bold text-[#050505]">
                     {activeCard.business ? activeCard.business.name : "Unassigned"}
                   </span>
                 </div>
                 {activeCard.business && (
-                  <div className="text-[11px] text-[#39E900] font-mono truncate">
+                  <div className="text-[11px] text-[#006B21] font-mono font-bold truncate">
                     {activeCard.business.googleReviewUrl}
                   </div>
                 )}
@@ -254,29 +254,29 @@ export function QrGeneratorClient() {
                   onClick={downloadPng}
                   className="flex-1 py-3 px-4 rounded-xl bg-[#006B21] hover:bg-[#005219] text-white font-bold text-xs shadow-md shadow-[#006B21]/20 flex items-center justify-center gap-2 transition-all"
                 >
-                  <Download className="w-4 h-4 text-[#39E900]" />
-                  Download PNG (Hi-Res)
+                  <Download className="w-4 h-4 text-white" />
+                  Download PNG
                 </button>
 
                 <button
                   onClick={downloadSvg}
-                  className="flex-1 py-3 px-4 rounded-xl border border-[#006B21]/40 bg-[#10251A] hover:bg-[#153322] text-white font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-sm"
+                  className="flex-1 py-3 px-4 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9] hover:bg-[#E9F8E9]/80 text-[#050505] font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-sm"
                 >
-                  <Download className="w-4 h-4 text-[#39E900]" />
-                  Download SVG (Vector)
+                  <Download className="w-4 h-4 text-[#006B21]" />
+                  Download SVG
                 </button>
 
                 <Link
                   href={`/admin/printable?cardId=${activeCard.id}`}
                   className="py-3 px-4 rounded-xl bg-[#006B21] text-white font-bold text-xs flex items-center justify-center gap-2 hover:bg-[#005219] transition-opacity"
                 >
-                  <Printer className="w-4 h-4 text-[#39E900]" />
+                  <Printer className="w-4 h-4 text-white" />
                   Print Card
                 </Link>
               </div>
             </div>
           ) : (
-            <div className="text-xs text-white/50">Please select a card to preview QR code.</div>
+            <div className="text-xs text-[#050505]/50">Please select a card to preview QR code.</div>
           )}
         </div>
       </div>

@@ -98,25 +98,25 @@ export function AdminHeader({
 
   return (
     <>
-      <header className="sticky top-0 z-30 h-16 bg-[#050505]/95 backdrop-blur-md border-b border-[#006B21]/30 px-4 sm:px-6 flex items-center justify-between">
+      <header className="sticky top-0 z-30 h-16 bg-white/95 backdrop-blur-md border-b border-[#006B21]/15 px-4 sm:px-6 flex items-center justify-between shadow-xs">
         <div className="flex items-center gap-2.5 sm:gap-3">
           <Link href="/admin" className="flex items-center gap-2 lg:hidden mr-1">
-            <div className="w-8 h-8 rounded-xl bg-[#006B21] flex items-center justify-center font-black text-xs text-[#39E900] shadow-sm border border-[#39E900]/30">
+            <div className="w-8 h-8 rounded-xl bg-[#006B21] flex items-center justify-center font-black text-xs text-white shadow-sm">
               GB
             </div>
-            <span className="font-black text-xs tracking-tight text-white hidden xs:inline">
-              Grow<span className="text-[#39E900]">Broo</span>
+            <span className="font-black text-xs tracking-tight text-[#050505] hidden xs:inline">
+              Grow<span className="text-[#006B21]">Broo</span>
             </span>
           </Link>
 
           {/* Quick Search trigger button */}
           <button
             onClick={() => setSearchOpen(true)}
-            className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-[#10251A] hover:bg-[#153322] text-white/60 text-xs font-medium border border-[#006B21]/30 transition-all w-48 sm:w-64"
+            className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-[#E9F8E9] hover:bg-[#ddf5dd] text-[#050505]/70 text-xs font-medium border border-[#006B21]/20 transition-all w-48 sm:w-64"
           >
-            <Search className="w-3.5 h-3.5 text-[#39E900]" />
-            <span className="flex-1 text-left truncate text-white/70">Search businesses, cards...</span>
-            <kbd className="hidden sm:inline-block px-1.5 py-0.5 text-[10px] font-mono bg-[#050505] border border-[#006B21]/40 rounded text-[#39E900]">
+            <Search className="w-3.5 h-3.5 text-[#006B21]" />
+            <span className="flex-1 text-left truncate text-[#050505]/75">Search businesses, cards...</span>
+            <kbd className="hidden sm:inline-block px-1.5 py-0.5 text-[10px] font-mono bg-white border border-[#006B21]/30 rounded text-[#006B21] font-bold">
               ⌘K
             </kbd>
           </button>
@@ -126,29 +126,29 @@ export function AdminHeader({
         <div className="flex items-center gap-3">
           <Link
             href="/dashboard"
-            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#10251A] hover:bg-[#006B21] text-xs font-semibold text-[#39E900] hover:text-white border border-[#006B21]/50 transition-all shadow-sm"
+            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#E9F8E9] hover:bg-[#006B21] text-xs font-semibold text-[#006B21] hover:text-white border border-[#006B21]/25 transition-all shadow-sm"
             title="Preview Client Business Portal"
           >
             <Store className="w-3.5 h-3.5" />
             <span>Business Portal</span>
           </Link>
 
-          <div className="flex items-center gap-3 pl-3 border-l border-[#006B21]/30">
+          <div className="flex items-center gap-3 pl-3 border-l border-[#006B21]/20">
             <div className="hidden sm:flex flex-col text-right">
-              <span className="text-xs font-bold text-white">
+              <span className="text-xs font-bold text-[#050505]">
                 {adminName}
               </span>
-              <span className="text-[10px] text-white/50">{adminEmail}</span>
+              <span className="text-[10px] text-[#050505]/50">{adminEmail}</span>
             </div>
 
-            <div className="w-8 h-8 rounded-xl bg-[#006B21] text-[#39E900] flex items-center justify-center font-bold text-xs shadow-sm border border-[#39E900]/30">
+            <div className="w-8 h-8 rounded-xl bg-[#006B21] text-white flex items-center justify-center font-bold text-xs shadow-sm">
               {adminName[0]}
             </div>
 
             <button
               onClick={handleLogout}
               title="Sign Out"
-              className="p-2 rounded-xl text-white/50 hover:text-rose-400 hover:bg-rose-950/40 transition-colors"
+              className="p-2 rounded-xl text-[#050505]/50 hover:text-rose-600 hover:bg-rose-50 transition-colors"
             >
               <LogOut className="w-4 h-4" />
             </button>
@@ -158,22 +158,22 @@ export function AdminHeader({
 
       {/* Global Search Modal */}
       {searchOpen && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-start justify-center p-4 sm:pt-20">
-          <div className="w-full max-w-xl bg-[#050505] rounded-2xl shadow-2xl border border-[#006B21]/40 overflow-hidden animate-in fade-in zoom-in-95 duration-150 text-white">
-            <div className="p-4 border-b border-[#006B21]/30 flex items-center gap-3 bg-[#10251A]/60">
-              <Search className="w-5 h-5 text-[#39E900]" />
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-start justify-center p-4 sm:pt-20">
+          <div className="w-full max-w-xl bg-white rounded-2xl shadow-2xl border border-[#006B21]/20 overflow-hidden animate-in fade-in zoom-in-95 duration-150 text-[#050505]">
+            <div className="p-4 border-b border-[#006B21]/15 flex items-center gap-3 bg-[#E9F8E9]/60">
+              <Search className="w-5 h-5 text-[#006B21]" />
               <input
                 ref={searchInputRef}
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search businesses (Royal Salon), cards (CARD0001), or tokens..."
-                className="flex-1 bg-transparent border-0 text-white placeholder-white/40 focus:outline-none text-sm"
+                className="flex-1 bg-transparent border-0 text-[#050505] placeholder-[#050505]/40 focus:outline-none text-sm"
               />
-              {isSearching && <Loader2 className="w-4 h-4 text-[#39E900] animate-spin" />}
+              {isSearching && <Loader2 className="w-4 h-4 text-[#006B21] animate-spin" />}
               <button
                 onClick={() => setSearchOpen(false)}
-                className="p-1 rounded-lg text-white/50 hover:text-white"
+                className="p-1 rounded-lg text-[#050505]/50 hover:text-[#050505]"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -189,7 +189,7 @@ export function AdminHeader({
               {/* Businesses */}
               {searchResults.businesses.length > 0 && (
                 <div>
-                  <div className="text-[10px] font-bold uppercase tracking-wider text-[#39E900] mb-2">
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-[#006B21] mb-2">
                     Businesses
                   </div>
                   <div className="space-y-1">
@@ -198,22 +198,22 @@ export function AdminHeader({
                         key={b.id}
                         href={`/admin/businesses/${b.id}`}
                         onClick={() => setSearchOpen(false)}
-                        className="flex items-center justify-between p-2.5 rounded-xl hover:bg-[#10251A] transition-colors group"
+                        className="flex items-center justify-between p-2.5 rounded-xl hover:bg-[#E9F8E9] transition-colors group"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-lg bg-[#006B21]/30 flex items-center justify-center text-[#39E900]">
+                          <div className="w-8 h-8 rounded-lg bg-[#E9F8E9] flex items-center justify-center text-[#006B21]">
                             <Building2 className="w-4 h-4" />
                           </div>
                           <div>
-                            <div className="text-xs font-bold text-white group-hover:text-[#39E900]">
+                            <div className="text-xs font-bold text-[#050505] group-hover:text-[#006B21]">
                               {b.name}
                             </div>
-                            <div className="text-[10px] text-white/50">
+                            <div className="text-[10px] text-[#050505]/60">
                               {b.businessType} • {b._count?.cards || 0} cards • {b._count?.scans || 0} scans
                             </div>
                           </div>
                         </div>
-                        <ExternalLink className="w-3.5 h-3.5 text-white/40 group-hover:text-[#39E900]" />
+                        <ExternalLink className="w-3.5 h-3.5 text-[#050505]/40 group-hover:text-[#006B21]" />
                       </Link>
                     ))}
                   </div>
@@ -223,7 +223,7 @@ export function AdminHeader({
               {/* Cards */}
               {searchResults.cards.length > 0 && (
                 <div>
-                  <div className="text-[10px] font-bold uppercase tracking-wider text-[#39E900] mb-2">
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-[#006B21] mb-2">
                     Cards
                   </div>
                   <div className="space-y-1">
@@ -232,22 +232,22 @@ export function AdminHeader({
                         key={c.id}
                         href={`/admin/cards/${c.id}`}
                         onClick={() => setSearchOpen(false)}
-                        className="flex items-center justify-between p-2.5 rounded-xl hover:bg-[#10251A] transition-colors group"
+                        className="flex items-center justify-between p-2.5 rounded-xl hover:bg-[#E9F8E9] transition-colors group"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-lg bg-[#006B21]/30 flex items-center justify-center text-[#39E900]">
+                          <div className="w-8 h-8 rounded-lg bg-[#E9F8E9] flex items-center justify-center text-[#006B21]">
                             <CreditCard className="w-4 h-4" />
                           </div>
                           <div>
-                            <div className="text-xs font-bold font-mono text-white group-hover:text-[#39E900]">
+                            <div className="text-xs font-bold font-mono text-[#050505] group-hover:text-[#006B21]">
                               {c.cardCode}
                             </div>
-                            <div className="text-[10px] text-white/50">
+                            <div className="text-[10px] text-[#050505]/60">
                               {c.business ? c.business.name : "Unassigned"} • {c._count?.scans || 0} scans
                             </div>
                           </div>
                         </div>
-                        <ExternalLink className="w-3.5 h-3.5 text-white/40 group-hover:text-[#39E900]" />
+                        <ExternalLink className="w-3.5 h-3.5 text-[#050505]/40 group-hover:text-[#006B21]" />
                       </Link>
                     ))}
                   </div>
@@ -257,24 +257,24 @@ export function AdminHeader({
               {/* Users */}
               {searchResults.users.length > 0 && (
                 <div>
-                  <div className="text-[10px] font-bold uppercase tracking-wider text-[#39E900] mb-2">
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-[#006B21] mb-2">
                     Users
                   </div>
                   <div className="space-y-1">
                     {searchResults.users.map((u) => (
                       <div
                         key={u.id}
-                        className="flex items-center justify-between p-2.5 rounded-xl hover:bg-[#10251A] transition-colors"
+                        className="flex items-center justify-between p-2.5 rounded-xl hover:bg-[#E9F8E9] transition-colors"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-lg bg-[#006B21]/30 flex items-center justify-center text-[#39E900]">
+                          <div className="w-8 h-8 rounded-lg bg-[#E9F8E9] flex items-center justify-center text-[#006B21]">
                             <UserIcon className="w-4 h-4" />
                           </div>
                           <div>
-                            <div className="text-xs font-bold text-white">
+                            <div className="text-xs font-bold text-[#050505]">
                               {u.name}
                             </div>
-                            <div className="text-[10px] text-white/50">
+                            <div className="text-[10px] text-[#050505]/60">
                               {u.email} • {u.role}
                             </div>
                           </div>

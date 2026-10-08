@@ -113,7 +113,7 @@ export function AdminBottomNav() {
   return (
     <nav
       aria-label="Mobile Bottom Navigation"
-      className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#050505]/95 backdrop-blur-2xl border-t border-[#006B21]/40 pb-[max(0.375rem,env(safe-area-inset-bottom))] shadow-[0_-10px_25px_rgba(0,0,0,0.7)]"
+      className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-2xl border-t border-[#006B21]/15 pb-[max(0.375rem,env(safe-area-inset-bottom))] shadow-lg"
     >
       {/* Horizontal Swipeable Scroll Container */}
       <div
@@ -129,25 +129,25 @@ export function AdminBottomNav() {
               href={tab.href}
               className={`relative shrink-0 flex flex-col items-center justify-center min-w-[62px] py-1.5 px-2 rounded-2xl transition-all ${
                 tab.isActive
-                  ? "text-[#39E900]"
-                  : "text-white/50 hover:text-white/90 active:scale-95"
+                  ? "text-[#006B21]"
+                  : "text-[#050505]/60 hover:text-[#050505] active:scale-95"
               }`}
             >
               {tab.isActive && (
-                <span className="absolute -top-1.5 w-6 h-1 rounded-full bg-[#39E900] shadow-[0_0_8px_#39E900]" />
+                <span className="absolute -top-1.5 w-6 h-1 rounded-full bg-[#006B21] shadow-[0_0_6px_#006B21]" />
               )}
               <div
                 className={`p-1.5 rounded-xl transition-all ${
                   tab.isActive
-                    ? "bg-[#10251A] scale-105 shadow-sm border border-[#006B21]/60 text-[#39E900]"
-                    : "hover:bg-white/5 text-white/60"
+                    ? "bg-[#E9F8E9] scale-105 shadow-sm border border-[#006B21]/25 text-[#006B21]"
+                    : "hover:bg-[#E9F8E9] text-[#050505]/60"
                 }`}
               >
                 <Icon className="w-5 h-5" />
               </div>
               <span
                 className={`text-[10px] mt-0.5 tracking-tight truncate whitespace-nowrap ${
-                  tab.isActive ? "font-bold text-[#39E900]" : "font-medium"
+                  tab.isActive ? "font-bold text-[#006B21]" : "font-medium"
                 }`}
               >
                 {tab.label}
@@ -160,9 +160,9 @@ export function AdminBottomNav() {
         <button
           type="button"
           onClick={handleLogout}
-          className="shrink-0 flex flex-col items-center justify-center min-w-[62px] py-1.5 px-2 rounded-2xl text-rose-400/70 hover:text-rose-400 active:scale-95 transition-all"
+          className="shrink-0 flex flex-col items-center justify-center min-w-[62px] py-1.5 px-2 rounded-2xl text-rose-600 hover:text-rose-700 active:scale-95 transition-all"
         >
-          <div className="p-1.5 rounded-xl hover:bg-rose-950/30">
+          <div className="p-1.5 rounded-xl hover:bg-rose-50">
             <LogOut className="w-5 h-5" />
           </div>
           <span className="text-[10px] mt-0.5 tracking-tight font-medium whitespace-nowrap">

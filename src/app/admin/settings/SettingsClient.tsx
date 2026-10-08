@@ -71,8 +71,8 @@ export function SettingsClient() {
 
   if (loading) {
     return (
-      <div className="py-20 flex justify-center text-white/50">
-        <Loader2 className="w-8 h-8 animate-spin text-[#39E900]" />
+      <div className="py-20 flex justify-center text-[#050505]/50">
+        <Loader2 className="w-8 h-8 animate-spin text-[#006B21]" />
       </div>
     );
   }
@@ -80,25 +80,25 @@ export function SettingsClient() {
   return (
     <div className="max-w-4xl space-y-6">
       <div>
-        <h1 className="text-2xl font-black text-white tracking-tight">
+        <h1 className="text-2xl font-black text-[#050505] tracking-tight">
           Platform Configuration & Settings
         </h1>
-        <p className="text-xs sm:text-sm text-white/60 mt-1">
+        <p className="text-xs sm:text-sm text-[#050505]/60 mt-1">
           Customize brand labels, default card copy, telemetry retention, and API security.
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* General Brand Settings */}
-        <div className="p-6 rounded-3xl bg-[#050505] border border-[#006B21]/30 shadow-md space-y-4">
-          <h2 className="text-sm font-bold uppercase tracking-wider text-white/70 flex items-center gap-2">
-            <Globe className="w-4 h-4 text-[#39E900]" />
+        <div className="p-6 rounded-3xl bg-white border border-[#006B21]/15 shadow-sm space-y-4">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-[#050505]/80 flex items-center gap-2">
+            <Globe className="w-4 h-4 text-[#006B21]" />
             General Branding
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-white/80 mb-1">
+              <label className="block text-xs font-bold text-[#050505]/80 mb-1">
                 Platform Brand Name
               </label>
               <input
@@ -106,12 +106,12 @@ export function SettingsClient() {
                 required
                 value={formData.brandName}
                 onChange={(e) => setFormData({ ...formData, brandName: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs text-white focus:outline-none focus:border-[#39E900]"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/30 text-xs text-[#050505] focus:outline-none focus:border-[#006B21]"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-white/80 mb-1">
+              <label className="block text-xs font-bold text-[#050505]/80 mb-1">
                 Redirect Custom Domain
               </label>
               <input
@@ -119,13 +119,13 @@ export function SettingsClient() {
                 required
                 value={formData.domain}
                 onChange={(e) => setFormData({ ...formData, domain: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs text-white focus:outline-none focus:border-[#39E900] font-mono"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/30 text-xs text-[#050505] focus:outline-none focus:border-[#006B21] font-mono"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-white/80 mb-1">
+            <label className="block text-xs font-bold text-[#050505]/80 mb-1">
               Support Email
             </label>
             <input
@@ -133,20 +133,20 @@ export function SettingsClient() {
               required
               value={formData.supportEmail}
               onChange={(e) => setFormData({ ...formData, supportEmail: e.target.value })}
-              className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs text-white focus:outline-none focus:border-[#39E900]"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/30 text-xs text-[#050505] focus:outline-none focus:border-[#006B21]"
             />
           </div>
         </div>
 
         {/* Card & Print Settings */}
-        <div className="p-6 rounded-3xl bg-[#050505] border border-[#006B21]/30 shadow-md space-y-4">
-          <h2 className="text-sm font-bold uppercase tracking-wider text-white/70 flex items-center gap-2">
-            <Palette className="w-4 h-4 text-[#39E900]" />
+        <div className="p-6 rounded-3xl bg-white border border-[#006B21]/15 shadow-sm space-y-4">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-[#050505]/80 flex items-center gap-2">
+            <Palette className="w-4 h-4 text-[#006B21]" />
             Physical QR Card Defaults
           </h2>
 
           <div>
-            <label className="block text-xs font-bold text-white/80 mb-1">
+            <label className="block text-xs font-bold text-[#050505]/80 mb-1">
               Default Card Feedback Copy (Neutral Google Policy Compliant)
             </label>
             <input
@@ -154,13 +154,13 @@ export function SettingsClient() {
               required
               value={formData.defaultCardText}
               onChange={(e) => setFormData({ ...formData, defaultCardText: e.target.value })}
-              className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs text-white focus:outline-none focus:border-[#39E900]"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/30 text-xs text-[#050505] focus:outline-none focus:border-[#006B21]"
             />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-white/80 mb-1">
+              <label className="block text-xs font-bold text-[#050505]/80 mb-1">
                 Primary Brand Color (Hex)
               </label>
               <div className="flex items-center gap-2">
@@ -168,19 +168,19 @@ export function SettingsClient() {
                   type="color"
                   value={formData.primaryColor}
                   onChange={(e) => setFormData({ ...formData, primaryColor: e.target.value })}
-                  className="w-9 h-9 rounded-xl border border-[#006B21]/40 bg-[#10251A] cursor-pointer"
+                  className="w-9 h-9 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/30 cursor-pointer"
                 />
                 <input
                   type="text"
                   value={formData.primaryColor}
                   onChange={(e) => setFormData({ ...formData, primaryColor: e.target.value })}
-                  className="flex-1 px-3 py-2 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs font-mono text-white focus:outline-none"
+                  className="flex-1 px-3 py-2 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/30 text-xs font-mono text-[#050505] focus:outline-none focus:border-[#006B21]"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-white/80 mb-1">
+              <label className="block text-xs font-bold text-[#050505]/80 mb-1">
                 Secondary Brand Color (Hex)
               </label>
               <div className="flex items-center gap-2">
@@ -188,13 +188,13 @@ export function SettingsClient() {
                   type="color"
                   value={formData.secondaryColor}
                   onChange={(e) => setFormData({ ...formData, secondaryColor: e.target.value })}
-                  className="w-9 h-9 rounded-xl border border-[#006B21]/40 bg-[#10251A] cursor-pointer"
+                  className="w-9 h-9 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/30 cursor-pointer"
                 />
                 <input
                   type="text"
                   value={formData.secondaryColor}
                   onChange={(e) => setFormData({ ...formData, secondaryColor: e.target.value })}
-                  className="flex-1 px-3 py-2 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs font-mono text-white focus:outline-none"
+                  className="flex-1 px-3 py-2 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/30 text-xs font-mono text-[#050505] focus:outline-none focus:border-[#006B21]"
                 />
               </div>
             </div>
@@ -202,15 +202,15 @@ export function SettingsClient() {
         </div>
 
         {/* Security & Analytics Retention */}
-        <div className="p-6 rounded-3xl bg-[#050505] border border-[#006B21]/30 shadow-md space-y-4">
-          <h2 className="text-sm font-bold uppercase tracking-wider text-white/70 flex items-center gap-2">
-            <Shield className="w-4 h-4 text-[#39E900]" />
+        <div className="p-6 rounded-3xl bg-white border border-[#006B21]/15 shadow-sm space-y-4">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-[#050505]/80 flex items-center gap-2">
+            <Shield className="w-4 h-4 text-[#006B21]" />
             Security & Retention
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-white/80 mb-1">
+              <label className="block text-xs font-bold text-[#050505]/80 mb-1">
                 Scan Rate Limit (Per IP Per Minute)
               </label>
               <input
@@ -222,15 +222,15 @@ export function SettingsClient() {
                 onChange={(e) =>
                   setFormData({ ...formData, rateLimitPerMinute: parseInt(e.target.value, 10) })
                 }
-                className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs text-white focus:outline-none"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/30 text-xs text-[#050505] focus:outline-none focus:border-[#006B21]"
               />
-              <span className="text-[10px] text-white/50 mt-1 block">
+              <span className="text-[10px] text-[#050505]/60 mt-1 block">
                 Prevents bot loops and click fraud on QR redirects.
               </span>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-white/80 mb-1">
+              <label className="block text-xs font-bold text-[#050505]/80 mb-1">
                 Telemetry Data Retention (Days)
               </label>
               <input
@@ -242,9 +242,9 @@ export function SettingsClient() {
                 onChange={(e) =>
                   setFormData({ ...formData, dataRetentionDays: parseInt(e.target.value, 10) })
                 }
-                className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs text-white focus:outline-none"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/30 text-xs text-[#050505] focus:outline-none focus:border-[#006B21]"
               />
-              <span className="text-[10px] text-white/50 mt-1 block">
+              <span className="text-[10px] text-[#050505]/60 mt-1 block">
                 Automatic purging window for anonymized telemetry logs.
               </span>
             </div>
@@ -257,7 +257,7 @@ export function SettingsClient() {
             disabled={saving}
             className="px-6 py-3 rounded-xl bg-[#006B21] hover:bg-[#005219] text-white font-bold text-xs shadow-md shadow-[#006B21]/20 disabled:opacity-50 flex items-center gap-2"
           >
-            {saving && <Loader2 className="w-4 h-4 animate-spin text-[#39E900]" />}
+            {saving && <Loader2 className="w-4 h-4 animate-spin text-white" />}
             Save Platform Settings
           </button>
         </div>

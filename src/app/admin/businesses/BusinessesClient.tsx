@@ -148,10 +148,10 @@ export function BusinessesClient() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-white tracking-tight">
+          <h1 className="text-2xl font-black text-[#050505] tracking-tight">
             Businesses
           </h1>
-          <p className="text-xs sm:text-sm text-white/60 mt-1">
+          <p className="text-xs sm:text-sm text-[#050505]/60 mt-1">
             Manage participating client businesses and their official Google Review destinations.
           </p>
         </div>
@@ -160,21 +160,21 @@ export function BusinessesClient() {
           onClick={() => setCreateModalOpen(true)}
           className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#006B21] hover:bg-[#005219] text-white font-bold text-xs shadow-md shadow-[#006B21]/20 transition-all self-start sm:self-auto"
         >
-          <Plus className="w-4 h-4 text-[#39E900]" />
+          <Plus className="w-4 h-4 text-white" />
           Add Business
         </button>
       </div>
 
       {/* Filter & Search Bar */}
-      <div className="p-4 rounded-2xl bg-[#050505] border border-[#006B21]/30 shadow-md flex flex-col md:flex-row gap-3 items-center justify-between">
+      <div className="p-4 rounded-2xl bg-white border border-[#006B21]/15 shadow-sm flex flex-col md:flex-row gap-3 items-center justify-between">
         <form onSubmit={handleSearch} className="flex-1 w-full relative">
-          <Search className="w-4 h-4 text-[#39E900] absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-[#006B21] absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by business name, city, email..."
-            className="w-full pl-10 pr-4 py-2 bg-[#10251A] border border-[#006B21]/30 rounded-xl text-xs text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#39E900]"
+            className="w-full pl-10 pr-4 py-2 bg-[#E9F8E9]/60 border border-[#006B21]/20 rounded-xl text-xs text-[#050505] placeholder-[#050505]/40 focus:outline-none focus:ring-2 focus:ring-[#006B21]"
           />
         </form>
 
@@ -182,7 +182,7 @@ export function BusinessesClient() {
           <select
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
-            className="px-3 py-2 bg-[#10251A] border border-[#006B21]/30 rounded-xl text-xs text-white focus:outline-none"
+            className="px-3 py-2 bg-[#E9F8E9]/60 border border-[#006B21]/20 rounded-xl text-xs text-[#050505] focus:outline-none"
           >
             <option value="">All Categories</option>
             <option value="SALON">Salon</option>
@@ -201,7 +201,7 @@ export function BusinessesClient() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-3 py-2 bg-[#10251A] border border-[#006B21]/30 rounded-xl text-xs text-white focus:outline-none"
+            className="px-3 py-2 bg-[#E9F8E9]/60 border border-[#006B21]/20 rounded-xl text-xs text-[#050505] focus:outline-none"
           >
             <option value="">All Statuses</option>
             <option value="ACTIVE">Active</option>
@@ -211,19 +211,19 @@ export function BusinessesClient() {
       </div>
 
       {/* Table */}
-      <div className="bg-[#050505] rounded-2xl border border-[#006B21]/30 shadow-md overflow-hidden">
+      <div className="bg-white rounded-2xl border border-[#006B21]/15 shadow-sm overflow-hidden">
         {loading ? (
-          <div className="py-20 flex flex-col items-center justify-center gap-3 text-white/50">
-            <Loader2 className="w-8 h-8 animate-spin text-[#39E900]" />
+          <div className="py-20 flex flex-col items-center justify-center gap-3 text-[#050505]/50">
+            <Loader2 className="w-8 h-8 animate-spin text-[#006B21]" />
             <span className="text-xs">Loading businesses...</span>
           </div>
         ) : businesses.length === 0 ? (
           <div className="py-20 text-center px-4">
-            <Building2 className="w-12 h-12 text-[#39E900] mx-auto mb-3" />
-            <h3 className="text-base font-bold text-white">
+            <Building2 className="w-12 h-12 text-[#006B21] mx-auto mb-3" />
+            <h3 className="text-base font-bold text-[#050505]">
               No businesses yet
             </h3>
-            <p className="text-xs text-white/60 max-w-sm mx-auto mt-1 mb-6">
+            <p className="text-xs text-[#050505]/60 max-w-sm mx-auto mt-1 mb-6">
               Create your first client business to start assigning dynamic QR cards.
             </p>
             <button
@@ -236,7 +236,7 @@ export function BusinessesClient() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-[#10251A] text-[#39E900] uppercase tracking-wider font-bold border-b border-[#006B21]/20">
+              <thead className="bg-[#E9F8E9] text-[#006B21] uppercase tracking-wider font-bold border-b border-[#006B21]/15">
                 <tr>
                   <th className="py-3.5 px-4">Business</th>
                   <th className="py-3.5 px-4">Type</th>
@@ -247,29 +247,29 @@ export function BusinessesClient() {
                   <th className="py-3.5 px-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#006B21]/20">
+              <tbody className="divide-y divide-[#006B21]/10">
                 {businesses.map((b) => (
                   <tr
                     key={b.id}
-                    className="hover:bg-[#10251A]/60 transition-colors"
+                    className="hover:bg-[#E9F8E9]/40 transition-colors"
                   >
                     <td className="py-4 px-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-[#10251A] flex items-center justify-center font-bold text-white shrink-0 border border-[#006B21]/30 overflow-hidden">
+                        <div className="w-10 h-10 rounded-xl bg-[#E9F8E9] flex items-center justify-center font-bold text-[#006B21] shrink-0 border border-[#006B21]/20 overflow-hidden">
                           {b.logoUrl ? (
                             <img src={b.logoUrl} alt={b.name} className="w-full h-full object-cover" />
                           ) : (
-                            <Building2 className="w-5 h-5 text-[#39E900]" />
+                            <Building2 className="w-5 h-5 text-[#006B21]" />
                           )}
                         </div>
                         <div>
                           <Link
                             href={`/admin/businesses/${b.id}`}
-                            className="font-bold text-white hover:text-[#39E900] transition-colors"
+                            className="font-bold text-[#050505] hover:text-[#006B21] transition-colors"
                           >
                             {b.name}
                           </Link>
-                          <div className="text-[11px] text-white/50 flex items-center gap-2">
+                          <div className="text-[11px] text-[#050505]/60 flex items-center gap-2">
                             <span>{b.city ? `${b.city}, ${b.country}` : "Location not set"}</span>
                             {b.owner && (
                               <span>• Owner: {b.owner.name}</span>
@@ -279,22 +279,22 @@ export function BusinessesClient() {
                       </div>
                     </td>
 
-                    <td className="py-4 px-4 font-medium text-white/80">
-                      <span className="px-2 py-0.5 rounded-md bg-[#10251A] border border-[#006B21]/30 text-[11px]">
+                    <td className="py-4 px-4 font-medium text-[#050505]/80">
+                      <span className="px-2 py-0.5 rounded-md bg-[#E9F8E9] border border-[#006B21]/20 text-[#006B21] text-[11px] font-semibold">
                         {b.businessType}
                       </span>
                     </td>
 
                     <td className="py-4 px-4">
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#006B21]/30 border border-[#006B21]/40 text-[#39E900] font-bold font-mono text-xs">
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#E9F8E9] border border-[#006B21]/20 text-[#006B21] font-bold font-mono text-xs">
                         <CreditCard className="w-3.5 h-3.5" />
                         {b._count?.cards || 0}
                       </span>
                     </td>
 
                     <td className="py-4 px-4">
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#10251A] border border-[#006B21]/40 text-white font-bold font-mono text-xs">
-                        <Eye className="w-3.5 h-3.5 text-[#39E900]" />
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-[#006B21]/20 text-[#050505] font-bold font-mono text-xs shadow-sm">
+                        <Eye className="w-3.5 h-3.5 text-[#006B21]" />
                         {b._count?.scans || 0}
                       </span>
                     </td>
@@ -302,30 +302,30 @@ export function BusinessesClient() {
                     <td className="py-4 px-4">
                       <div className="flex flex-col gap-1 items-start">
                         {b.status === "ACTIVE" ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#006B21]/40 text-[#39E900] border border-[#39E900]/30">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#E9F8E9] text-[#006B21] border border-[#006B21]/30">
                             <CheckCircle className="w-3 h-3" />
                             Active
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-rose-950/60 text-rose-300 border border-rose-800">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-rose-50 text-rose-700 border border-rose-200">
                             <XCircle className="w-3 h-3" />
                             Inactive
                           </span>
                         )}
 
                         {b.planType === "PREMIUM" ? (
-                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-black bg-[#006B21] text-[#39E900] border border-[#39E900]/40">
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-black bg-[#006B21] text-white border border-[#006B21]/30">
                             ⭐ PREMIUM
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-[#10251A] text-white/60 border border-[#006B21]/30">
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-[#E9F8E9] text-[#050505]/70 border border-[#006B21]/20">
                             BASIC
                           </span>
                         )}
                       </div>
                     </td>
 
-                    <td className="py-4 px-4 text-white/50 font-mono">
+                    <td className="py-4 px-4 text-[#050505]/60 font-mono">
                       {new Date(b.createdAt).toLocaleDateString()}
                     </td>
 
@@ -333,14 +333,14 @@ export function BusinessesClient() {
                       <div className="flex items-center justify-end gap-1.5">
                         <Link
                           href={`/admin/businesses/${b.id}`}
-                          className="p-1.5 rounded-lg text-white/60 hover:text-[#39E900] hover:bg-[#10251A] transition-colors"
+                          className="p-1.5 rounded-lg text-[#050505]/60 hover:text-[#006B21] hover:bg-[#E9F8E9] transition-colors"
                           title="View Business"
                         >
                           <ExternalLink className="w-4 h-4" />
                         </Link>
                         <button
                           onClick={() => handleDeleteBusiness(b.id, b.name)}
-                          className="p-1.5 rounded-lg text-white/40 hover:text-rose-400 hover:bg-rose-950/40 transition-colors"
+                          className="p-1.5 rounded-lg text-[#050505]/40 hover:text-rose-600 hover:bg-rose-50 transition-colors"
                           title="Delete Business"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -357,20 +357,20 @@ export function BusinessesClient() {
 
       {/* Create Business Modal */}
       {createModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-2xl bg-[#050505] rounded-3xl shadow-2xl border border-[#006B21]/40 overflow-hidden flex flex-col max-h-[90vh] text-white">
-            <div className="p-6 border-b border-[#006B21]/30 flex items-center justify-between bg-[#10251A]/60">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-[#006B21]/20 overflow-hidden flex flex-col max-h-[90vh] text-[#050505]">
+            <div className="p-6 border-b border-[#006B21]/15 flex items-center justify-between bg-[#E9F8E9]/60">
               <div>
-                <h3 className="text-lg font-bold text-white">
+                <h3 className="text-lg font-bold text-[#050505]">
                   Add New Business
                 </h3>
-                <p className="text-xs text-white/60 mt-0.5">
+                <p className="text-xs text-[#050505]/60 mt-0.5">
                   Configure official Google Review link and business credentials.
                 </p>
               </div>
               <button
                 onClick={() => setCreateModalOpen(false)}
-                className="p-2 rounded-xl text-white/50 hover:text-white"
+                className="p-2 rounded-xl text-[#050505]/50 hover:text-[#050505]"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -379,7 +379,7 @@ export function BusinessesClient() {
             <form onSubmit={handleCreateBusiness} className="p-6 overflow-y-auto space-y-4 flex-1">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-white/80 mb-1">
+                  <label className="block text-xs font-semibold text-[#050505]/80 mb-1">
                     Business Name *
                   </label>
                   <input
@@ -388,18 +388,18 @@ export function BusinessesClient() {
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     placeholder="e.g. Royal Salon"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs text-white focus:outline-none focus:ring-2 focus:ring-[#39E900]"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/40 text-xs text-[#050505] focus:outline-none focus:ring-2 focus:ring-[#006B21]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-white/80 mb-1">
+                  <label className="block text-xs font-semibold text-[#050505]/80 mb-1">
                     Business Category *
                   </label>
                   <select
                     value={formData.businessType}
                     onChange={(e) => setFormData({ ...formData, businessType: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs text-white focus:outline-none"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/40 text-xs text-[#050505] focus:outline-none"
                   >
                     <option value="SALON">Salon / Spa</option>
                     <option value="RESTAURANT">Restaurant</option>
@@ -417,8 +417,8 @@ export function BusinessesClient() {
               </div>
 
               {/* CRITICAL: Google Review URL */}
-              <div className="p-4 rounded-2xl bg-[#10251A] border border-[#006B21]/50">
-                <label className="block text-xs font-bold text-[#39E900] mb-1">
+              <div className="p-4 rounded-2xl bg-[#E9F8E9]/60 border border-[#006B21]/20">
+                <label className="block text-xs font-bold text-[#006B21] mb-1">
                   Google Review Request URL *
                 </label>
                 <input
@@ -427,22 +427,22 @@ export function BusinessesClient() {
                   value={formData.googleReviewUrl}
                   onChange={(e) => setFormData({ ...formData, googleReviewUrl: e.target.value })}
                   placeholder="https://search.google.com/local/writereview?placeid=..."
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/60 bg-[#050505] text-xs text-white focus:outline-none focus:ring-2 focus:ring-[#39E900] font-mono"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/30 bg-white text-xs text-[#050505] focus:outline-none focus:ring-2 focus:ring-[#006B21] font-mono shadow-sm"
                 />
-                <p className="text-[11px] text-white/70 mt-2">
+                <p className="text-[11px] text-[#050505]/70 mt-2 font-medium">
                   ℹ️ Enter the business official Google review request link. Do not generate or assume a URL.
                 </p>
               </div>
 
               {/* Plan Selection */}
               <div>
-                <label className="block text-xs font-semibold text-white/80 mb-1">
+                <label className="block text-xs font-semibold text-[#050505]/80 mb-1">
                   Subscription Plan & QR Flow *
                 </label>
                 <select
                   value={formData.planType}
                   onChange={(e) => setFormData({ ...formData, planType: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs text-white focus:outline-none"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/40 text-xs text-[#050505] focus:outline-none"
                 >
                   <option value="BASIC">Basic Plan (Direct 307 Redirect to Google)</option>
                   <option value="PREMIUM">Premium Plan (Smart Review Assistant + Feedback Filter)</option>
@@ -451,7 +451,7 @@ export function BusinessesClient() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-white/80 mb-1">
+                  <label className="block text-xs font-semibold text-[#050505]/80 mb-1">
                     Contact Email
                   </label>
                   <input
@@ -459,12 +459,12 @@ export function BusinessesClient() {
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     placeholder="contact@business.com"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs text-white"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/40 text-xs text-[#050505]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-white/80 mb-1">
+                  <label className="block text-xs font-semibold text-[#050505]/80 mb-1">
                     Phone Number
                   </label>
                   <input
@@ -472,14 +472,14 @@ export function BusinessesClient() {
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     placeholder="+1 (555) 000-0000"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs text-white"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/40 text-xs text-[#050505]"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-white/80 mb-1">
+                  <label className="block text-xs font-semibold text-[#050505]/80 mb-1">
                     City
                   </label>
                   <input
@@ -487,12 +487,12 @@ export function BusinessesClient() {
                     value={formData.city}
                     onChange={(e) => setFormData({ ...formData, city: e.target.value })}
                     placeholder="e.g. New York"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs text-white"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/40 text-xs text-[#050505]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-white/80 mb-1">
+                  <label className="block text-xs font-semibold text-[#050505]/80 mb-1">
                     State / Region
                   </label>
                   <input
@@ -500,12 +500,12 @@ export function BusinessesClient() {
                     value={formData.state}
                     onChange={(e) => setFormData({ ...formData, state: e.target.value })}
                     placeholder="e.g. NY"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs text-white"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/40 text-xs text-[#050505]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-white/80 mb-1">
+                  <label className="block text-xs font-semibold text-[#050505]/80 mb-1">
                     Country
                   </label>
                   <input
@@ -513,13 +513,13 @@ export function BusinessesClient() {
                     value={formData.country}
                     onChange={(e) => setFormData({ ...formData, country: e.target.value })}
                     placeholder="USA"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs text-white"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/40 text-xs text-[#050505]"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-white/80 mb-1">
+                <label className="block text-xs font-semibold text-[#050505]/80 mb-1">
                   Logo Image URL (Optional)
                 </label>
                 <input
@@ -527,24 +527,24 @@ export function BusinessesClient() {
                   value={formData.logoUrl}
                   onChange={(e) => setFormData({ ...formData, logoUrl: e.target.value })}
                   placeholder="https://example.com/logo.png"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs text-white"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/40 text-xs text-[#050505]"
                 />
               </div>
 
-              <div className="pt-4 border-t border-[#006B21]/30 flex justify-end gap-3">
+              <div className="pt-4 border-t border-[#006B21]/15 flex justify-end gap-3">
                 <button
                   type="button"
                   onClick={() => setCreateModalOpen(false)}
-                  className="px-4 py-2.5 rounded-xl border border-[#006B21]/40 text-xs font-medium text-white/70 hover:bg-[#10251A]"
+                  className="px-4 py-2.5 rounded-xl border border-[#006B21]/20 text-xs font-medium text-[#050505]/70 hover:bg-[#E9F8E9]"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="px-5 py-2.5 rounded-xl bg-[#006B21] hover:bg-[#005219] text-white font-bold text-xs shadow-md shadow-[#006B21]/30 disabled:opacity-50 flex items-center gap-2"
+                  className="px-5 py-2.5 rounded-xl bg-[#006B21] hover:bg-[#005219] text-white font-bold text-xs shadow-md shadow-[#006B21]/20 disabled:opacity-50 flex items-center gap-2"
                 >
-                  {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin text-[#39E900]" />}
+                  {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin text-white" />}
                   Create Business
                 </button>
               </div>

@@ -17,7 +17,7 @@ export function AdminLayoutClient({ children, user }: AdminLayoutClientProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#10251A] text-white flex">
+    <div className="min-h-screen bg-[#E9F8E9] text-[#050505] flex">
       {/* Sidebar for Desktop */}
       <AdminSidebar
         mobileOpen={mobileMenuOpen}
