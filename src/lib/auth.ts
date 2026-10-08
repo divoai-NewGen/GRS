@@ -53,26 +53,44 @@ export async function getCurrentUser() {
   const session = await getSession();
   if (!session) return null;
 
-  const user = await prisma.user.findUnique({
-    where: { id: session.userId },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      role: true,
-      createdAt: true,
-      businesses: {
-        select: {
-          id: true,
-          name: true,
-          slug: true,
-          status: true,
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: session.userId },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        createdAt: true,
+        businesses: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+            status: true,
+          },
         },
       },
-    },
-  });
+    });
 
-  return user;
+    if (user) return user;
+  } catch (err) {
+    console.warn("getCurrentUser DB lookup failed:", err);
+  }
+
+  // Graceful fallback for Platform Master Admin session
+  if (session.role === "ADMIN") {
+    return {
+      id: session.userId || "admin-master",
+      name: session.name || "GrowBroo Admin",
+      email: session.email,
+      role: "ADMIN" as const,
+      createdAt: new Date(),
+      businesses: [],
+    };
+  }
+
+  return null;
 }
 
 export async function requireAuth() {

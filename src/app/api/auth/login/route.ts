@@ -52,41 +52,53 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: "Invalid email or password" }, { status: 401 });
       }
 
-      // Ensure Admin user exists in DB with role ADMIN
-      let adminUser = await prisma.user.findUnique({
-        where: { email: envAdminEmail },
-      });
+      let adminUserId = "admin-master";
+      let adminUserName = "GrowBroo Admin";
 
-      if (!adminUser) {
-        const passwordHash = await hashPassword(envAdminPassword);
-        adminUser = await prisma.user.create({
-          data: {
-            name: "GrowBroo Admin",
-            email: envAdminEmail,
-            passwordHash,
-            role: "ADMIN",
-          },
+      // Attempt to find or create Admin user in database (graceful fallback if DB is cold-starting)
+      try {
+        let adminUser = await prisma.user.findUnique({
+          where: { email: envAdminEmail },
         });
-      } else if (adminUser.role !== "ADMIN") {
-        adminUser = await prisma.user.update({
-          where: { id: adminUser.id },
-          data: { role: "ADMIN" },
-        });
+
+        if (!adminUser) {
+          const passwordHash = await hashPassword(envAdminPassword);
+          adminUser = await prisma.user.create({
+            data: {
+              name: "GrowBroo Admin",
+              email: envAdminEmail,
+              passwordHash,
+              role: "ADMIN",
+            },
+          });
+        } else if (adminUser.role !== "ADMIN") {
+          adminUser = await prisma.user.update({
+            where: { id: adminUser.id },
+            data: { role: "ADMIN" },
+          });
+        }
+
+        if (adminUser) {
+          adminUserId = adminUser.id;
+          adminUserName = adminUser.name;
+        }
+      } catch (dbErr) {
+        console.warn("Database sync during admin login skipped/failed, proceeding with master admin auth:", dbErr);
       }
 
       const token = await createSessionToken({
-        userId: adminUser.id,
-        email: adminUser.email,
+        userId: adminUserId,
+        email: envAdminEmail,
         role: "ADMIN",
-        name: adminUser.name,
+        name: adminUserName,
       });
 
       const response = NextResponse.json({
         success: true,
         user: {
-          id: adminUser.id,
-          name: adminUser.name,
-          email: adminUser.email,
+          id: adminUserId,
+          name: adminUserName,
+          email: envAdminEmail,
           role: "ADMIN",
           businesses: [],
         },
