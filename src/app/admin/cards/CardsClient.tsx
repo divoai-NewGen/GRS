@@ -56,9 +56,60 @@ export function CardsClient() {
   const [targetBusinessId, setTargetBusinessId] = useState("");
   const [batchCount, setBatchCount] = useState(10);
   const [batchPrefix, setBatchPrefix] = useState("CARD");
+  const [batchStartNum, setBatchStartNum] = useState<string>("");
+  const [batchDigits, setBatchDigits] = useState(3);
   const [csvText, setCsvText] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [deleting, setDeleting] = useState(false);
+
+  const getBatchPreview = () => {
+    let p = (batchPrefix || "CARD").trim().toUpperCase();
+    p = p.replace(/^O+(?=\d)/, "0").replace(/O(?=\d)/g, "0");
+    let basePrefix = "CARD";
+    let start: number | null = null;
+    let digits = batchDigits || 3;
+
+    if (batchStartNum !== "" && !isNaN(Number(batchStartNum)) && Number(batchStartNum) > 0) {
+      start = Number(batchStartNum);
+    }
+
+    if (/^\d+$/.test(p)) {
+      basePrefix = "CARD";
+      if (start === null) start = parseInt(p, 10);
+      digits = Math.max(3, p.length);
+    } else {
+      const match = p.match(/^([A-Z\-_]+?)(\d+)$/);
+      if (match) {
+        basePrefix = match[1];
+        if (start === null) start = parseInt(match[2], 10);
+        digits = Math.max(3, match[2].length);
+      } else {
+        basePrefix = p;
+      }
+    }
+
+    if (start === null) {
+      let maxNum = 0;
+      const regex = new RegExp(`^${basePrefix}(\\d+)$`, "i");
+      for (const c of cards) {
+        const m = c.cardCode.match(regex);
+        if (m && m[1]) {
+          const n = parseInt(m[1], 10);
+          if (n > maxNum) maxNum = n;
+        }
+      }
+      start = maxNum + 1;
+    }
+
+    const count = Math.min(Number(batchCount) || 1, 500);
+    const first = `${basePrefix}${start.toString().padStart(digits, "0")}`;
+    const second = count > 1 ? `${basePrefix}${(start + 1).toString().padStart(digits, "0")}` : null;
+    const last = count > 2 ? `${basePrefix}${(start + count - 1).toString().padStart(digits, "0")}` : null;
+
+    if (count === 1) return first;
+    if (count === 2) return `${first}, ${second}`;
+    return `${first}, ${second}, ... ${last}`;
+  };
 
   const fetchCards = async () => {
     setLoading(true);
@@ -122,6 +173,8 @@ export function CardsClient() {
         body: JSON.stringify({
           count: Number(batchCount),
           prefix: batchPrefix.toUpperCase().trim(),
+          startNumber: batchStartNum !== "" ? Number(batchStartNum) : undefined,
+          digits: Number(batchDigits),
         }),
       });
 
@@ -129,6 +182,7 @@ export function CardsClient() {
       if (res.ok) {
         success(`Successfully generated ${data.count} new cards!`);
         setCreateModalOpen(false);
+        setBatchStartNum("");
         fetchCards();
       } else {
         toastError(data.error || "Failed to generate cards");
@@ -609,36 +663,84 @@ export function CardsClient() {
             </p>
 
             <form onSubmit={handleBatchGenerate} className="space-y-4">
-              <div>
-                <label className="block text-xs font-bold text-white/80 mb-1">
-                  Quantity to Generate *
-                </label>
-                <input
-                  type="number"
-                  min="1"
-                  max="500"
-                  required
-                  value={batchCount}
-                  onChange={(e) => setBatchCount(parseInt(e.target.value, 10))}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs text-white focus:outline-none focus:border-[#39E900]"
-                />
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-white/80 mb-1">
+                    Quantity *
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="500"
+                    required
+                    value={batchCount}
+                    onChange={(e) => setBatchCount(parseInt(e.target.value, 10))}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs text-white focus:outline-none focus:border-[#39E900]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-white/80 mb-1">
+                    Card Prefix *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={batchPrefix}
+                    onChange={(e) => setBatchPrefix(e.target.value)}
+                    placeholder="CARD"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs text-white uppercase font-mono focus:outline-none focus:border-[#39E900]"
+                  />
+                </div>
               </div>
 
-              <div>
-                <label className="block text-xs font-bold text-white/80 mb-1">
-                  Card Code Prefix *
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={batchPrefix}
-                  onChange={(e) => setBatchPrefix(e.target.value)}
-                  placeholder="CARD"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs text-white uppercase font-mono focus:outline-none focus:border-[#39E900]"
-                />
-                <span className="text-[10px] text-white/50 mt-1 block">
-                  Example codes: {batchPrefix}0001, {batchPrefix}0002...
-                </span>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-white/80 mb-1">
+                    Start Number
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    value={batchStartNum}
+                    onChange={(e) => setBatchStartNum(e.target.value)}
+                    placeholder="Auto (Next available)"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs text-white placeholder-white/30 focus:outline-none focus:border-[#39E900]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-white/80 mb-1">
+                    Code Padding
+                  </label>
+                  <select
+                    value={batchDigits}
+                    onChange={(e) => setBatchDigits(parseInt(e.target.value, 10))}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/40 bg-[#10251A] text-xs text-white focus:outline-none focus:border-[#39E900]"
+                  >
+                    <option value={3}>3 Digits (CARD001, CARD002)</option>
+                    <option value={4}>4 Digits (CARD0001, CARD0002)</option>
+                    <option value={2}>2 Digits (CARD01, CARD02)</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Live Preview Box */}
+              <div className="p-3.5 rounded-2xl bg-[#10251A]/80 border border-[#39E900]/30 space-y-1">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] uppercase font-bold text-[#39E900] tracking-wider">
+                    Generated Codes Preview
+                  </span>
+                  <span className="text-[10px] text-white/40">
+                    Total {batchCount || 0} cards
+                  </span>
+                </div>
+                <div className="text-xs font-mono font-bold text-[#39E900] tracking-wide truncate">
+                  {getBatchPreview()}
+                </div>
+                <div className="text-[10px] text-white/40">
+                  Cards will be generated in clean sequential order: CARD001, CARD002, CARD003...
+                </div>
               </div>
 
               <div className="flex justify-end gap-3 pt-2">

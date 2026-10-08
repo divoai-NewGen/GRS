@@ -92,7 +92,41 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { count, prefix, labelPrefix } = result.data;
+    const { count, prefix: inputPrefix, labelPrefix, startNumber: requestedStart, digits: requestedDigits } = result.data;
+
+    // Smart extraction of prefix, start number, and padding digits
+    let raw = (inputPrefix || "CARD").trim().toUpperCase();
+    // Normalize typos where letter O was used instead of number 0 (e.g. "OO1" -> "001")
+    raw = raw.replace(/^O+(?=\d)/, "0").replace(/O(?=\d)/g, "0");
+
+    let prefix = "CARD";
+    let startNumber = requestedStart;
+    let digits = requestedDigits || 3;
+
+    if (/^\d+$/.test(raw)) {
+      // Input was purely numbers, e.g. "001" or "1"
+      prefix = "CARD";
+      if (startNumber === undefined) {
+        startNumber = parseInt(raw, 10);
+      }
+      if (!requestedDigits) {
+        digits = Math.max(3, raw.length);
+      }
+    } else {
+      // Input has prefix with optional trailing numbers, e.g. "CARD001"
+      const match = raw.match(/^([A-Z\-_]+?)(\d+)$/);
+      if (match) {
+        prefix = match[1];
+        if (startNumber === undefined) {
+          startNumber = parseInt(match[2], 10);
+        }
+        if (!requestedDigits) {
+          digits = Math.max(3, match[2].length);
+        }
+      } else {
+        prefix = raw;
+      }
+    }
 
     // Determine highest sequential number for this prefix
     const existingCards = await prisma.card.findMany({
@@ -102,21 +136,37 @@ export async function POST(request: NextRequest) {
       select: { cardCode: true },
     });
 
-    let maxNum = 0;
-    const regex = new RegExp(`^${prefix}(\\d+)$`, "i");
-    for (const c of existingCards) {
-      const match = c.cardCode.match(regex);
-      if (match && match[1]) {
-        const num = parseInt(match[1], 10);
-        if (num > maxNum) maxNum = num;
+    let currentStart = startNumber;
+    if (currentStart === undefined) {
+      let maxNum = 0;
+      const regex = new RegExp(`^${prefix}(\\d+)$`, "i");
+      for (const c of existingCards) {
+        const match = c.cardCode.match(regex);
+        if (match && match[1]) {
+          const num = parseInt(match[1], 10);
+          if (num > maxNum) maxNum = num;
+        }
       }
+      currentStart = maxNum + 1;
     }
+
+    // Set of existing cardCodes to prevent any collision
+    const existingCodeSet = new Set(existingCards.map((c) => c.cardCode.toUpperCase()));
 
     // Generate batch of cards
     const createdCards = [];
-    for (let i = 1; i <= count; i++) {
-      const cardNum = (maxNum + i).toString().padStart(4, "0");
+    let curNum = currentStart;
+
+    for (let i = 0; i < count; i++) {
+      // Skip any existing codes
+      while (existingCodeSet.has(`${prefix}${curNum.toString().padStart(digits, "0")}`)) {
+        curNum++;
+      }
+
+      const cardNum = curNum.toString().padStart(digits, "0");
       const cardCode = `${prefix}${cardNum}`;
+      existingCodeSet.add(cardCode);
+      curNum++;
 
       // Ensure public token is unique and unpredictable
       let publicToken = generatePublicToken(8);

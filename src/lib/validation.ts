@@ -44,7 +44,9 @@ export const businessSchema = z.object({
 
 export const cardCreateBatchSchema = z.object({
   count: z.number().int().min(1).max(500),
-  prefix: z.string().min(2).max(10).default("CARD"),
+  prefix: z.string().max(15).optional().default("CARD"),
+  startNumber: z.number().int().min(1).optional(),
+  digits: z.number().int().min(1).max(8).optional().default(3),
   labelPrefix: z.string().max(50).optional(),
 });
 
