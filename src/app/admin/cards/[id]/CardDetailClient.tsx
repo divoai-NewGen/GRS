@@ -35,6 +35,8 @@ export function CardDetailClient() {
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
   const [hostMode, setHostMode] = useState<"network" | "localhost">("network");
+  const [isLocalhost, setIsLocalhost] = useState(false);
+  const [liveOrigin, setLiveOrigin] = useState("");
   const networkHost = "http://192.168.88.40:3000";
 
   // Modals
@@ -45,10 +47,28 @@ export function CardDetailClient() {
   const [submitting, setSubmitting] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+      setIsLocalhost(isLocal);
+      setLiveOrigin(window.location.origin);
+    }
+  }, []);
+
   const fetchCardData = async (mode = hostMode) => {
     setLoading(true);
     try {
-      const activeHost = mode === "network" ? networkHost : "http://localhost:3000";
+      let activeHost = "";
+      if (typeof window !== "undefined") {
+        const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+        if (isLocal) {
+          activeHost = mode === "network" ? networkHost : "http://localhost:3000";
+        } else {
+          // Cloud / Vercel / Production environment: ALWAYS use live origin
+          activeHost = window.location.origin;
+        }
+      }
+
       const [cRes, bRes] = await Promise.all([
         fetch(`/api/cards/${id}?host=${encodeURIComponent(activeHost)}`),
         fetch("/api/businesses"),
@@ -293,32 +313,39 @@ export function CardDetailClient() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* QR Code Presentation Box */}
         <div className="p-6 rounded-3xl bg-[#050505] border border-[#006B21]/30 shadow-md flex flex-col items-center text-center">
-          {/* Host Mode Selector for Mobile vs Desktop */}
-          <div className="w-full mb-3 p-1 rounded-xl bg-[#10251A] border border-[#006B21]/40 flex items-center gap-1">
-            <button
-              type="button"
-              onClick={() => handleSwitchHostMode("network")}
-              className={`flex-1 py-1.5 px-2 rounded-lg text-[11px] font-bold transition-all flex items-center justify-center gap-1 ${
-                hostMode === "network"
-                  ? "bg-[#006B21] text-white shadow-sm border border-[#39E900]/40"
-                  : "text-white/60 hover:text-white"
-              }`}
-            >
-              <Smartphone className="w-3.5 h-3.5 text-[#39E900]" />
-              <span>📱 Phone Scanner</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => handleSwitchHostMode("localhost")}
-              className={`flex-1 py-1.5 px-2 rounded-lg text-[11px] font-bold transition-all flex items-center justify-center gap-1 ${
-                hostMode === "localhost"
-                  ? "bg-[#006B21] text-white shadow-sm border border-[#39E900]/40"
-                  : "text-white/60 hover:text-white"
-              }`}
-            >
-              <span>💻 Desktop</span>
-            </button>
-          </div>
+          {/* Host Mode Selector for Mobile vs Desktop (Only on localhost) */}
+          {isLocalhost ? (
+            <div className="w-full mb-3 p-1 rounded-xl bg-[#10251A] border border-[#006B21]/40 flex items-center gap-1">
+              <button
+                type="button"
+                onClick={() => handleSwitchHostMode("network")}
+                className={`flex-1 py-1.5 px-2 rounded-lg text-[11px] font-bold transition-all flex items-center justify-center gap-1 ${
+                  hostMode === "network"
+                    ? "bg-[#006B21] text-white shadow-sm border border-[#39E900]/40"
+                    : "text-white/60 hover:text-white"
+                }`}
+              >
+                <Smartphone className="w-3.5 h-3.5 text-[#39E900]" />
+                <span>📱 Phone Scanner</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => handleSwitchHostMode("localhost")}
+                className={`flex-1 py-1.5 px-2 rounded-lg text-[11px] font-bold transition-all flex items-center justify-center gap-1 ${
+                  hostMode === "localhost"
+                    ? "bg-[#006B21] text-white shadow-sm border border-[#39E900]/40"
+                    : "text-white/60 hover:text-white"
+                }`}
+              >
+                <span>💻 Desktop</span>
+              </button>
+            </div>
+          ) : (
+            <div className="w-full mb-3 py-1.5 px-3 rounded-xl bg-[#10251A] border border-[#39E900]/40 flex items-center justify-center gap-1.5 text-[11px] font-bold text-[#39E900]">
+              <span className="w-2 h-2 rounded-full bg-[#39E900] animate-pulse" />
+              <span>Live Cloud Domain ({liveOrigin})</span>
+            </div>
+          )}
 
           <div className="w-56 h-56 p-3 bg-white rounded-2xl shadow-inner border border-white/20 mb-3 flex items-center justify-center">
             {qrDataUrl && (
@@ -338,7 +365,9 @@ export function CardDetailClient() {
           </span>
 
           <p className="text-[10px] text-[#39E900] font-semibold mt-2 px-2 py-1 bg-[#10251A] rounded-lg border border-[#006B21]/40">
-            {hostMode === "network"
+            {!isLocalhost
+              ? "✓ Global Live QR: Kisi bhi phone se 4G/5G par scan karein!"
+              : hostMode === "network"
               ? "✓ Phone se scan karein (Same Wi-Fi par connected rahein)"
               : "Desktop localhost mode"}
           </p>

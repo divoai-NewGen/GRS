@@ -40,8 +40,11 @@ export async function GET(
   }
 
   const searchParams = request.nextUrl.searchParams;
-  const customHost = searchParams.get("host");
-  const publicUrl = getPublicCardUrl(card.publicToken, customHost || undefined);
+  const forwardedHost = request.headers.get("x-forwarded-host") || request.headers.get("host");
+  const forwardedProto = request.headers.get("x-forwarded-proto") || "https";
+  const inferredOrigin = forwardedHost ? `${forwardedProto}://${forwardedHost}` : (process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000");
+  const customHost = searchParams.get("host") || inferredOrigin;
+  const publicUrl = getPublicCardUrl(card.publicToken, customHost);
   const qrSvg = await generateQrSvg(publicUrl);
   const qrDataUrl = await generateQrDataUrl(publicUrl);
 

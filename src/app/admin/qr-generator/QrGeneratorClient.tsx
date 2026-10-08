@@ -56,7 +56,8 @@ export function QrGeneratorClient() {
     if (!card) return;
 
     setIsGenerating(true);
-    const host = hostMode === "network" ? networkHost : window.location.origin;
+    const isLocal = typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
+    const host = isLocal ? (hostMode === "network" ? networkHost : window.location.origin) : window.location.origin;
     const targetUrl = `${host}/r/${card.publicToken}`;
 
     Promise.all([
