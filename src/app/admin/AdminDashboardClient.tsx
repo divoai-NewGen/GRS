@@ -117,27 +117,32 @@ export function AdminDashboardClient() {
       {/* Top Banner / Actions */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-[#050505] tracking-tight">
-            Dashboard Overview
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight">
+            <span className="text-[#050505]">Dashboard</span>{" "}
+            <span className="text-[#006B21]">Overview</span>
           </h1>
-          <p className="text-xs sm:text-sm text-[#050505]/60 mt-1">
+          <p className="text-xs sm:text-sm text-[#52606D] mt-1.5 font-normal">
             GrowBroo dynamic review card network status and real-time telemetry.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
           <button
             onClick={fetchData}
             disabled={loading}
-            className="p-2.5 rounded-xl border border-[#006B21]/20 bg-white hover:bg-[#E9F8E9] text-[#050505]/70 hover:text-[#050505] transition-colors shadow-xs"
+            className="p-2.5 rounded-xl border border-[#DCEBDD] bg-white hover:bg-[#E9F8E9] text-[#52606D] hover:text-[#006B21] transition-all duration-200 shadow-xs group"
             title="Refresh metrics"
           >
-            <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin text-[#006B21]" : ""}`} />
+            <RefreshCw
+              className={`w-4 h-4 transition-transform ${
+                loading ? "animate-spin text-[#006B21]" : "group-hover:rotate-45"
+              }`}
+            />
           </button>
 
           <Link
             href="/admin/cards"
-            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-white hover:bg-[#E9F8E9] text-[#050505] border border-[#006B21]/20 font-bold text-xs transition-colors shadow-xs"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white hover:bg-[#E9F8E9] text-[#050505] border border-[#DCEBDD] hover:border-[#006B21]/30 font-semibold text-xs transition-all duration-200 shadow-xs"
           >
             <PlusCircle className="w-4 h-4 text-[#006B21]" />
             Generate Cards
@@ -145,7 +150,7 @@ export function AdminDashboardClient() {
 
           <Link
             href="/admin/businesses"
-            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#006B21] hover:bg-[#005219] text-white font-bold text-xs transition-colors shadow-sm shadow-[#006B21]/20"
+            className="inline-flex items-center gap-2 px-4.5 py-2.5 rounded-xl bg-[#006B21] hover:bg-[#005219] text-white font-semibold text-xs transition-all duration-200 shadow-sm shadow-[#006B21]/20 hover:shadow-md hover:shadow-[#006B21]/25"
           >
             <Building2 className="w-4 h-4 text-white" />
             Add Business
@@ -153,58 +158,189 @@ export function AdminDashboardClient() {
         </div>
       </div>
 
-      {/* Metric Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {statCards.map((c, i) => {
-          const Icon = c.icon;
-          return (
-            <Link
-              key={i}
-              href={c.href}
-              className="p-5 rounded-2xl bg-white border border-[#006B21]/15 shadow-xs hover:border-[#006B21]/40 transition-all group"
-            >
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-xs font-bold uppercase tracking-wider text-[#050505]/60">
-                  {c.title}
-                </span>
-                <div
-                  className={`w-9 h-9 rounded-xl ${c.color} flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform`}
-                >
-                  <Icon className="w-4 h-4" />
-                </div>
-              </div>
+      {/* 4 Pastel KPI Cards Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        {/* CARD 1 — TOTAL BUSINESSES (Green Identity) */}
+        <Link
+          href="/admin/businesses"
+          className="relative overflow-hidden p-6 rounded-[20px] bg-[#F2FBF4] border border-[#DCEBDD] shadow-[0_8px_30px_rgba(0,60,20,0.05)] hover:-translate-y-0.5 hover:shadow-[0_12px_35px_rgba(0,60,20,0.08)] transition-all duration-200 group flex flex-col justify-between"
+        >
+          {/* Subtle Decorative Wave */}
+          <svg
+            aria-hidden="true"
+            className="absolute -right-6 -bottom-6 w-36 h-36 text-[#168A3A] opacity-[0.09] pointer-events-none transition-transform duration-300 group-hover:scale-110"
+            viewBox="0 0 100 100"
+            fill="currentColor"
+          >
+            <path d="M0,50 C20,20 40,80 60,40 C80,0 100,50 100,100 L0,100 Z" />
+          </svg>
 
-              <div className="text-2xl sm:text-3xl font-black text-[#050505] tracking-tight">
-                {c.value}
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-[#52606D]">
+                Total Businesses
+              </span>
+              <div className="w-10 h-10 rounded-xl bg-[#E0F5E5] text-[#168A3A] flex items-center justify-center shadow-xs transition-transform duration-200 group-hover:scale-105">
+                <Building2 className="w-5 h-5" />
               </div>
+            </div>
 
-              <div className="flex items-center justify-between mt-2 pt-2 border-t border-[#006B21]/10 text-xs text-[#050505]/60">
-                <span>{c.subtext}</span>
-                <ArrowUpRight className="w-3.5 h-3.5 text-[#050505]/40 group-hover:text-[#006B21] transition-colors" />
+            <div className="text-3xl sm:text-4xl font-extrabold text-[#050505] tracking-tight leading-none mb-4">
+              {metrics.totalBusinesses}
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between pt-3 border-t border-[#168A3A]/15 text-xs text-[#52606D]">
+            <span>{metrics.activeBusinesses} active</span>
+            <span className="inline-flex items-center gap-1 font-semibold text-[#168A3A]">
+              <span>↗ 0%</span>
+              <ArrowUpRight className="w-3.5 h-3.5" />
+            </span>
+          </div>
+        </Link>
+
+        {/* CARD 2 — TOTAL QR CARDS (Purple Identity) */}
+        <Link
+          href="/admin/cards"
+          className="relative overflow-hidden p-6 rounded-[20px] bg-[#F7F3FF] border border-[#E8DEFF] shadow-[0_8px_30px_rgba(0,60,20,0.05)] hover:-translate-y-0.5 hover:shadow-[0_12px_35px_rgba(0,60,20,0.08)] transition-all duration-200 group flex flex-col justify-between"
+        >
+          {/* Subtle Decorative Wave */}
+          <svg
+            aria-hidden="true"
+            className="absolute -right-6 -bottom-6 w-36 h-36 text-[#7657D9] opacity-[0.09] pointer-events-none transition-transform duration-300 group-hover:scale-110"
+            viewBox="0 0 100 100"
+            fill="currentColor"
+          >
+            <path d="M0,60 C30,30 50,70 70,30 C90,10 100,50 100,100 L0,100 Z" />
+          </svg>
+
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-[#52606D]">
+                Total QR Cards
+              </span>
+              <div className="w-10 h-10 rounded-xl bg-[#EEE6FF] text-[#7657D9] flex items-center justify-center shadow-xs transition-transform duration-200 group-hover:scale-105">
+                <CreditCard className="w-5 h-5" />
               </div>
-            </Link>
-          );
-        })}
+            </div>
+
+            <div className="text-3xl sm:text-4xl font-extrabold text-[#050505] tracking-tight leading-none mb-4">
+              {metrics.totalCards}
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between pt-3 border-t border-[#7657D9]/15 text-xs text-[#52606D]">
+            <span className="truncate pr-1">
+              {metrics.assignedCards} assigned, {metrics.unassignedCards} free
+            </span>
+            <span className="inline-flex items-center gap-1 font-semibold text-[#7657D9] shrink-0">
+              <ArrowUpRight className="w-3.5 h-3.5" />
+            </span>
+          </div>
+        </Link>
+
+        {/* CARD 3 — TOTAL SCANS (Blue Identity) */}
+        <Link
+          href="/admin/scan-history"
+          className="relative overflow-hidden p-6 rounded-[20px] bg-[#F1F8FF] border border-[#D4E7FA] shadow-[0_8px_30px_rgba(0,60,20,0.05)] hover:-translate-y-0.5 hover:shadow-[0_12px_35px_rgba(0,60,20,0.08)] transition-all duration-200 group flex flex-col justify-between"
+        >
+          {/* Subtle Decorative Wave */}
+          <svg
+            aria-hidden="true"
+            className="absolute -right-6 -bottom-6 w-36 h-36 text-[#2878C8] opacity-[0.09] pointer-events-none transition-transform duration-300 group-hover:scale-110"
+            viewBox="0 0 100 100"
+            fill="currentColor"
+          >
+            <path d="M0,40 C20,70 50,30 70,60 C90,40 100,70 100,100 L0,100 Z" />
+          </svg>
+
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-[#52606D]">
+                Total Scans
+              </span>
+              <div className="w-10 h-10 rounded-xl bg-[#E3F1FF] text-[#2878C8] flex items-center justify-center shadow-xs transition-transform duration-200 group-hover:scale-105">
+                <Eye className="w-5 h-5" />
+              </div>
+            </div>
+
+            <div className="text-3xl sm:text-4xl font-extrabold text-[#050505] tracking-tight leading-none mb-4">
+              {metrics.totalScans.toLocaleString()}
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between pt-3 border-t border-[#2878C8]/15 text-xs text-[#52606D]">
+            <span>~{metrics.uniqueVisitors} visitors</span>
+            <span className="inline-flex items-center gap-1 font-semibold text-[#2878C8]">
+              <ArrowUpRight className="w-3.5 h-3.5" />
+            </span>
+          </div>
+        </Link>
+
+        {/* CARD 4 — SCANS TODAY (Warm Amber Identity) */}
+        <Link
+          href="/admin/analytics"
+          className="relative overflow-hidden p-6 rounded-[20px] bg-[#FFF9EE] border border-[#F5E5C6] shadow-[0_8px_30px_rgba(0,60,20,0.05)] hover:-translate-y-0.5 hover:shadow-[0_12px_35px_rgba(0,60,20,0.08)] transition-all duration-200 group flex flex-col justify-between"
+        >
+          {/* Subtle Decorative Wave */}
+          <svg
+            aria-hidden="true"
+            className="absolute -right-6 -bottom-6 w-36 h-36 text-[#C98616] opacity-[0.09] pointer-events-none transition-transform duration-300 group-hover:scale-110"
+            viewBox="0 0 100 100"
+            fill="currentColor"
+          >
+            <path d="M0,50 C30,70 60,30 80,60 C90,40 100,60 100,100 L0,100 Z" />
+          </svg>
+
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-[#52606D]">
+                Scans Today
+              </span>
+              <div className="w-10 h-10 rounded-xl bg-[#FFF0CF] text-[#C98616] flex items-center justify-center shadow-xs transition-transform duration-200 group-hover:scale-105">
+                <TrendingUp className="w-5 h-5" />
+              </div>
+            </div>
+
+            <div className="text-3xl sm:text-4xl font-extrabold text-[#050505] tracking-tight leading-none mb-4">
+              {metrics.scansToday}
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between pt-3 border-t border-[#C98616]/15 text-xs text-[#52606D]">
+            <span>{metrics.scansThisMonth} this month</span>
+            <span className="inline-flex items-center gap-1 font-semibold text-[#C98616]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#39E900]"></span>
+              <ArrowUpRight className="w-3.5 h-3.5" />
+            </span>
+          </div>
+        </Link>
       </div>
 
       {/* Customer Leads & Inquiries Banner */}
-      <div className="p-5 rounded-2xl bg-white border border-[#006B21]/15 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-3.5">
-          <div className="w-12 h-12 rounded-2xl bg-[#E9F8E9] flex items-center justify-center text-[#006B21] shadow-xs shrink-0">
+      <div className="relative overflow-hidden p-6 rounded-[20px] bg-white border border-[#DCEBDD] shadow-[0_8px_30px_rgba(0,60,20,0.05)] flex flex-col sm:flex-row sm:items-center justify-between gap-5">
+        {/* Subtle mint/green decorative gradient on the right side */}
+        <div
+          aria-hidden="true"
+          className="absolute right-0 top-0 bottom-0 w-80 bg-gradient-to-l from-[#E9F8E9]/60 via-[#E9F8E9]/20 to-transparent pointer-events-none"
+        />
+
+        <div className="flex items-center gap-4 relative z-10">
+          <div className="w-12 h-12 rounded-2xl bg-[#E9F8E9] flex items-center justify-center text-[#006B21] shadow-xs shrink-0 border border-[#DCEBDD]">
             <Inbox className="w-6 h-6" />
           </div>
           <div>
-            <div className="flex items-center gap-2">
-              <h2 className="text-sm sm:text-base font-bold text-[#050505]">
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <h2 className="text-base font-bold text-[#050505]">
                 Customer Inquiries & Leads ({inquiries.length})
               </h2>
               {inquiries.filter((i) => i.status === "NEW").length > 0 && (
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-100 border border-amber-300 text-amber-800 animate-pulse">
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#FFF0CF] border border-[#F5E5C6] text-[#C98616] animate-pulse">
                   {inquiries.filter((i) => i.status === "NEW").length} NEW LEADS
                 </span>
               )}
             </div>
-            <p className="text-xs text-[#050505]/60 mt-0.5">
+            <p className="text-xs text-[#52606D] mt-1">
               Client requests submitted through the website Contact Us page with selected plans.
             </p>
           </div>
@@ -212,7 +348,7 @@ export function AdminDashboardClient() {
 
         <Link
           href="/admin/inquiries"
-          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#006B21] hover:bg-[#005219] text-white font-bold text-xs shadow-sm shadow-[#006B21]/20 transition-all self-start sm:self-auto shrink-0"
+          className="relative z-10 inline-flex items-center gap-2 px-4.5 py-2.5 rounded-xl bg-[#006B21] hover:bg-[#005219] text-white font-semibold text-xs shadow-sm shadow-[#006B21]/20 transition-all duration-200 self-start sm:self-auto shrink-0"
         >
           <span>View All Inquiries</span>
           <ArrowUpRight className="w-3.5 h-3.5 text-white" />
@@ -221,78 +357,104 @@ export function AdminDashboardClient() {
 
       {/* Main Charts & Activity Row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Scans Over Time Chart */}
-        <div className="lg:col-span-2 p-6 rounded-2xl bg-white border border-[#006B21]/15 shadow-xs">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
-            <div>
-              <h2 className="text-base font-bold text-[#050505] flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 text-[#006B21]" />
-                Scan Activity Over Time
-              </h2>
-              <p className="text-xs text-[#050505]/60">
-                Dynamic QR scan volume over chosen timeframe
-              </p>
+        {/* Scans Over Time Chart (White Premium Card) */}
+        <div className="lg:col-span-2 p-6 sm:p-7 rounded-[20px] bg-white border border-[#DCEBDD] shadow-[0_8px_30px_rgba(0,60,20,0.05)] flex flex-col justify-between">
+          <div>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+              <div>
+                <h2 className="text-base font-bold text-[#050505] flex items-center gap-2">
+                  <TrendingUp className="w-4.5 h-4.5 text-[#006B21]" />
+                  Scan Activity Over Time
+                </h2>
+                <p className="text-xs text-[#52606D] mt-0.5">
+                  Dynamic QR scan volume over chosen timeframe
+                </p>
+              </div>
+
+              {/* Time filter pill selector */}
+              <div className="inline-flex rounded-xl bg-[#F7FBF7] p-1 text-xs border border-[#DCEBDD]">
+                {["7", "30", "90"].map((d) => (
+                  <button
+                    key={d}
+                    onClick={() => setDaysFilter(d)}
+                    className={`px-3 py-1.5 rounded-lg font-semibold transition-all duration-200 ${
+                      daysFilter === d
+                        ? "bg-[#006B21] text-white shadow-xs"
+                        : "text-[#52606D] hover:text-[#050505]"
+                    }`}
+                  >
+                    {d}d
+                  </button>
+                ))}
+              </div>
             </div>
 
-            <div className="inline-flex rounded-xl bg-[#E9F8E9] p-1 text-xs border border-[#006B21]/20">
-              {["7", "30", "90"].map((d) => (
-                <button
-                  key={d}
-                  onClick={() => setDaysFilter(d)}
-                  className={`px-3 py-1 rounded-lg font-bold transition-colors ${
-                    daysFilter === d
-                      ? "bg-[#006B21] text-white shadow-xs"
-                      : "text-[#050505]/60 hover:text-[#050505]"
-                  }`}
-                >
-                  {d}d
-                </button>
-              ))}
-            </div>
-          </div>
+            {/* Interactive Visualizer */}
+            <div className="h-60 flex items-end gap-1.5 pt-6 pb-2 px-2 border-b border-[#EAF0EA] relative">
+              {data?.scansOverTime?.map((item: any, idx: number) => {
+                const heightPct = Math.max((item.scans / maxScanInChart) * 100, 5);
+                const isLatest = idx === (data?.scansOverTime?.length || 0) - 1;
 
-          {/* Interactive Bar Visualizer */}
-          <div className="h-56 flex items-end gap-1.5 pt-4 pb-2 px-1 border-b border-[#006B21]/15">
-            {data?.scansOverTime?.map((item: any, idx: number) => {
-              const heightPct = Math.max((item.scans / maxScanInChart) * 100, 4);
-              return (
-                <div
-                  key={idx}
-                  className="flex-1 flex flex-col items-center group relative h-full justify-end"
-                >
-                  {/* Tooltip */}
-                  <div className="absolute -top-10 opacity-0 group-hover:opacity-100 transition-opacity bg-[#050505] text-white text-[10px] px-2 py-1 rounded shadow-lg pointer-events-none whitespace-nowrap z-10 font-bold">
-                    {item.date}: <span className="text-[#39E900]">{item.scans} scans</span>
-                  </div>
+                return (
                   <div
-                    style={{ height: `${heightPct}%` }}
-                    className="w-full bg-[#006B21] group-hover:bg-[#005219] rounded-t-sm transition-all"
-                  />
-                </div>
-              );
-            })}
+                    key={idx}
+                    className="flex-1 flex flex-col items-center group relative h-full justify-end cursor-pointer"
+                  >
+                    {/* Tooltip */}
+                    <div className="absolute -top-11 opacity-0 group-hover:opacity-100 transition-opacity duration-150 bg-[#050505] text-white text-[10px] px-2.5 py-1 rounded-lg shadow-xl pointer-events-none whitespace-nowrap z-20 font-medium border border-white/10 flex items-center gap-1.5">
+                      <span>{item.date}:</span>
+                      <span className="text-[#39E900] font-bold">{item.scans} scans</span>
+                    </div>
+
+                    {/* Bar with subtle vertical gradient and highlight */}
+                    <div className="w-full relative flex flex-col items-center justify-end h-full">
+                      <div
+                        style={{ height: `${heightPct}%` }}
+                        className={`w-full rounded-t-md transition-all duration-200 bg-gradient-to-t from-[#006B21]/80 to-[#006B21] group-hover:from-[#005219] group-hover:to-[#006B21] ${
+                          isLatest ? "ring-1 ring-[#39E900]/40" : ""
+                        }`}
+                      >
+                        {/* Tiny endpoint highlight on latest bar */}
+                        {isLatest && item.scans > 0 && (
+                          <div className="w-1.5 h-1.5 rounded-full bg-[#39E900] mx-auto -mt-1 shadow-[0_0_6px_#39E900]" />
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
 
-          <div className="flex items-center justify-between text-[11px] text-[#050505]/50 mt-3 px-1 font-mono">
+          <div className="flex items-center justify-between text-[11px] text-[#718071] mt-3.5 px-2 font-mono">
             <span>{data?.scansOverTime?.[0]?.date || "Start"}</span>
+            <span className="text-[#006B21] font-semibold">
+              Peak: {maxScanInChart} scans
+            </span>
             <span>
               {data?.scansOverTime?.[data.scansOverTime.length - 1]?.date || "Today"}
             </span>
           </div>
         </div>
 
-        {/* Device & Hardware Breakdown */}
-        <div className="p-6 rounded-2xl bg-white border border-[#006B21]/15 shadow-xs flex flex-col justify-between">
+        {/* Device & Hardware Card (White Premium Card) */}
+        <div className="relative overflow-hidden p-6 sm:p-7 rounded-[20px] bg-white border border-[#DCEBDD] shadow-[0_8px_30px_rgba(0,60,20,0.05)] flex flex-col justify-between">
+          {/* Subtle blue/mint background decoration in corner */}
+          <div
+            aria-hidden="true"
+            className="absolute -top-12 -right-12 w-36 h-36 bg-[#E9F8E9]/40 rounded-full blur-2xl pointer-events-none"
+          />
+
           <div>
-            <h2 className="text-base font-bold text-[#050505] flex items-center gap-2 mb-1">
-              <Smartphone className="w-4 h-4 text-[#006B21]" />
+            <h2 className="text-base font-bold text-[#050505] flex items-center gap-2 mb-0.5">
+              <Smartphone className="w-4.5 h-4.5 text-[#006B21]" />
               Device & Hardware
             </h2>
-            <p className="text-xs text-[#050505]/60 mb-6">Visitor device environment</p>
+            <p className="text-xs text-[#52606D] mb-6">Visitor device environment</p>
 
             <div className="space-y-4">
               <div>
-                <div className="text-xs font-bold text-[#050505] mb-2">
+                <div className="text-xs font-bold text-[#050505] mb-2.5">
                   Device Categories
                 </div>
                 {data?.deviceBreakdown?.map((dev: any, i: number) => {
@@ -300,33 +462,35 @@ export function AdminDashboardClient() {
                     (dev.value / (metrics.totalScans || 1)) * 100
                   );
                   return (
-                    <div key={i} className="mb-2">
-                      <div className="flex justify-between text-xs text-[#050505]/70 mb-1">
+                    <div key={i} className="mb-3">
+                      <div className="flex justify-between text-xs text-[#52606D] mb-1">
                         <span>{dev.name}</span>
                         <span className="font-bold text-[#006B21]">
                           {dev.value} ({pct}%)
                         </span>
                       </div>
-                      <div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden border border-[#006B21]/15">
+                      <div className="h-2 w-full bg-[#E9F8E9] rounded-full overflow-hidden border border-[#DCEBDD]/40">
                         <div
-                          className="h-full bg-[#006B21] rounded-full"
-                          style={{ width: `${pct}%` }}
-                        />
+                          className="h-full bg-[#006B21] rounded-full relative transition-all duration-300"
+                          style={{ width: `${Math.max(pct, 4)}%` }}
+                        >
+                          <span className="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-[#39E900]" />
+                        </div>
                       </div>
                     </div>
                   );
                 })}
               </div>
 
-              <div className="pt-4 border-t border-[#006B21]/10">
-                <div className="text-xs font-bold text-[#050505] mb-2">
+              <div className="pt-4 border-t border-[#E5EEE6]">
+                <div className="text-xs font-bold text-[#050505] mb-2.5">
                   Top Browsers
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {data?.browserBreakdown?.map((br: any, i: number) => (
                     <span
                       key={i}
-                      className="px-2.5 py-1 rounded-lg bg-[#E9F8E9] border border-[#006B21]/20 text-[11px] font-medium text-[#050505]"
+                      className="px-2.5 py-1 rounded-lg bg-[#F7FBF7] border border-[#E5EEE6] text-[11px] font-medium text-[#050505]"
                     >
                       {br.name}: <span className="text-[#006B21] font-bold">{br.value}</span>
                     </span>
@@ -336,12 +500,13 @@ export function AdminDashboardClient() {
             </div>
           </div>
 
-          <div className="mt-6 pt-4 border-t border-[#006B21]/10 text-center">
+          <div className="mt-6 pt-4 border-t border-[#E5EEE6] text-center">
             <Link
               href="/admin/analytics"
-              className="text-xs font-bold text-[#006B21] hover:underline"
+              className="text-xs font-semibold text-[#006B21] hover:underline inline-flex items-center gap-1"
             >
-              View detailed analytics report →
+              <span>View detailed analytics report</span>
+              <span>→</span>
             </Link>
           </div>
         </div>
@@ -350,43 +515,43 @@ export function AdminDashboardClient() {
       {/* Top Performers & Recent Audit Logs */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Top Businesses by Scans */}
-        <div className="p-6 rounded-2xl bg-white border border-[#006B21]/15 shadow-xs">
+        <div className="p-6 sm:p-7 rounded-[20px] bg-white border border-[#DCEBDD] shadow-[0_8px_30px_rgba(0,60,20,0.05)]">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h2 className="text-base font-bold text-[#050505] flex items-center gap-2">
-                <Building2 className="w-4 h-4 text-[#006B21]" />
+                <Building2 className="w-4.5 h-4.5 text-[#006B21]" />
                 Top Businesses by Scans
               </h2>
-              <p className="text-xs text-[#050505]/60">Most active customer destinations</p>
+              <p className="text-xs text-[#52606D] mt-0.5">Most active customer destinations</p>
             </div>
             <Link
               href="/admin/businesses"
-              className="text-xs font-bold text-[#006B21] hover:underline"
+              className="text-xs font-semibold text-[#006B21] hover:underline"
             >
               Manage all
             </Link>
           </div>
 
-          <div className="divide-y divide-[#006B21]/10">
+          <div className="divide-y divide-[#E5EEE6]">
             {data?.scansByBusiness?.length === 0 ? (
-              <div className="py-8 text-center text-xs text-[#050505]/40">
+              <div className="py-8 text-center text-xs text-[#52606D]">
                 No scan data recorded yet.
               </div>
             ) : (
               data?.scansByBusiness?.map((b: any, i: number) => (
                 <div
                   key={i}
-                  className="py-3 flex items-center justify-between hover:bg-[#E9F8E9]/50 rounded-xl px-2 transition-colors"
+                  className="py-3 flex items-center justify-between hover:bg-[#F7FBF7] rounded-xl px-2 transition-colors duration-150"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="w-6 h-6 rounded-lg bg-[#E9F8E9] text-[11px] font-bold text-[#006B21] flex items-center justify-center border border-[#006B21]/20">
+                    <span className="w-6 h-6 rounded-lg bg-[#E9F8E9] text-[11px] font-bold text-[#006B21] flex items-center justify-center border border-[#DCEBDD]">
                       #{i + 1}
                     </span>
                     <span className="text-xs font-bold text-[#050505]">
                       {b.name}
                     </span>
                   </div>
-                  <span className="text-xs font-mono font-bold text-[#006B21] bg-[#E9F8E9] border border-[#006B21]/20 px-2.5 py-1 rounded-lg">
+                  <span className="text-xs font-mono font-bold text-[#006B21] bg-[#F7FBF7] border border-[#DCEBDD] px-2.5 py-1 rounded-lg">
                     {b.count} scans
                   </span>
                 </div>
@@ -396,18 +561,18 @@ export function AdminDashboardClient() {
         </div>
 
         {/* Recent Audit Logs */}
-        <div className="p-6 rounded-2xl bg-white border border-[#006B21]/15 shadow-xs">
+        <div className="p-6 sm:p-7 rounded-[20px] bg-white border border-[#DCEBDD] shadow-[0_8px_30px_rgba(0,60,20,0.05)]">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h2 className="text-base font-bold text-[#050505] flex items-center gap-2">
-                <Clock className="w-4 h-4 text-[#006B21]" />
+                <Clock className="w-4.5 h-4.5 text-[#006B21]" />
                 Recent System Activity
               </h2>
-              <p className="text-xs text-[#050505]/60">Administrative and card lifecycle logs</p>
+              <p className="text-xs text-[#52606D] mt-0.5">Administrative and card lifecycle logs</p>
             </div>
             <Link
               href="/admin/audit-logs"
-              className="text-xs font-bold text-[#006B21] hover:underline"
+              className="text-xs font-semibold text-[#006B21] hover:underline"
             >
               View all logs
             </Link>
@@ -415,29 +580,29 @@ export function AdminDashboardClient() {
 
           <div className="space-y-3">
             {logs.length === 0 ? (
-              <div className="py-8 text-center text-xs text-[#050505]/40">
+              <div className="py-8 text-center text-xs text-[#52606D]">
                 No audit events recorded.
               </div>
             ) : (
               logs.map((log: any) => (
                 <div
                   key={log.id}
-                  className="p-3 rounded-xl bg-[#E9F8E9]/40 border border-[#006B21]/15 flex items-start justify-between gap-3 text-xs"
+                  className="p-3.5 rounded-xl bg-[#F7FBF7] border border-[#E5EEE6] flex items-start justify-between gap-3 text-xs hover:border-[#DCEBDD] transition-colors duration-150"
                 >
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#006B21]/10 text-[#006B21] border border-[#006B21]/20 font-mono">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#E9F8E9] text-[#006B21] border border-[#DCEBDD] font-mono">
                         {log.action}
                       </span>
                       <span className="font-bold text-[#050505]">
                         {log.user?.name || "System"}
                       </span>
                     </div>
-                    <div className="text-[11px] text-[#050505]/60 font-mono">
+                    <div className="text-[11px] text-[#52606D] font-mono">
                       {log.metadata ? log.metadata.slice(0, 70) : "Action executed"}
                     </div>
                   </div>
-                  <span className="text-[10px] text-[#050505]/40 shrink-0 font-mono">
+                  <span className="text-[10px] text-[#52606D] shrink-0 font-mono">
                     {new Date(log.createdAt).toLocaleDateString()}
                   </span>
                 </div>
