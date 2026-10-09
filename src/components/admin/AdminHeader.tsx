@@ -14,6 +14,8 @@ import {
   Loader2,
   ExternalLink,
   Store,
+  Bell,
+  ChevronRight,
 } from "lucide-react";
 import { useToast } from "@/components/ui/Toast";
 
@@ -25,8 +27,8 @@ interface AdminHeaderProps {
 
 export function AdminHeader({
   onToggleMobileMenu,
-  adminName = "Shahbaz Admin",
-  adminEmail = "admin@revio.app",
+  adminName = "GrowBroo Admin",
+  adminEmail = "growbroo.info@gmail.com",
 }: AdminHeaderProps) {
   const router = useRouter();
   const { success } = useToast();
@@ -98,8 +100,8 @@ export function AdminHeader({
 
   return (
     <>
-      <header className="sticky top-0 z-30 h-16 bg-white/90 backdrop-blur-[16px] border-b border-[#E5EEE6] px-4 sm:px-6 flex items-center justify-between shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
-        <div className="flex items-center gap-2.5 sm:gap-3">
+      <header className="sticky top-0 z-30 h-16 bg-white/95 backdrop-blur-[16px] border-b border-[#E5EEE6] px-4 sm:px-8 flex items-center justify-between">
+        <div className="flex items-center gap-3">
           {/* Mobile hamburger menu toggle */}
           <button
             type="button"
@@ -119,46 +121,60 @@ export function AdminHeader({
             </span>
           </Link>
 
-          {/* Quick Search trigger button */}
+          {/* Quick Search trigger button - Pill style exactly matching screenshot */}
           <button
             onClick={() => setSearchOpen(true)}
-            className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-white hover:bg-[#F2F8F3] focus:outline-none focus:ring-2 focus:ring-[#39E900]/30 text-[#52606D] text-xs font-medium border border-[#DCEBDD] hover:border-[#006B21]/30 transition-all duration-200 w-44 sm:w-64 shadow-xs"
+            className="flex items-center gap-2.5 px-4 py-2 rounded-full bg-[#F4F7F5] hover:bg-[#EDF3EF] focus:outline-none focus:ring-2 focus:ring-[#39E900]/30 text-[#52606D] text-xs font-medium border border-[#E2EBE4] transition-all duration-200 w-52 sm:w-80 shadow-xs"
           >
-            <Search className="w-3.5 h-3.5 text-[#006B21]" />
-            <span className="flex-1 text-left truncate text-[#52606D]">Search businesses, cards...</span>
-            <kbd className="hidden sm:inline-block px-1.5 py-0.5 text-[10px] font-mono bg-[#F7FBF7] border border-[#E5EEE6] rounded text-[#52606D] font-medium">
-              ⌘K
+            <Search className="w-3.5 h-3.5 text-[#718096]" />
+            <span className="flex-1 text-left truncate text-[#718096]">Search businesses, cards, ...</span>
+            <kbd className="hidden sm:inline-flex items-center px-1.5 py-0.5 text-[10px] font-sans bg-white border border-[#DCEBDD] rounded-md text-[#718096] font-medium shadow-2xs">
+              ⌘ K
             </kbd>
           </button>
         </div>
 
         {/* Right tools & user dropdown */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           <Link
             href="/dashboard"
-            className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-white hover:bg-[#E9F8E9] text-xs font-semibold text-[#006B21] border border-[#DCEBDD] hover:border-[#006B21]/30 transition-all duration-200 shadow-xs"
+            className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#EBF7EE] hover:bg-[#DEF0E4] text-xs font-semibold text-[#006B21] border border-[#CDE9D4] transition-all duration-200 shadow-xs"
             title="Preview Client Business Portal"
           >
             <Store className="w-3.5 h-3.5 text-[#006B21]" />
             <span>Business Portal</span>
+            <ChevronRight className="w-3.5 h-3.5 text-[#006B21]/80" />
           </Link>
 
-          <div className="flex items-center gap-3 pl-3 border-l border-[#E5EEE6]">
-            <div className="hidden sm:flex flex-col text-right">
-              <span className="text-xs font-bold text-[#050505]">
-                {adminName}
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-full bg-[#0B3B24] text-white flex items-center justify-center font-bold text-xs shadow-xs">
+              G
+            </div>
+
+            <div className="hidden md:flex flex-col text-left">
+              <span className="text-xs font-bold text-[#050505] leading-tight">
+                {adminName || "GrowBroo Admin"}
               </span>
-              <span className="text-[10px] text-[#52606D]">{adminEmail}</span>
+              <span className="text-[10px] text-[#718096] leading-tight mt-0.5">
+                {adminEmail || "growbroo.info@gmail.com"}
+              </span>
             </div>
 
-            <div className="w-8.5 h-8.5 rounded-full bg-[#E9F8E9] text-[#006B21] border border-[#DCEBDD] flex items-center justify-center font-bold text-xs shadow-xs">
-              {adminName[0]}
-            </div>
+            {/* Notification bell with green badge */}
+            <button
+              type="button"
+              className="relative p-2 rounded-xl text-[#52606D] hover:text-[#050505] hover:bg-[#F2F8F3] transition-colors ml-1"
+              aria-label="Notifications"
+            >
+              <Bell className="w-4 h-4" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#39E900] ring-2 ring-white" />
+            </button>
 
+            {/* Logout button */}
             <button
               onClick={handleLogout}
               title="Sign Out"
-              className="p-2 rounded-xl text-[#52606D] hover:text-rose-600 hover:bg-rose-50 transition-colors duration-200"
+              className="p-2 rounded-xl text-[#52606D] hover:text-[#050505] hover:bg-[#F2F8F3] transition-colors"
             >
               <LogOut className="w-4 h-4" />
             </button>
