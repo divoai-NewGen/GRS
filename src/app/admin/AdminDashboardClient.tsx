@@ -217,202 +217,158 @@ export function AdminDashboardClient() {
 
       {/* 2. THE 4 RICH DARK GRADIENT KPI CARDS */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-        {/* CARD 1 — TOTAL BUSINESSES (Forest Green Gradient) */}
+        {/* CARD 1 — TOTAL BUSINESSES (Forest Green Gradient + 3D Wave) */}
         <Link
           href="/admin/businesses"
-          className="relative overflow-hidden p-5 rounded-[22px] bg-gradient-to-br from-[#0B3822] via-[#0E472B] to-[#072B18] border border-[#145332] shadow-[0_8px_25px_rgba(11,56,34,0.3)] hover:-translate-y-0.5 hover:shadow-[0_12px_30px_rgba(11,56,34,0.4)] transition-all duration-200 group flex flex-col justify-between"
+          className="relative overflow-hidden p-4 sm:p-5 rounded-[22px] bg-[#071F17] bg-gradient-to-br from-[#061D15] via-[#093526] to-[#0A4330] shadow-[0_10px_25px_rgba(6,29,21,0.4)] hover:-translate-y-0.5 transition-all duration-200 group flex flex-col justify-between min-h-[135px] border border-white/[0.04]"
         >
-          {/* Glowing Green Wave Vector Overlay */}
-          <svg
-            className="absolute right-0 bottom-0 w-36 h-20 opacity-30 pointer-events-none text-[#39E900]"
-            viewBox="0 0 144 80"
-            fill="none"
-          >
-            <path
-              d="M0,60 C30,70 60,30 90,45 C120,60 135,20 144,30 L144,80 L0,80 Z"
-              fill="currentColor"
-              opacity="0.3"
-            />
-            <path
-              d="M0,60 C30,70 60,30 90,45 C120,60 135,20 144,30"
-              stroke="currentColor"
-              strokeWidth="2"
-            />
-          </svg>
+          {/* Exact Glowing 3D Wave Image from Reference */}
+          <img
+            src="/images/clean_wave_1.png"
+            alt=""
+            className="absolute right-0 top-0 bottom-0 h-full w-auto max-w-[65%] object-cover object-right pointer-events-none select-none opacity-95 transition-transform duration-300 group-hover:scale-105"
+          />
 
           <div className="relative z-10">
-            {/* Top row: Icon + Label */}
-            <div className="flex items-center gap-3 mb-2.5">
-              <div className="w-9 h-9 rounded-xl bg-[#145332]/80 border border-[#23784A]/60 flex items-center justify-center text-[#39E900] shadow-xs">
-                <Building2 className="w-4.5 h-4.5" />
+            {/* Top row: 3D Glossy Icon + Label */}
+            <div className="flex items-center gap-2.5 mb-2.5">
+              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-[14px] bg-gradient-to-b from-[#22C55E] to-[#15803D] shadow-[0_4px_12px_rgba(21,128,61,0.5),inset_0_1px_1px_rgba(255,255,255,0.6),inset_0_-2px_2px_rgba(0,0,0,0.25)] border border-[#4ADE80]/30 flex items-center justify-center shrink-0">
+                <Building2 className="w-5 h-5 text-white drop-shadow-xs" />
               </div>
-              <span className="text-xs font-semibold text-white/90">
+              <span className="text-[12px] sm:text-xs font-bold text-white tracking-tight">
                 Total Businesses
               </span>
             </div>
 
             {/* Dominant Metric Number */}
-            <div className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight my-2">
+            <div className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-none mt-2.5 mb-1">
               {metrics.totalBusinesses}
             </div>
           </div>
 
-          {/* Bottom row: Status + Trend */}
-          <div className="relative z-10 flex items-center justify-between text-xs text-white/80 pt-2 border-t border-white/10">
-            <span>{metrics.activeBusinesses} active</span>
-            <span className="inline-flex items-center gap-1 font-bold text-[#39E900]">
+          {/* Bottom row: Subtext on left + Trend on right */}
+          <div className="relative z-10 flex items-center justify-between text-[11px] pt-1">
+            <span className="text-white/70 font-medium">{metrics.activeBusinesses} active</span>
+            <span className="inline-flex items-center gap-0.5 font-bold text-[#39E900]">
               <ArrowUpRight className="w-3.5 h-3.5" />
               <span>+0%</span>
             </span>
           </div>
         </Link>
 
-        {/* CARD 2 — TOTAL QR CARDS (Violet/Purple Gradient) */}
+        {/* CARD 2 — TOTAL QR CARDS (Violet/Purple Gradient + 3D Wave) */}
         <Link
           href="/admin/cards"
-          className="relative overflow-hidden p-5 rounded-[22px] bg-gradient-to-br from-[#2D124D] via-[#3E1B6B] to-[#1F0C36] border border-[#4B2282] shadow-[0_8px_25px_rgba(45,18,77,0.3)] hover:-translate-y-0.5 hover:shadow-[0_12px_30px_rgba(45,18,77,0.4)] transition-all duration-200 group flex flex-col justify-between"
+          className="relative overflow-hidden p-4 sm:p-5 rounded-[22px] bg-[#120924] bg-gradient-to-br from-[#140A28] via-[#221044] to-[#2B1454] shadow-[0_10px_25px_rgba(18,9,36,0.4)] hover:-translate-y-0.5 transition-all duration-200 group flex flex-col justify-between min-h-[135px] border border-white/[0.04]"
         >
-          {/* Glowing Purple Wave Vector Overlay */}
-          <svg
-            className="absolute right-0 bottom-0 w-36 h-20 opacity-30 pointer-events-none text-[#C084FC]"
-            viewBox="0 0 144 80"
-            fill="none"
-          >
-            <path
-              d="M0,55 C35,65 65,25 95,40 C125,55 135,15 144,25 L144,80 L0,80 Z"
-              fill="currentColor"
-              opacity="0.3"
-            />
-            <path
-              d="M0,55 C35,65 65,25 95,40 C125,55 135,15 144,25"
-              stroke="currentColor"
-              strokeWidth="2"
-            />
-          </svg>
+          {/* Exact Glowing 3D Wave Image from Reference */}
+          <img
+            src="/images/clean_wave_2.png"
+            alt=""
+            className="absolute right-0 top-0 bottom-0 h-full w-auto max-w-[65%] object-cover object-right pointer-events-none select-none opacity-95 transition-transform duration-300 group-hover:scale-105"
+          />
 
           <div className="relative z-10">
-            {/* Top row: Icon + Label */}
-            <div className="flex items-center gap-3 mb-2.5">
-              <div className="w-9 h-9 rounded-xl bg-[#451B75]/80 border border-[#6B32B3]/60 flex items-center justify-center text-[#C084FC] shadow-xs">
-                <CreditCard className="w-4.5 h-4.5" />
+            {/* Top row: 3D Glossy Icon + Label */}
+            <div className="flex items-center gap-2.5 mb-2.5">
+              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-[14px] bg-gradient-to-b from-[#A855F7] to-[#6B21A8] shadow-[0_4px_12px_rgba(107,33,168,0.5),inset_0_1px_1px_rgba(255,255,255,0.6),inset_0_-2px_2px_rgba(0,0,0,0.25)] border border-[#C084FC]/30 flex items-center justify-center shrink-0">
+                <CreditCard className="w-5 h-5 text-white drop-shadow-xs" />
               </div>
-              <span className="text-xs font-semibold text-white/90">
+              <span className="text-[12px] sm:text-xs font-bold text-white tracking-tight">
                 Total QR Cards
               </span>
             </div>
 
             {/* Dominant Metric Number */}
-            <div className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight my-2">
+            <div className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-none mt-2.5 mb-1">
               {metrics.totalCards}
             </div>
           </div>
 
-          {/* Bottom row: Status + Trend */}
-          <div className="relative z-10 flex items-center justify-between text-xs text-white/80 pt-2 border-t border-white/10">
-            <span className="truncate pr-1">
+          {/* Bottom row: Subtext on left + Trend on right */}
+          <div className="relative z-10 flex items-center justify-between text-[11px] pt-1">
+            <span className="text-white/70 font-medium truncate pr-1">
               {metrics.assignedCards} assigned, {metrics.unassignedCards} available
             </span>
-            <span className="inline-flex items-center gap-1 font-bold text-[#39E900] shrink-0">
+            <span className="inline-flex items-center gap-0.5 font-bold text-[#39E900] shrink-0">
               <ArrowUpRight className="w-3.5 h-3.5" />
               <span>+0%</span>
             </span>
           </div>
         </Link>
 
-        {/* CARD 3 — TOTAL SCANS (Ocean Blue Gradient) */}
+        {/* CARD 3 — TOTAL SCANS (Ocean Blue Gradient + 3D Wave) */}
         <Link
           href="/admin/scan-history"
-          className="relative overflow-hidden p-5 rounded-[22px] bg-gradient-to-br from-[#0C3260] via-[#104482] to-[#082242] border border-[#18559E] shadow-[0_8px_25px_rgba(12,50,96,0.3)] hover:-translate-y-0.5 hover:shadow-[0_12px_30px_rgba(12,50,96,0.4)] transition-all duration-200 group flex flex-col justify-between"
+          className="relative overflow-hidden p-4 sm:p-5 rounded-[22px] bg-[#06182E] bg-gradient-to-br from-[#041935] via-[#08305E] to-[#0A3D78] shadow-[0_10px_25px_rgba(6,24,46,0.4)] hover:-translate-y-0.5 transition-all duration-200 group flex flex-col justify-between min-h-[135px] border border-white/[0.04]"
         >
-          {/* Glowing Blue Wave Vector Overlay */}
-          <svg
-            className="absolute right-0 bottom-0 w-36 h-20 opacity-30 pointer-events-none text-[#38BDF8]"
-            viewBox="0 0 144 80"
-            fill="none"
-          >
-            <path
-              d="M0,62 C28,68 58,32 88,48 C118,62 132,22 144,32 L144,80 L0,80 Z"
-              fill="currentColor"
-              opacity="0.3"
-            />
-            <path
-              d="M0,62 C28,68 58,32 88,48 C118,62 132,22 144,32"
-              stroke="currentColor"
-              strokeWidth="2"
-            />
-          </svg>
+          {/* Exact Glowing 3D Wave Image from Reference */}
+          <img
+            src="/images/clean_wave_3.png"
+            alt=""
+            className="absolute right-0 top-0 bottom-0 h-full w-auto max-w-[65%] object-cover object-right pointer-events-none select-none opacity-95 transition-transform duration-300 group-hover:scale-105"
+          />
 
           <div className="relative z-10">
-            {/* Top row: Icon + Label */}
-            <div className="flex items-center gap-3 mb-2.5">
-              <div className="w-9 h-9 rounded-xl bg-[#134988]/80 border border-[#2170CC]/60 flex items-center justify-center text-[#38BDF8] shadow-xs">
-                <Eye className="w-4.5 h-4.5" />
+            {/* Top row: 3D Glossy Icon + Label */}
+            <div className="flex items-center gap-2.5 mb-2.5">
+              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-[14px] bg-gradient-to-b from-[#0EA5E9] to-[#0369A1] shadow-[0_4px_12px_rgba(3,105,161,0.5),inset_0_1px_1px_rgba(255,255,255,0.6),inset_0_-2px_2px_rgba(0,0,0,0.25)] border border-[#38BDF8]/30 flex items-center justify-center shrink-0">
+                <Eye className="w-5 h-5 text-white drop-shadow-xs" />
               </div>
-              <span className="text-xs font-semibold text-white/90">
+              <span className="text-[12px] sm:text-xs font-bold text-white tracking-tight">
                 Total Scans
               </span>
             </div>
 
             {/* Dominant Metric Number */}
-            <div className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight my-2">
+            <div className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-none mt-2.5 mb-1">
               {metrics.totalScans.toLocaleString()}
             </div>
           </div>
 
-          {/* Bottom row: Status + Trend */}
-          <div className="relative z-10 flex items-center justify-between text-xs text-white/80 pt-2 border-t border-white/10">
-            <span>~{metrics.uniqueVisitors} unique visitors</span>
-            <span className="inline-flex items-center gap-1 font-bold text-[#39E900]">
+          {/* Bottom row: Subtext on left + Trend on right */}
+          <div className="relative z-10 flex items-center justify-between text-[11px] pt-1">
+            <span className="text-white/70 font-medium">~{metrics.uniqueVisitors} unique visitors</span>
+            <span className="inline-flex items-center gap-0.5 font-bold text-[#39E900]">
               <ArrowUpRight className="w-3.5 h-3.5" />
               <span>+0%</span>
             </span>
           </div>
         </Link>
 
-        {/* CARD 4 — SCANS TODAY (Warm Amber/Bronze Gradient) */}
+        {/* CARD 4 — SCANS TODAY (Warm Amber/Bronze Gradient + 3D Wave) */}
         <Link
           href="/admin/analytics"
-          className="relative overflow-hidden p-5 rounded-[22px] bg-gradient-to-br from-[#7C3E08] via-[#A0520A] to-[#592C05] border border-[#B46014] shadow-[0_8px_25px_rgba(124,62,8,0.3)] hover:-translate-y-0.5 hover:shadow-[0_12px_30px_rgba(124,62,8,0.4)] transition-all duration-200 group flex flex-col justify-between"
+          className="relative overflow-hidden p-4 sm:p-5 rounded-[22px] bg-[#241407] bg-gradient-to-br from-[#2A1706] via-[#482708] to-[#60350B] shadow-[0_10px_25px_rgba(36,20,7,0.4)] hover:-translate-y-0.5 transition-all duration-200 group flex flex-col justify-between min-h-[135px] border border-white/[0.04]"
         >
-          {/* Glowing Amber Wave Vector Overlay */}
-          <svg
-            className="absolute right-0 bottom-0 w-36 h-20 opacity-30 pointer-events-none text-[#FCD34D]"
-            viewBox="0 0 144 80"
-            fill="none"
-          >
-            <path
-              d="M0,58 C32,66 62,28 92,42 C122,58 134,18 144,28 L144,80 L0,80 Z"
-              fill="currentColor"
-              opacity="0.3"
-            />
-            <path
-              d="M0,58 C32,66 62,28 92,42 C122,58 134,18 144,28"
-              stroke="currentColor"
-              strokeWidth="2"
-            />
-          </svg>
+          {/* Exact Glowing 3D Wave Image from Reference */}
+          <img
+            src="/images/clean_wave_4.png"
+            alt=""
+            className="absolute right-0 top-0 bottom-0 h-full w-auto max-w-[65%] object-cover object-right pointer-events-none select-none opacity-95 transition-transform duration-300 group-hover:scale-105"
+          />
 
           <div className="relative z-10">
-            {/* Top row: Icon + Label */}
-            <div className="flex items-center gap-3 mb-2.5">
-              <div className="w-9 h-9 rounded-xl bg-[#964E10]/80 border border-[#D6741F]/60 flex items-center justify-center text-[#FCD34D] shadow-xs">
-                <TrendingUp className="w-4.5 h-4.5" />
+            {/* Top row: 3D Glossy Icon + Label */}
+            <div className="flex items-center gap-2.5 mb-2.5">
+              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-[14px] bg-gradient-to-b from-[#F59E0B] to-[#B45309] shadow-[0_4px_12px_rgba(180,83,9,0.5),inset_0_1px_1px_rgba(255,255,255,0.6),inset_0_-2px_2px_rgba(0,0,0,0.25)] border border-[#FCD34D]/30 flex items-center justify-center shrink-0">
+                <TrendingUp className="w-5 h-5 text-white drop-shadow-xs" />
               </div>
-              <span className="text-xs font-semibold text-white/90">
+              <span className="text-[12px] sm:text-xs font-bold text-white tracking-tight">
                 Scans Today
               </span>
             </div>
 
             {/* Dominant Metric Number */}
-            <div className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight my-2">
+            <div className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-none mt-2.5 mb-1">
               {metrics.scansToday}
             </div>
           </div>
 
-          {/* Bottom row: Status + Trend */}
-          <div className="relative z-10 flex items-center justify-between text-xs text-white/80 pt-2 border-t border-white/10">
-            <span>{metrics.scansThisMonth} this month</span>
-            <span className="inline-flex items-center gap-1 font-bold text-[#39E900]">
+          {/* Bottom row: Subtext on left + Trend on right */}
+          <div className="relative z-10 flex items-center justify-between text-[11px] pt-1">
+            <span className="text-white/70 font-medium">{metrics.scansThisMonth} this month</span>
+            <span className="inline-flex items-center gap-0.5 font-bold text-[#39E900]">
               <ArrowUpRight className="w-3.5 h-3.5" />
               <span>+0%</span>
             </span>
