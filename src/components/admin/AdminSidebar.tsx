@@ -92,10 +92,10 @@ export function AdminSidebar({ mobileOpen = false, onCloseMobile }: AdminSidebar
                 key={item.href}
                 href={item.href}
                 onClick={onCloseMobile}
-                className={`group flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 ${
+                className={`group flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-150 ${
                   isActive
                     ? "bg-[#E9F8E9] text-[#006B21]"
-                    : "text-[#52606D] hover:text-[#050505] hover:bg-[#F2F8F3]"
+                    : "text-[#52606D] hover:text-[#050505] hover:bg-[#F0F8F1]"
                 }`}
               >
                 <div className="flex items-center gap-3">

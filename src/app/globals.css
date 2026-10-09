@@ -3,23 +3,26 @@
 :root {
   --background: #F7FBF7;
   --foreground: #050505;
-  --pure-black: #050505;
-  --growth-green: #006B21;
-  --neon-lime: #39E900;
-  --soft-mint: #E9F8E9;
-  --off-white: #F7FBF7;
-  --dark-forest: #10251A;
+  --color-primary: #006B21;
+  --color-accent: #39E900;
+  --color-background: #F7FBF7;
+  --color-surface: #FFFFFF;
+  --color-soft-mint: #E9F8E9;
+  --color-text: #050505;
+  --color-muted: #52606D;
+  --color-border: #DCEBDD;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-pure-black: #050505;
-  --color-growth-green: #006B21;
-  --color-neon-lime: #39E900;
+  --color-primary: #006B21;
+  --color-accent: #39E900;
+  --color-surface: #FFFFFF;
   --color-soft-mint: #E9F8E9;
-  --color-off-white: #F7FBF7;
-  --color-dark-forest: #10251A;
+  --color-text: #050505;
+  --color-muted: #52606D;
+  --color-border: #DCEBDD;
 }
 
 body {

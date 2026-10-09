@@ -98,7 +98,7 @@ export function AdminHeader({
 
   return (
     <>
-      <header className="sticky top-0 z-30 h-16 bg-white/92 backdrop-blur-[14px] border-b border-[#E5EEE6] px-4 sm:px-6 flex items-center justify-between shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
+      <header className="sticky top-0 z-30 h-16 bg-white/90 backdrop-blur-[16px] border-b border-[#E5EEE6] px-4 sm:px-6 flex items-center justify-between shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
         <div className="flex items-center gap-2.5 sm:gap-3">
           {/* Mobile hamburger menu toggle */}
           <button
@@ -122,7 +122,7 @@ export function AdminHeader({
           {/* Quick Search trigger button */}
           <button
             onClick={() => setSearchOpen(true)}
-            className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-white hover:bg-[#F2F8F3] text-[#52606D] text-xs font-medium border border-[#DCEBDD] hover:border-[#006B21]/30 transition-all duration-200 w-44 sm:w-64 shadow-xs"
+            className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-white hover:bg-[#F2F8F3] focus:outline-none focus:ring-2 focus:ring-[#39E900]/30 text-[#52606D] text-xs font-medium border border-[#DCEBDD] hover:border-[#006B21]/30 transition-all duration-200 w-44 sm:w-64 shadow-xs"
           >
             <Search className="w-3.5 h-3.5 text-[#006B21]" />
             <span className="flex-1 text-left truncate text-[#52606D]">Search businesses, cards...</span>
@@ -151,7 +151,7 @@ export function AdminHeader({
               <span className="text-[10px] text-[#52606D]">{adminEmail}</span>
             </div>
 
-            <div className="w-8 h-8 rounded-xl bg-[#E9F8E9] text-[#006B21] border border-[#DCEBDD] flex items-center justify-center font-bold text-xs shadow-xs">
+            <div className="w-8.5 h-8.5 rounded-full bg-[#E9F8E9] text-[#006B21] border border-[#DCEBDD] flex items-center justify-center font-bold text-xs shadow-xs">
               {adminName[0]}
             </div>
 
@@ -178,7 +178,7 @@ export function AdminHeader({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search businesses (Royal Salon), cards (CARD0001), or tokens..."
-                className="flex-1 bg-transparent border-0 text-[#050505] placeholder-[#52606D]/60 focus:outline-none text-sm"
+                className="flex-1 bg-transparent border-0 text-[#050505] placeholder-[#52606D]/60 focus:outline-none focus:ring-1 focus:ring-[#39E900]/30 rounded-lg px-1.5 py-0.5 text-sm"
               />
               {isSearching && <Loader2 className="w-4 h-4 text-[#006B21] animate-spin" />}
               <button

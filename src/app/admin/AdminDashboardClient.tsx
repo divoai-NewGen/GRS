@@ -130,7 +130,7 @@ export function AdminDashboardClient() {
           <button
             onClick={fetchData}
             disabled={loading}
-            className="p-2.5 rounded-xl border border-[#DCEBDD] bg-white hover:bg-[#E9F8E9] text-[#52606D] hover:text-[#006B21] transition-all duration-200 shadow-xs group"
+            className="h-11 w-11 flex items-center justify-center rounded-xl border border-[#DCEBDD] bg-white hover:bg-[#E9F8E9] text-[#52606D] hover:text-[#006B21] transition-all duration-200 shadow-xs group disabled:opacity-50"
             title="Refresh metrics"
           >
             <RefreshCw
@@ -142,7 +142,7 @@ export function AdminDashboardClient() {
 
           <Link
             href="/admin/cards"
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white hover:bg-[#E9F8E9] text-[#050505] border border-[#DCEBDD] hover:border-[#006B21]/30 font-semibold text-xs transition-all duration-200 shadow-xs"
+            className="h-11 inline-flex items-center gap-2 px-4.5 rounded-xl bg-white hover:bg-[#E9F8E9] text-[#050505] border border-[#DCEBDD] hover:border-[#006B21]/30 font-semibold text-xs transition-all duration-200 shadow-xs active:scale-[0.98]"
           >
             <PlusCircle className="w-4 h-4 text-[#006B21]" />
             Generate Cards
@@ -150,7 +150,7 @@ export function AdminDashboardClient() {
 
           <Link
             href="/admin/businesses"
-            className="inline-flex items-center gap-2 px-4.5 py-2.5 rounded-xl bg-[#006B21] hover:bg-[#005219] text-white font-semibold text-xs transition-all duration-200 shadow-sm shadow-[#006B21]/20 hover:shadow-md hover:shadow-[#006B21]/25"
+            className="h-11 inline-flex items-center gap-2 px-5 rounded-xl bg-[#006B21] hover:bg-[#005219] text-white font-semibold text-xs transition-all duration-200 shadow-sm shadow-[#006B21]/20 hover:shadow-md hover:shadow-[#006B21]/25 active:scale-[0.98]"
           >
             <Building2 className="w-4 h-4 text-white" />
             Add Business
@@ -158,159 +158,158 @@ export function AdminDashboardClient() {
         </div>
       </div>
 
-      {/* 4 Pastel KPI Cards Grid */}
+      {/* 4 Premium Mixed KPI Cards Grid (Pure White Cards with Pastel Accents) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        {/* CARD 1 — TOTAL BUSINESSES (Green Identity) */}
+        {/* CARD 1 — TOTAL BUSINESSES (Green Accent) */}
         <Link
           href="/admin/businesses"
-          className="relative overflow-hidden p-6 rounded-[20px] bg-[#F2FBF4] border border-[#DCEBDD] shadow-[0_8px_30px_rgba(0,60,20,0.05)] hover:-translate-y-0.5 hover:shadow-[0_12px_35px_rgba(0,60,20,0.08)] transition-all duration-200 group flex flex-col justify-between"
+          className="relative overflow-hidden p-6 rounded-[20px] bg-white border border-[#DCEBDD] shadow-[0_8px_30px_rgba(0,80,30,0.06)] hover:-translate-y-0.5 hover:shadow-[0_12px_35px_rgba(0,80,30,0.10)] transition-all duration-200 group flex flex-col justify-between"
         >
-          {/* Subtle Decorative Wave */}
-          <svg
+          {/* Extremely subtle corner wave accent */}
+          <div
             aria-hidden="true"
-            className="absolute -right-6 -bottom-6 w-36 h-36 text-[#168A3A] opacity-[0.09] pointer-events-none transition-transform duration-300 group-hover:scale-110"
-            viewBox="0 0 100 100"
-            fill="currentColor"
-          >
-            <path d="M0,50 C20,20 40,80 60,40 C80,0 100,50 100,100 L0,100 Z" />
-          </svg>
+            className="absolute -right-6 -bottom-6 w-32 h-32 bg-[#E9F8E9]/60 rounded-full blur-xl pointer-events-none transition-transform duration-300 group-hover:scale-110"
+          />
 
-          <div>
-            <div className="flex items-center justify-between mb-4">
+          <div className="relative z-10">
+            {/* Top row: Icon + Label */}
+            <div className="flex items-center justify-between mb-3.5">
               <span className="text-[11px] font-bold uppercase tracking-wider text-[#52606D]">
                 Total Businesses
               </span>
-              <div className="w-10 h-10 rounded-xl bg-[#E0F5E5] text-[#168A3A] flex items-center justify-center shadow-xs transition-transform duration-200 group-hover:scale-105">
+              <div className="w-10 h-10 rounded-xl bg-[#E9F8E9] text-[#006B21] flex items-center justify-center shadow-xs transition-transform duration-200 group-hover:scale-105 border border-[#DCEBDD]/60">
                 <Building2 className="w-5 h-5" />
               </div>
             </div>
 
-            <div className="text-3xl sm:text-4xl font-extrabold text-[#050505] tracking-tight leading-none mb-4">
+            {/* Middle: Large Dominant Metric Number */}
+            <div className="text-3xl sm:text-4xl font-extrabold text-[#050505] tracking-tight leading-none mb-3.5">
               {metrics.totalBusinesses}
             </div>
           </div>
 
-          <div className="flex items-center justify-between pt-3 border-t border-[#168A3A]/15 text-xs text-[#52606D]">
+          {/* Bottom: Supporting Information + Trend Indicator */}
+          <div className="relative z-10 flex items-center justify-between pt-3 border-t border-[#DCEBDD]/60 text-xs text-[#52606D]">
             <span>{metrics.activeBusinesses} active</span>
             <span className="inline-flex items-center gap-1 font-semibold text-[#168A3A]">
-              <span>↗ 0%</span>
+              <span>↑ 0%</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
             </span>
           </div>
         </Link>
 
-        {/* CARD 2 — TOTAL QR CARDS (Purple Identity) */}
+        {/* CARD 2 — TOTAL QR CARDS (Purple Accent) */}
         <Link
           href="/admin/cards"
-          className="relative overflow-hidden p-6 rounded-[20px] bg-[#F7F3FF] border border-[#E8DEFF] shadow-[0_8px_30px_rgba(0,60,20,0.05)] hover:-translate-y-0.5 hover:shadow-[0_12px_35px_rgba(0,60,20,0.08)] transition-all duration-200 group flex flex-col justify-between"
+          className="relative overflow-hidden p-6 rounded-[20px] bg-white border border-[#DCEBDD] shadow-[0_8px_30px_rgba(0,80,30,0.06)] hover:-translate-y-0.5 hover:shadow-[0_12px_35px_rgba(0,80,30,0.10)] transition-all duration-200 group flex flex-col justify-between"
         >
-          {/* Subtle Decorative Wave */}
-          <svg
+          {/* Extremely subtle corner wave accent */}
+          <div
             aria-hidden="true"
-            className="absolute -right-6 -bottom-6 w-36 h-36 text-[#7657D9] opacity-[0.09] pointer-events-none transition-transform duration-300 group-hover:scale-110"
-            viewBox="0 0 100 100"
-            fill="currentColor"
-          >
-            <path d="M0,60 C30,30 50,70 70,30 C90,10 100,50 100,100 L0,100 Z" />
-          </svg>
+            className="absolute -right-6 -bottom-6 w-32 h-32 bg-[#F1ECFF]/60 rounded-full blur-xl pointer-events-none transition-transform duration-300 group-hover:scale-110"
+          />
 
-          <div>
-            <div className="flex items-center justify-between mb-4">
+          <div className="relative z-10">
+            {/* Top row: Icon + Label */}
+            <div className="flex items-center justify-between mb-3.5">
               <span className="text-[11px] font-bold uppercase tracking-wider text-[#52606D]">
                 Total QR Cards
               </span>
-              <div className="w-10 h-10 rounded-xl bg-[#EEE6FF] text-[#7657D9] flex items-center justify-center shadow-xs transition-transform duration-200 group-hover:scale-105">
+              <div className="w-10 h-10 rounded-xl bg-[#F1ECFF] text-[#7657D9] flex items-center justify-center shadow-xs transition-transform duration-200 group-hover:scale-105 border border-[#E8DEFF]">
                 <CreditCard className="w-5 h-5" />
               </div>
             </div>
 
-            <div className="text-3xl sm:text-4xl font-extrabold text-[#050505] tracking-tight leading-none mb-4">
+            {/* Middle: Large Dominant Metric Number */}
+            <div className="text-3xl sm:text-4xl font-extrabold text-[#050505] tracking-tight leading-none mb-3.5">
               {metrics.totalCards}
             </div>
           </div>
 
-          <div className="flex items-center justify-between pt-3 border-t border-[#7657D9]/15 text-xs text-[#52606D]">
+          {/* Bottom: Supporting Information + Trend Indicator */}
+          <div className="relative z-10 flex items-center justify-between pt-3 border-t border-[#DCEBDD]/60 text-xs text-[#52606D]">
             <span className="truncate pr-1">
-              {metrics.assignedCards} assigned, {metrics.unassignedCards} free
+              {metrics.assignedCards} assigned, {metrics.unassignedCards} available
             </span>
             <span className="inline-flex items-center gap-1 font-semibold text-[#7657D9] shrink-0">
+              <span>↑ Active</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
             </span>
           </div>
         </Link>
 
-        {/* CARD 3 — TOTAL SCANS (Blue Identity) */}
+        {/* CARD 3 — TOTAL SCANS (Cyan/Blue Accent) */}
         <Link
           href="/admin/scan-history"
-          className="relative overflow-hidden p-6 rounded-[20px] bg-[#F1F8FF] border border-[#D4E7FA] shadow-[0_8px_30px_rgba(0,60,20,0.05)] hover:-translate-y-0.5 hover:shadow-[0_12px_35px_rgba(0,60,20,0.08)] transition-all duration-200 group flex flex-col justify-between"
+          className="relative overflow-hidden p-6 rounded-[20px] bg-white border border-[#DCEBDD] shadow-[0_8px_30px_rgba(0,80,30,0.06)] hover:-translate-y-0.5 hover:shadow-[0_12px_35px_rgba(0,80,30,0.10)] transition-all duration-200 group flex flex-col justify-between"
         >
-          {/* Subtle Decorative Wave */}
-          <svg
+          {/* Extremely subtle corner wave accent */}
+          <div
             aria-hidden="true"
-            className="absolute -right-6 -bottom-6 w-36 h-36 text-[#2878C8] opacity-[0.09] pointer-events-none transition-transform duration-300 group-hover:scale-110"
-            viewBox="0 0 100 100"
-            fill="currentColor"
-          >
-            <path d="M0,40 C20,70 50,30 70,60 C90,40 100,70 100,100 L0,100 Z" />
-          </svg>
+            className="absolute -right-6 -bottom-6 w-32 h-32 bg-[#EAF4FF]/60 rounded-full blur-xl pointer-events-none transition-transform duration-300 group-hover:scale-110"
+          />
 
-          <div>
-            <div className="flex items-center justify-between mb-4">
+          <div className="relative z-10">
+            {/* Top row: Icon + Label */}
+            <div className="flex items-center justify-between mb-3.5">
               <span className="text-[11px] font-bold uppercase tracking-wider text-[#52606D]">
                 Total Scans
               </span>
-              <div className="w-10 h-10 rounded-xl bg-[#E3F1FF] text-[#2878C8] flex items-center justify-center shadow-xs transition-transform duration-200 group-hover:scale-105">
+              <div className="w-10 h-10 rounded-xl bg-[#EAF4FF] text-[#2878C8] flex items-center justify-center shadow-xs transition-transform duration-200 group-hover:scale-105 border border-[#D4E7FA]">
                 <Eye className="w-5 h-5" />
               </div>
             </div>
 
-            <div className="text-3xl sm:text-4xl font-extrabold text-[#050505] tracking-tight leading-none mb-4">
+            {/* Middle: Large Dominant Metric Number */}
+            <div className="text-3xl sm:text-4xl font-extrabold text-[#050505] tracking-tight leading-none mb-3.5">
               {metrics.totalScans.toLocaleString()}
             </div>
           </div>
 
-          <div className="flex items-center justify-between pt-3 border-t border-[#2878C8]/15 text-xs text-[#52606D]">
-            <span>~{metrics.uniqueVisitors} visitors</span>
+          {/* Bottom: Supporting Information + Trend Indicator */}
+          <div className="relative z-10 flex items-center justify-between pt-3 border-t border-[#DCEBDD]/60 text-xs text-[#52606D]">
+            <span>~{metrics.uniqueVisitors} unique visitors</span>
             <span className="inline-flex items-center gap-1 font-semibold text-[#2878C8]">
+              <span>↑ Live</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
             </span>
           </div>
         </Link>
 
-        {/* CARD 4 — SCANS TODAY (Warm Amber Identity) */}
+        {/* CARD 4 — SCANS TODAY (Lime/Amber Accent) */}
         <Link
           href="/admin/analytics"
-          className="relative overflow-hidden p-6 rounded-[20px] bg-[#FFF9EE] border border-[#F5E5C6] shadow-[0_8px_30px_rgba(0,60,20,0.05)] hover:-translate-y-0.5 hover:shadow-[0_12px_35px_rgba(0,60,20,0.08)] transition-all duration-200 group flex flex-col justify-between"
+          className="relative overflow-hidden p-6 rounded-[20px] bg-white border border-[#DCEBDD] shadow-[0_8px_30px_rgba(0,80,30,0.06)] hover:-translate-y-0.5 hover:shadow-[0_12px_35px_rgba(0,80,30,0.10)] transition-all duration-200 group flex flex-col justify-between"
         >
-          {/* Subtle Decorative Wave */}
-          <svg
+          {/* Extremely subtle corner wave accent */}
+          <div
             aria-hidden="true"
-            className="absolute -right-6 -bottom-6 w-36 h-36 text-[#C98616] opacity-[0.09] pointer-events-none transition-transform duration-300 group-hover:scale-110"
-            viewBox="0 0 100 100"
-            fill="currentColor"
-          >
-            <path d="M0,50 C30,70 60,30 80,60 C90,40 100,60 100,100 L0,100 Z" />
-          </svg>
+            className="absolute -right-6 -bottom-6 w-32 h-32 bg-[#FFF6E5]/60 rounded-full blur-xl pointer-events-none transition-transform duration-300 group-hover:scale-110"
+          />
 
-          <div>
-            <div className="flex items-center justify-between mb-4">
+          <div className="relative z-10">
+            {/* Top row: Icon + Label */}
+            <div className="flex items-center justify-between mb-3.5">
               <span className="text-[11px] font-bold uppercase tracking-wider text-[#52606D]">
                 Scans Today
               </span>
-              <div className="w-10 h-10 rounded-xl bg-[#FFF0CF] text-[#C98616] flex items-center justify-center shadow-xs transition-transform duration-200 group-hover:scale-105">
+              <div className="w-10 h-10 rounded-xl bg-[#FFF6E5] text-[#D98B00] flex items-center justify-center shadow-xs transition-transform duration-200 group-hover:scale-105 border border-[#F5E5C6]">
                 <TrendingUp className="w-5 h-5" />
               </div>
             </div>
 
-            <div className="text-3xl sm:text-4xl font-extrabold text-[#050505] tracking-tight leading-none mb-4">
+            {/* Middle: Large Dominant Metric Number */}
+            <div className="text-3xl sm:text-4xl font-extrabold text-[#050505] tracking-tight leading-none mb-3.5">
               {metrics.scansToday}
             </div>
           </div>
 
-          <div className="flex items-center justify-between pt-3 border-t border-[#C98616]/15 text-xs text-[#52606D]">
+          {/* Bottom: Supporting Information + Trend Indicator */}
+          <div className="relative z-10 flex items-center justify-between pt-3 border-t border-[#DCEBDD]/60 text-xs text-[#52606D]">
             <span>{metrics.scansThisMonth} this month</span>
-            <span className="inline-flex items-center gap-1 font-semibold text-[#C98616]">
+            <span className="inline-flex items-center gap-1 font-semibold text-[#168A3A]">
               <span className="w-1.5 h-1.5 rounded-full bg-[#39E900]"></span>
+              <span>↑ Today</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
             </span>
           </div>
