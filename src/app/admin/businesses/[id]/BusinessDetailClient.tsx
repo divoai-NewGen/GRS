@@ -25,8 +25,35 @@ import {
   Star,
   MessageSquareWarning,
   ShieldCheck,
+  Clock,
+  RotateCw,
+  Scissors,
+  UtensilsCrossed,
+  Coffee,
+  Hotel,
+  Dumbbell,
+  Stethoscope,
+  ShoppingBag,
+  Car,
+  Home,
+  Briefcase,
+  Layers,
 } from "lucide-react";
 import { useToast } from "@/components/ui/Toast";
+import { CATEGORY_PRESETS, getRotatingReviewsAndTags } from "@/lib/reviewTemplates";
+const CATEGORY_LIST = [
+  { id: "RESTAURANT", name: "Restaurant & Dining", icon: UtensilsCrossed, desc: "Food taste, waiter service, ambience & kitchen hygiene" },
+  { id: "SALON", name: "Salon, Spa & Beauty", icon: Scissors, desc: "Stylist skills, haircuts, beard grooming & salon hygiene" },
+  { id: "CAFE", name: "Cafe & Bakery", icon: Coffee, desc: "Specialty brews, aesthetic vibes, snacks & peaceful setup" },
+  { id: "HOTEL", name: "Hotel, Resort & Stay", icon: Hotel, desc: "Clean rooms, front desk, room service & amenities" },
+  { id: "CLINIC", name: "Clinic & Healthcare", icon: Stethoscope, desc: "Doctor compassion, accurate diagnosis & nursing care" },
+  { id: "DENTIST", name: "Dental Clinic", icon: Stethoscope, desc: "Painless procedures, modern tools & gentle treatment" },
+  { id: "GYM", name: "Gym & Fitness Center", icon: Dumbbell, desc: "Certified trainers, workout machines & workout vibe" },
+  { id: "RETAIL", name: "Retail & Supermarket", icon: ShoppingBag, desc: "Wide inventory, discounts, helpful staff & fast billing" },
+  { id: "AUTO_SERVICE", name: "Automobile & Car Care", icon: Car, desc: "Expert mechanics, genuine parts & clean detailing" },
+  { id: "REAL_ESTATE", name: "Real Estate & Property", icon: Home, desc: "Transparent deals, legal paperwork & property advice" },
+  { id: "OTHER", name: "General Business & Services", icon: Briefcase, desc: "Professional services, reliable team & fair pricing" },
+];
 
 export function BusinessDetailClient() {
   const params = useParams();
@@ -45,6 +72,12 @@ export function BusinessDetailClient() {
   const [editUrlModal, setEditUrlModal] = useState(false);
   const [newReviewUrl, setNewReviewUrl] = useState("");
   const [savingUrl, setSavingUrl] = useState(false);
+
+  // Edit Business Category Modal & Rotation Simulator
+  const [editCategoryModal, setEditCategoryModal] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("OTHER");
+  const [savingCategory, setSavingCategory] = useState(false);
+  const [previewHourOffset, setPreviewHourOffset] = useState<number>(0);
 
   // Assign card modal
   const [assignCardModal, setAssignCardModal] = useState(false);
@@ -65,6 +98,7 @@ export function BusinessDetailClient() {
         const bData = await bRes.json();
         setBusiness(bData.business);
         setNewReviewUrl(bData.business.googleReviewUrl);
+        setSelectedCategory(bData.business.businessType || "OTHER");
       }
       if (aRes.ok) {
         const aData = await aRes.json();
@@ -113,6 +147,33 @@ export function BusinessDetailClient() {
       toastError("Network error");
     } finally {
       setUpdatingPlan(false);
+    }
+  };
+
+  const handleUpdateCategory = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSavingCategory(true);
+    try {
+      const res = await fetch(`/api/businesses/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ businessType: selectedCategory }),
+      });
+
+      if (res.ok) {
+        success(
+          `Category updated to ${CATEGORY_PRESETS[selectedCategory]?.name || selectedCategory}!`
+        );
+        setEditCategoryModal(false);
+        fetchBusinessData();
+      } else {
+        const data = await res.json();
+        toastError(data.error || "Failed to update category");
+      }
+    } catch {
+      toastError("Network error");
+    } finally {
+      setSavingCategory(false);
     }
   };
 
@@ -195,6 +256,17 @@ export function BusinessDetailClient() {
     );
   }
 
+  const previewRotation = business
+    ? getRotatingReviewsAndTags({
+        businessType: business.businessType,
+        businessName: business.name,
+        businessId: business.id,
+        customTags: business.customTags,
+        customReviews: business.recommendedReviews,
+        hourOffset: previewHourOffset,
+      })
+    : null;
+
   return (
     <div className="space-y-6">
       {/* Top Back & Action Row */}
@@ -231,9 +303,22 @@ export function BusinessDetailClient() {
               <h1 className="text-2xl font-black text-[#050505] tracking-tight">
                 {business.name}
               </h1>
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#E9F8E9] text-[#006B21] border border-[#006B21]/20">
-                {business.businessType}
-              </span>
+              <div className="flex items-center gap-1.5">
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#E9F8E9] text-[#006B21] border border-[#006B21]/20">
+                  {CATEGORY_PRESETS[business.businessType]?.name || business.businessType}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedCategory(business.businessType || "OTHER");
+                    setEditCategoryModal(true);
+                  }}
+                  className="p-1 rounded-lg hover:bg-[#E9F8E9] text-[#006B21] transition-colors"
+                  title="Change Business Category"
+                >
+                  <Edit2 className="w-3.5 h-3.5" />
+                </button>
+              </div>
               {business.status === "ACTIVE" ? (
                 <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#E9F8E9] text-[#006B21] border border-[#006B21]/30 flex items-center gap-1">
                   <CheckCircle className="w-3 h-3" /> Active
@@ -356,6 +441,154 @@ export function BusinessDetailClient() {
             {updatingPlan && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
             {business.planType === "PREMIUM" ? "Switch to Basic Plan" : "Upgrade to Premium Plan"}
           </button>
+        </div>
+      </div>
+
+      {/* Industry Category & 1-Hour Dynamic Review Engine */}
+      <div className="p-6 rounded-3xl bg-white border border-[#006B21]/15 shadow-sm space-y-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#006B21]/10 pb-4">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="p-1.5 rounded-xl bg-[#E9F8E9] text-[#006B21] border border-[#006B21]/20">
+                <RotateCw className="w-4 h-4" />
+              </span>
+              <h2 className="text-base font-bold text-[#050505]">
+                Industry Category & 1-Hour Anti-Duplicate Rotation Engine
+              </h2>
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                Google Spam-Safe
+              </span>
+            </div>
+            <p className="text-xs text-[#050505]/60 max-w-2xl leading-relaxed">
+              Reviews & tags shift automatically every 60 minutes from a master pool of 15+ curated templates. Google&apos;s algorithm detects diverse, genuine reviews and avoids duplicate penalties.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={() => {
+                setSelectedCategory(business.businessType || "OTHER");
+                setEditCategoryModal(true);
+              }}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#006B21] hover:bg-[#005219] text-white text-xs font-bold shadow-sm transition-all"
+            >
+              <Edit2 className="w-3.5 h-3.5 text-white" />
+              Change Category
+            </button>
+          </div>
+        </div>
+
+        {/* Category Details Banner */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+          <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+            <span className="text-slate-500 font-medium">Selected Category:</span>
+            <span className="font-bold text-slate-900">
+              {CATEGORY_PRESETS[business.businessType]?.name || business.businessType}
+            </span>
+          </div>
+          <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+            <span className="text-slate-500 font-medium">Master Pool Size:</span>
+            <span className="font-bold text-emerald-700">
+              {previewRotation?.totalPoolSize || 15} Unique Reviews (3/hr)
+            </span>
+          </div>
+          <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+            <span className="text-slate-500 font-medium">Rotation Frequency:</span>
+            <span className="font-bold text-blue-700 flex items-center gap-1">
+              <Clock className="w-3.5 h-3.5 text-blue-600" /> Every 60 Minutes
+            </span>
+          </div>
+        </div>
+
+        {/* Live Simulation & Preview Bar */}
+        <div className="p-4 rounded-2xl bg-slate-50/80 border border-slate-200/80 space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-bold text-slate-700">
+                Hourly Review Rotation Preview:
+              </span>
+              <span className="text-[11px] text-slate-400">
+                (Simulate how customer templates change over time)
+              </span>
+            </div>
+
+            {/* Hour Offset Simulation Switcher */}
+            <div className="flex items-center gap-1 bg-white p-1 rounded-xl border border-slate-200 shadow-2xs">
+              <button
+                type="button"
+                onClick={() => setPreviewHourOffset(0)}
+                className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all ${
+                  previewHourOffset === 0
+                    ? "bg-[#006B21] text-white shadow-xs"
+                    : "text-slate-600 hover:text-slate-900"
+                }`}
+              >
+                ● Current Hour
+              </button>
+              <button
+                type="button"
+                onClick={() => setPreviewHourOffset(1)}
+                className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all ${
+                  previewHourOffset === 1
+                    ? "bg-[#006B21] text-white shadow-xs"
+                    : "text-slate-600 hover:text-slate-900"
+                }`}
+              >
+                +1 Hour (Shift 1)
+              </button>
+              <button
+                type="button"
+                onClick={() => setPreviewHourOffset(2)}
+                className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition-all ${
+                  previewHourOffset === 2
+                    ? "bg-[#006B21] text-white shadow-xs"
+                    : "text-slate-600 hover:text-slate-900"
+                }`}
+              >
+                +2 Hours (Shift 2)
+              </button>
+            </div>
+          </div>
+
+          {/* 3 Active Review Templates */}
+          <div className="space-y-2">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 block">
+              3 Reviews Served to Customers for this Hour:
+            </span>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              {previewRotation?.reviews.map((rev, idx) => (
+                <div
+                  key={idx}
+                  className="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-2xs space-y-2 text-xs flex flex-col justify-between"
+                >
+                  <p className="text-slate-700 leading-relaxed font-medium">
+                    &ldquo;{rev}&rdquo;
+                  </p>
+                  <div className="flex items-center justify-between text-[11px] text-slate-400 font-semibold pt-2 border-t border-slate-100">
+                    <span>Template #{idx + 1 + previewHourOffset * 3}</span>
+                    <span className="text-amber-500 font-bold">★★★★★</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Active 6 Positive Tags */}
+          <div className="space-y-1.5 pt-1">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 block">
+              Active &ldquo;Tap to Add&rdquo; Highlights for this Hour:
+            </span>
+            <div className="flex flex-wrap gap-1.5">
+              {previewRotation?.tags.map((tag, idx) => (
+                <span
+                  key={idx}
+                  className="px-2.5 py-1 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 font-semibold text-xs"
+                >
+                  + {tag}
+                </span>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -667,6 +900,98 @@ export function BusinessDetailClient() {
                 >
                   {assigningCard && <Loader2 className="w-3.5 h-3.5 animate-spin text-white" />}
                   Assign to Business
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Category Modal */}
+      {editCategoryModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-2xl bg-white rounded-3xl p-6 shadow-2xl border border-slate-200 space-y-4 text-[#050505] max-h-[90vh] overflow-y-auto">
+            <div className="flex items-start justify-between border-b pb-3">
+              <div>
+                <h3 className="text-base font-black text-[#050505]">
+                  Select Business Industry Category
+                </h3>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Choose the category that matches this business. Review templates, compliments, and tags will automatically adjust and rotate.
+                </p>
+              </div>
+              <button
+                onClick={() => setEditCategoryModal(false)}
+                className="p-1 rounded-lg text-slate-400 hover:text-slate-700 text-sm font-bold"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleUpdateCategory} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                {CATEGORY_LIST.map((cat) => {
+                  const Icon = cat.icon;
+                  const isSelected = selectedCategory === cat.id;
+                  return (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => setSelectedCategory(cat.id)}
+                      className={`text-left p-3.5 rounded-2xl border transition-all flex items-start gap-3 ${
+                        isSelected
+                          ? "bg-[#E9F8E9] border-[#006B21] ring-2 ring-[#006B21]/20 shadow-xs"
+                          : "bg-white border-slate-200 hover:bg-slate-50 hover:border-slate-300"
+                      }`}
+                    >
+                      <div
+                        className={`p-2 rounded-xl shrink-0 ${
+                          isSelected
+                            ? "bg-[#006B21] text-white"
+                            : "bg-slate-100 text-slate-600"
+                        }`}
+                      >
+                        <Icon className="w-4 h-4" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between">
+                          <span
+                            className={`text-xs font-bold block ${
+                              isSelected ? "text-[#006B21]" : "text-slate-800"
+                            }`}
+                          >
+                            {cat.name}
+                          </span>
+                          {isSelected && (
+                            <Check className="w-3.5 h-3.5 text-[#006B21] shrink-0" />
+                          )}
+                        </div>
+                        <p className="text-[11px] text-slate-500 mt-0.5 leading-snug line-clamp-2">
+                          {cat.desc}
+                        </p>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="flex justify-end gap-3 pt-3 border-t">
+                <button
+                  type="button"
+                  onClick={() => setEditCategoryModal(false)}
+                  className="px-4 py-2 rounded-xl text-xs font-medium text-slate-600 hover:bg-slate-100"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={savingCategory}
+                  className="px-5 py-2.5 rounded-xl bg-[#006B21] hover:bg-[#005219] text-white font-bold text-xs shadow-md shadow-[#006B21]/20 disabled:opacity-50 flex items-center gap-2"
+                >
+                  {savingCategory && (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin text-white" />
+                  )}
+                  Save & Apply Category
                 </button>
               </div>
             </form>

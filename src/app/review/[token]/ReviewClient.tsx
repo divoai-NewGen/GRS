@@ -37,23 +37,7 @@ interface ReviewClientProps {
   };
 }
 
-// Default tags based on typical local business types
-const DEFAULT_POSITIVE_TAGS = [
-  "Polite Staff",
-  "Quick Service",
-  "Clean & Hygienic",
-  "Great Ambiance",
-  "Value for Money",
-  "Highly Recommended",
-];
-
-const DEFAULT_NEGATIVE_TAGS = [
-  "Long Wait Time",
-  "Staff Behavior",
-  "Pricing Issue",
-  "Quality Not Met",
-  "Cleanliness",
-];
+import { getRotatingReviewsAndTags } from "@/lib/reviewTemplates";
 
 export function ReviewClient({
   cardId,
@@ -61,29 +45,36 @@ export function ReviewClient({
   publicToken,
   business,
 }: ReviewClientProps) {
-  const [rating, setRating] = useState<number>(5);
+  // Stars are initially empty (0 rating until user clicks)
+  const [rating, setRating] = useState<number>(0);
   const [hoverRating, setHoverRating] = useState<number>(0);
 
-  // Positive flow states
-  const availableTags =
-    business.customTags && business.customTags.length > 0
-      ? business.customTags
-      : DEFAULT_POSITIVE_TAGS;
-
-  const defaultTemplates = [
-    `Exceptional experience at ${business.name}! The staff was courteous, service was super prompt, and the ambiance was top notch. Highly recommended!`,
-    `Had a wonderful visit! Top-notch service and great attention to detail. Will definitely be coming back.`,
-    `10/10 service! Professional staff, great hygiene, and reasonable pricing. Best place around!`,
-  ];
-
-  const availableTemplates =
-    business.recommendedReviews && business.recommendedReviews.length > 0
-      ? business.recommendedReviews
-      : defaultTemplates;
+  // Dynamic Category & 1-Hour Anti-Duplicate Rotating Engine
+  const {
+    tags: availableTags,
+    reviews: availableTemplates,
+    negativeTags: availableNegativeTags,
+  } = React.useMemo(() => {
+    return getRotatingReviewsAndTags({
+      businessType: business.businessType,
+      businessName: business.name,
+      businessId: business.id,
+      customTags: business.customTags,
+      customReviews: business.recommendedReviews,
+    });
+  }, [
+    business.businessType,
+    business.name,
+    business.id,
+    business.customTags,
+    business.recommendedReviews,
+  ]);
 
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedTemplateIndex, setSelectedTemplateIndex] = useState<number>(0);
-  const [reviewText, setReviewText] = useState<string>(availableTemplates[0]);
+  const [reviewText, setReviewText] = useState<string>(
+    availableTemplates[0] || ""
+  );
   const [copiedSuccess, setCopiedSuccess] = useState<boolean>(false);
 
   // Negative feedback states
@@ -94,7 +85,7 @@ export function ReviewClient({
   const [submittingFeedback, setSubmittingFeedback] = useState<boolean>(false);
   const [feedbackSubmitted, setFeedbackSubmitted] = useState<boolean>(false);
 
-  // Toggle positive tags
+  // Toggle positive tags and dynamically blend into the review text
   const togglePositiveTag = (tag: string) => {
     let nextTags: string[];
     if (selectedTags.includes(tag)) {
@@ -104,12 +95,12 @@ export function ReviewClient({
     }
     setSelectedTags(nextTags);
 
-    // Auto-enrich template text if desired
+    const base =
+      availableTemplates[selectedTemplateIndex] || availableTemplates[0] || "";
     if (nextTags.length > 0) {
-      const base = availableTemplates[selectedTemplateIndex] || defaultTemplates[0];
       setReviewText(`${base} Specially loved their ${nextTags.join(", ")}!`);
     } else {
-      setReviewText(availableTemplates[selectedTemplateIndex] || defaultTemplates[0]);
+      setReviewText(base);
     }
   };
 
@@ -122,7 +113,7 @@ export function ReviewClient({
     }
   };
 
-  // Robust Cross-Browser Clipboard Copy (Works on mobile HTTP, Safari, Chrome & WebViews)
+  // Robust Cross-Browser Clipboard Copy
   const copyTextToClipboard = async (text: string): Promise<boolean> => {
     let success = false;
     if (typeof navigator !== "undefined" && navigator.clipboard && navigator.clipboard.writeText) {
@@ -197,15 +188,17 @@ export function ReviewClient({
   };
 
   const isPositive = rating >= 4;
+  const isNegative = rating >= 1 && rating <= 3;
+  const effectiveRating = hoverRating || rating;
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white flex flex-col justify-between selection:bg-[#39E900] selection:text-black">
+    <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] flex flex-col justify-between selection:bg-amber-100 selection:text-amber-900 font-sans">
       {/* Top Header / Business Card Hero */}
       <div className="w-full max-w-lg mx-auto p-4 sm:p-6 space-y-6">
         <div className="text-center pt-4 sm:pt-6 space-y-3">
           {/* Business Logo or Avatar */}
-          <div className="inline-flex p-1 rounded-3xl bg-gradient-to-tr from-[#006B21] to-[#39E900] shadow-lg shadow-[#006B21]/30">
-            <div className="w-20 h-20 rounded-[22px] bg-[#10251A] border-2 border-[#050505] flex items-center justify-center overflow-hidden">
+          <div className="inline-flex p-1.5 rounded-3xl bg-white shadow-md shadow-slate-200/60 border border-slate-200/80">
+            <div className="w-20 h-20 rounded-[20px] bg-slate-50 flex items-center justify-center overflow-hidden">
               {business.logoUrl ? (
                 <img
                   src={business.logoUrl}
@@ -213,34 +206,35 @@ export function ReviewClient({
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <Building2 className="w-10 h-10 text-[#39E900]" />
+                <Building2 className="w-10 h-10 text-slate-700" />
               )}
             </div>
           </div>
 
           <div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#10251A] border border-[#006B21]/50 text-[11px] font-bold text-[#39E900] mb-1.5 shadow-sm">
-              <ShieldCheck className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 border border-blue-200/80 text-[11px] font-bold text-blue-700 mb-1.5 shadow-2xs">
+              <ShieldCheck className="w-3.5 h-3.5 text-blue-600" />
               Verified Business
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0F172A] tracking-tight">
               {business.name}
             </h1>
-            <p className="text-xs text-white/60 max-w-xs mx-auto mt-1">
+            <p className="text-xs sm:text-sm text-slate-500 max-w-xs mx-auto mt-1">
               Your honest feedback helps us serve you better.
             </p>
           </div>
         </div>
 
-        {/* Star Rating Selector */}
-        <div className="p-6 rounded-3xl bg-[#10251A]/80 border border-[#006B21]/40 shadow-xl text-center space-y-4 backdrop-blur-md">
-          <span className="text-xs font-bold uppercase tracking-wider text-[#39E900]">
+        {/* Star Rating Selector Card */}
+        <div className="p-6 rounded-3xl bg-white border border-slate-200/90 shadow-sm text-center space-y-4">
+          <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
             Rate Your Experience
           </span>
 
+          {/* 5 Stars: Initially empty, golden-yellow on click/hover */}
           <div className="flex items-center justify-center gap-2 sm:gap-3 py-1">
             {[1, 2, 3, 4, 5].map((star) => {
-              const active = (hoverRating || rating) >= star;
+              const isFilled = effectiveRating >= star;
               return (
                 <button
                   key={star}
@@ -252,10 +246,10 @@ export function ReviewClient({
                   aria-label={`${star} star rating`}
                 >
                   <Star
-                    className={`w-9 h-9 sm:w-11 sm:h-11 transition-all ${
-                      active
-                        ? "fill-[#39E900] text-[#39E900] drop-shadow-[0_0_12px_rgba(57,233,0,0.6)]"
-                        : "fill-transparent text-white/25 stroke-[1.5]"
+                    className={`w-10 h-10 sm:w-12 sm:h-12 transition-all duration-150 ${
+                      isFilled
+                        ? "fill-[#FFB800] text-[#FFB800] drop-shadow-[0_2px_8px_rgba(255,184,0,0.45)] stroke-[#E5A500] stroke-[1]"
+                        : "fill-slate-100 text-slate-300 stroke-slate-300 stroke-[1.5] hover:text-[#FFB800]"
                     }`}
                   />
                 </button>
@@ -263,12 +257,33 @@ export function ReviewClient({
             })}
           </div>
 
-          <p className="text-xs font-semibold text-white/80">
-            {rating === 5 && "Outstanding Experience! ⭐⭐⭐⭐⭐"}
-            {rating === 4 && "Great Experience! ⭐⭐⭐⭐"}
-            {rating === 3 && "Average ⭐⭐⭐"}
-            {rating === 2 && "Could be better ⭐⭐"}
-            {rating === 1 && "Disappointing ⭐"}
+          <p className="text-xs sm:text-sm font-semibold text-slate-600 min-h-[20px]">
+            {rating === 0 && (
+              <span className="text-slate-400 font-normal">
+                Tap a star above to rate your experience
+              </span>
+            )}
+            {rating === 5 && (
+              <span className="text-amber-600 font-bold">
+                Outstanding Experience! ⭐⭐⭐⭐⭐
+              </span>
+            )}
+            {rating === 4 && (
+              <span className="text-amber-600 font-bold">
+                Great Experience! ⭐⭐⭐⭐
+              </span>
+            )}
+            {rating === 3 && (
+              <span className="text-slate-700 font-bold">Average ⭐⭐⭐</span>
+            )}
+            {rating === 2 && (
+              <span className="text-slate-700 font-bold">
+                Could be better ⭐⭐
+              </span>
+            )}
+            {rating === 1 && (
+              <span className="text-slate-700 font-bold">Disappointing ⭐</span>
+            )}
           </p>
         </div>
 
@@ -277,8 +292,8 @@ export function ReviewClient({
           <div className="space-y-5 animate-in fade-in slide-in-from-bottom-3 duration-200">
             {/* Filter Chips / Positive Highlights */}
             <div className="space-y-2">
-              <label className="text-xs font-bold text-white/80 flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-[#39E900]" />
+              <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-amber-500" />
                 What did you like the most? (Tap to add)
               </label>
               <div className="flex flex-wrap gap-2">
@@ -289,10 +304,10 @@ export function ReviewClient({
                       key={tag}
                       type="button"
                       onClick={() => togglePositiveTag(tag)}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+                      className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 ${
                         isSelected
-                          ? "bg-[#39E900] text-black shadow-md shadow-[#39E900]/30 scale-105"
-                          : "bg-[#10251A] border border-[#006B21]/40 text-white/80 hover:text-white hover:border-[#39E900]/40"
+                          ? "bg-[#FFB800] text-slate-900 font-bold shadow-sm scale-105 border border-[#E5A500]"
+                          : "bg-white border border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-50"
                       }`}
                     >
                       {isSelected ? "✓" : "+"} {tag}
@@ -304,9 +319,9 @@ export function ReviewClient({
 
             {/* Recommended Template Reviews */}
             <div className="space-y-2">
-              <label className="text-xs font-bold text-white/80 flex items-center justify-between">
+              <label className="text-xs font-bold text-slate-700 flex items-center justify-between">
                 <span>Select a ready-made compliment:</span>
-                <span className="text-[10px] text-[#39E900] font-normal">
+                <span className="text-[10px] text-slate-400 font-normal">
                   Zero typing needed
                 </span>
               </label>
@@ -325,12 +340,14 @@ export function ReviewClient({
                       }}
                       className={`w-full text-left p-3.5 rounded-2xl border text-xs leading-relaxed transition-all ${
                         isSelected
-                          ? "bg-[#10251A] border-[#39E900] text-white shadow-md shadow-[#39E900]/10 ring-1 ring-[#39E900]"
-                          : "bg-[#050505] border-[#006B21]/30 text-white/70 hover:bg-[#10251A]/40 hover:text-white"
+                          ? "bg-amber-50/50 border-[#FFB800] text-slate-900 ring-2 ring-[#FFB800]/30 shadow-xs"
+                          : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                       }`}
                     >
                       <div className="flex items-start gap-2">
-                        <span className="text-[#39E900] font-black text-sm">“</span>
+                        <span className="text-[#FFB800] font-black text-base leading-none">
+                          “
+                        </span>
                         <p className="flex-1 font-medium">{template}</p>
                       </div>
                     </button>
@@ -342,10 +359,10 @@ export function ReviewClient({
             {/* Editable Review Box */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <label className="text-xs font-bold text-white/80">
+                <label className="text-xs font-bold text-slate-700">
                   Your Google Review:
                 </label>
-                <span className="text-[10px] text-white/40">
+                <span className="text-[10px] text-slate-400">
                   {reviewText.length} characters
                 </span>
               </div>
@@ -354,7 +371,7 @@ export function ReviewClient({
                 value={reviewText}
                 onChange={(e) => setReviewText(e.target.value)}
                 placeholder="Write your review here..."
-                className="w-full p-3.5 rounded-2xl bg-[#10251A] border border-[#006B21]/40 text-xs text-white focus:outline-none focus:border-[#39E900] transition-colors resize-none leading-relaxed"
+                className="w-full p-3.5 rounded-2xl bg-white border border-slate-200 text-xs sm:text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors resize-none leading-relaxed shadow-2xs"
               />
             </div>
 
@@ -363,11 +380,29 @@ export function ReviewClient({
               <button
                 type="button"
                 onClick={handleCopyAndOpenGoogle}
-                className="w-full py-4 px-6 rounded-2xl bg-[#006B21] hover:bg-[#005219] active:scale-[0.99] text-white font-black text-sm shadow-xl shadow-[#006B21]/40 border border-[#39E900]/40 flex items-center justify-center gap-2.5 transition-all group"
+                className="w-full py-4 px-6 rounded-2xl bg-[#1A73E8] hover:bg-[#1557B0] active:scale-[0.99] text-white font-bold text-sm sm:text-base shadow-lg shadow-blue-500/25 flex items-center justify-center gap-2.5 transition-all group"
               >
-                <Copy className="w-4 h-4 text-[#39E900] group-hover:scale-110 transition-transform" />
+                {/* Official Google G Logo icon */}
+                <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24">
+                  <path
+                    fill="#FFFFFF"
+                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                  />
+                  <path
+                    fill="#FFFFFF"
+                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                  />
+                  <path
+                    fill="#FFFFFF"
+                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+                  />
+                  <path
+                    fill="#FFFFFF"
+                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                  />
+                </svg>
                 <span>Copy Review & Post on Google</span>
-                <ChevronRight className="w-4 h-4 text-[#39E900]" />
+                <ChevronRight className="w-4 h-4 text-white/80 group-hover:translate-x-0.5 transition-transform" />
               </button>
 
               <div className="text-center">
@@ -375,7 +410,7 @@ export function ReviewClient({
                   href={business.googleReviewUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-xs text-white/50 hover:text-[#39E900] transition-colors underline underline-offset-4"
+                  className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-800 transition-colors underline underline-offset-4"
                 >
                   Or write directly on Google from scratch
                   <ExternalLink className="w-3 h-3" />
@@ -386,20 +421,20 @@ export function ReviewClient({
         )}
 
         {/* ---------------- NEGATIVE FEEDBACK FUNNEL (1 to 3 STARS) ---------------- */}
-        {!isPositive && !feedbackSubmitted && (
+        {isNegative && !feedbackSubmitted && (
           <form
             onSubmit={handleSubmitPrivateFeedback}
-            className="p-5 rounded-3xl bg-[#10251A] border border-amber-900/60 space-y-4 animate-in fade-in slide-in-from-bottom-3 duration-200"
+            className="p-5 sm:p-6 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-4 animate-in fade-in slide-in-from-bottom-3 duration-200"
           >
             <div className="flex items-start gap-3">
-              <div className="p-2 rounded-2xl bg-amber-950/80 border border-amber-800 text-amber-400 mt-0.5">
+              <div className="p-2 rounded-2xl bg-amber-50 border border-amber-200 text-amber-600 mt-0.5">
                 <MessageSquareWarning className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-sm font-black text-white">
+                <h3 className="text-sm font-bold text-slate-900">
                   We care about your experience
                 </h3>
-                <p className="text-xs text-white/60 leading-relaxed mt-0.5">
+                <p className="text-xs text-slate-500 leading-relaxed mt-0.5">
                   Please let our management know what went wrong so we can fix it right away.
                 </p>
               </div>
@@ -407,21 +442,21 @@ export function ReviewClient({
 
             {/* Quick Issue Chips */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-white/80">
+              <label className="text-xs font-bold text-slate-700">
                 What area needs improvement?
               </label>
               <div className="flex flex-wrap gap-2">
-                {DEFAULT_NEGATIVE_TAGS.map((tag) => {
+                {availableNegativeTags.map((tag) => {
                   const isSelected = negativeSelectedTags.includes(tag);
                   return (
                     <button
                       key={tag}
                       type="button"
                       onClick={() => toggleNegativeTag(tag)}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                      className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
                         isSelected
-                          ? "bg-amber-600 text-white shadow-sm"
-                          : "bg-[#050505] border border-amber-900/40 text-white/70 hover:text-white"
+                          ? "bg-amber-600 text-white shadow-xs font-bold"
+                          : "bg-slate-50 border border-slate-200 text-slate-700 hover:bg-slate-100"
                       }`}
                     >
                       {isSelected ? "✓" : "+"} {tag}
@@ -433,7 +468,7 @@ export function ReviewClient({
 
             {/* Detailed Complaint Box */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-white/80">
+              <label className="text-xs font-bold text-slate-700">
                 Your feedback to management:
               </label>
               <textarea
@@ -442,14 +477,14 @@ export function ReviewClient({
                 value={complaintText}
                 onChange={(e) => setComplaintText(e.target.value)}
                 placeholder="Tell us what happened..."
-                className="w-full p-3 rounded-xl bg-[#050505] border border-amber-900/40 text-xs text-white placeholder-white/30 focus:outline-none focus:border-amber-500 transition-colors resize-none"
+                className="w-full p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-amber-500 transition-colors resize-none"
               />
             </div>
 
             {/* Contact details for management followup */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="text-[11px] font-medium text-white/60 block mb-1">
+                <label className="text-[11px] font-medium text-slate-500 block mb-1">
                   Your Name (Optional)
                 </label>
                 <input
@@ -457,11 +492,11 @@ export function ReviewClient({
                   value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
                   placeholder="Rahul Sharma"
-                  className="w-full px-3 py-2 rounded-xl bg-[#050505] border border-amber-900/40 text-xs text-white placeholder-white/30 focus:outline-none focus:border-amber-500"
+                  className="w-full px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-amber-500"
                 />
               </div>
               <div>
-                <label className="text-[11px] font-medium text-white/60 block mb-1">
+                <label className="text-[11px] font-medium text-slate-500 block mb-1">
                   Phone / WhatsApp (Optional)
                 </label>
                 <input
@@ -469,7 +504,7 @@ export function ReviewClient({
                   value={customerPhone}
                   onChange={(e) => setCustomerPhone(e.target.value)}
                   placeholder="+91 98765 43210"
-                  className="w-full px-3 py-2 rounded-xl bg-[#050505] border border-amber-900/40 text-xs text-white placeholder-white/30 focus:outline-none focus:border-amber-500"
+                  className="w-full px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-amber-500"
                 />
               </div>
             </div>
@@ -477,7 +512,7 @@ export function ReviewClient({
             <button
               type="submit"
               disabled={submittingFeedback || !complaintText.trim()}
-              className="w-full py-3.5 px-4 rounded-xl bg-amber-600 hover:bg-amber-500 disabled:opacity-50 text-white font-bold text-xs shadow-md shadow-amber-900/30 flex items-center justify-center gap-2 transition-all"
+              className="w-full py-3.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 disabled:opacity-50 text-white font-bold text-xs shadow-sm flex items-center justify-center gap-2 transition-all"
             >
               {submittingFeedback ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -490,45 +525,53 @@ export function ReviewClient({
         )}
 
         {/* Feedback Submitted Confirmation */}
-        {!isPositive && feedbackSubmitted && (
-          <div className="p-6 rounded-3xl bg-[#10251A] border border-[#006B21]/50 text-center space-y-3 animate-in zoom-in-95 duration-200">
-            <div className="w-12 h-12 rounded-2xl bg-[#006B21] text-[#39E900] mx-auto flex items-center justify-center">
+        {isNegative && feedbackSubmitted && (
+          <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-sm text-center space-y-3 animate-in zoom-in-95 duration-200">
+            <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-200 mx-auto flex items-center justify-center">
               <CheckCircle2 className="w-6 h-6" />
             </div>
-            <h3 className="text-base font-black text-white">
+            <h3 className="text-base font-bold text-slate-900">
               Thank You for Your Feedback
             </h3>
-            <p className="text-xs text-white/70 max-w-sm mx-auto leading-relaxed">
+            <p className="text-xs text-slate-500 max-w-sm mx-auto leading-relaxed">
               Your message has been received privately by the store management. We appreciate you giving us the chance to address this and improve.
             </p>
           </div>
         )}
       </div>
 
-      {/* Copy Success Animated Overlay Toast */}
+      {/* Copy Success Animated Overlay Modal */}
       {copiedSuccess && (
-        <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="w-full max-w-sm bg-[#10251A] rounded-3xl p-6 border border-[#39E900]/50 shadow-2xl text-center space-y-4">
-            <div className="w-16 h-16 rounded-full bg-[#006B21] text-[#39E900] mx-auto flex items-center justify-center shadow-lg shadow-[#006B21]/50">
+        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="w-full max-w-sm bg-white rounded-3xl p-6 border border-slate-200 shadow-2xl text-center space-y-4">
+            <div className="w-16 h-16 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200 mx-auto flex items-center justify-center shadow-sm">
               <CheckCircle2 className="w-9 h-9" />
             </div>
 
-            <div className="space-y-1.5">
-              <h3 className="text-lg font-black text-white">Review Copied! ✓</h3>
-              <p className="text-xs text-white/70 leading-relaxed">
+            <div className="space-y-1">
+              <h3 className="text-lg font-bold text-slate-900">Review Copied! ✓</h3>
+              <p className="text-xs text-slate-500 leading-relaxed">
                 Review aapke clipboard par copy ho chuka hai.
               </p>
             </div>
 
             {/* Step Guide */}
-            <div className="p-3 rounded-2xl bg-[#050505] border border-[#006B21]/40 text-left space-y-2 text-[11px] text-white/80">
+            <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-left space-y-2 text-[11px] text-slate-700">
               <div className="flex items-start gap-2">
-                <span className="w-4 h-4 rounded-full bg-[#39E900] text-black font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">1</span>
-                <span>Google Review page par review box mein <strong>Paste</strong> karein.</span>
+                <span className="w-4 h-4 rounded-full bg-[#1A73E8] text-white font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">
+                  1
+                </span>
+                <span>
+                  Google Review page par review box mein <strong>Paste</strong> karein.
+                </span>
               </div>
               <div className="flex items-start gap-2">
-                <span className="w-4 h-4 rounded-full bg-[#39E900] text-black font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">2</span>
-                <span>Upar diye gaye <strong>Post</strong> button par tap karein!</span>
+                <span className="w-4 h-4 rounded-full bg-[#1A73E8] text-white font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">
+                  2
+                </span>
+                <span>
+                  Upar diye gaye <strong>Post</strong> button par tap karein!
+                </span>
               </div>
             </div>
 
@@ -538,14 +581,14 @@ export function ReviewClient({
                 href={business.googleReviewUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full py-3.5 px-4 rounded-xl bg-[#006B21] hover:bg-[#005219] text-white font-black text-xs shadow-md border border-[#39E900]/50 flex items-center justify-center gap-2 transition-all"
+                className="w-full py-3.5 px-4 rounded-xl bg-[#1A73E8] hover:bg-[#1557B0] text-white font-bold text-xs shadow-md flex items-center justify-center gap-2 transition-all"
               >
                 <span>Open Google Review Now →</span>
-                <ExternalLink className="w-3.5 h-3.5 text-[#39E900]" />
+                <ExternalLink className="w-3.5 h-3.5 text-white/80" />
               </a>
 
-              <div className="flex items-center justify-center gap-2 text-[10px] text-[#39E900] font-semibold">
-                <Loader2 className="w-3 h-3 animate-spin" />
+              <div className="flex items-center justify-center gap-2 text-[10px] text-slate-500 font-medium">
+                <Loader2 className="w-3 h-3 animate-spin text-blue-600" />
                 <span>Redirecting automatically...</span>
               </div>
             </div>
@@ -554,10 +597,10 @@ export function ReviewClient({
       )}
 
       {/* Footer Branding */}
-      <footer className="py-6 text-center text-[11px] text-white/40">
+      <footer className="py-6 text-center text-xs text-slate-400">
         Powered by{" "}
-        <span className="font-bold text-white">
-          Grow<span className="text-[#39E900]">Broo</span>
+        <span className="font-semibold text-slate-600">
+          GrowBroo
         </span>{" "}
         Smart Review Network
       </footer>
