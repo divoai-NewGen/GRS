@@ -182,6 +182,7 @@ export function PrintableClient() {
   const [headlineMain, setHeadlineMain] = useState("Review Us");
   const [subline, setSubline] = useState("Your feedback helps us grow");
   const [ratingSubtitle, setRatingSubtitle] = useState("Share your honest experience.");
+  const [bottomQuote, setBottomQuote] = useState("Thanks for your visit! Welcome again.");
   const [footerNote, setFooterNote] = useState("Made with GrowBroo");
   const [backMessage, setBackMessage] = useState(
     "Thank you for supporting our local business."
@@ -730,16 +731,17 @@ export function PrintableClient() {
             />
           </div>
 
-          {/* Bottom Action Label (Fixed) */}
+          {/* Bottom Custom Quote / Hospitality Message */}
           <div>
             <label className="block text-xs font-bold text-[#050505]/80 mb-1">
-              Bottom Action Label
+              Bottom Quote / Message
             </label>
             <input
               type="text"
-              disabled
-              value="SCAN TO REVIEW (Fixed)"
-              className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 text-xs text-slate-500 font-bold cursor-not-allowed"
+              value={bottomQuote}
+              onChange={(e) => setBottomQuote(e.target.value)}
+              placeholder="e.g. Thanks for your visit! Welcome again"
+              className="w-full px-3 py-2 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/40 text-xs text-[#050505] font-semibold focus:outline-none"
             />
           </div>
         </div>
@@ -939,31 +941,17 @@ export function PrintableClient() {
                     </p>
                   </div>
 
-                  {/* Bottom NFC & Action Bar */}
+                  {/* Bottom Customizable Quote / Hospitality Message */}
                   <div
-                    className="flex items-center justify-between z-10 pt-2 border-t mt-auto"
+                    className="text-center z-10 pt-2 border-t mt-auto"
                     style={{ borderColor: currentTheme.dividerColor }}
                   >
-                    <div className="flex items-center gap-1.5">
-                      <Wifi
-                        className="w-4 h-4 rotate-90 shrink-0"
-                        style={{ color: currentTheme.accentColor }}
-                      />
-                      <div className="border-l border-slate-300 pl-1.5 leading-none text-left">
-                        <span className="text-[8px] text-slate-400 font-semibold uppercase block">
-                          Tap for
-                        </span>
-                        <span className="text-[10px] font-black tracking-wider block">
-                          NFC
-                        </span>
-                      </div>
-                    </div>
-                    <span
-                      className="print-scan-label tracking-wider uppercase text-[10px] sm:text-[11px] font-black"
+                    <p
+                      className="print-scan-label text-xs sm:text-[13px] font-bold tracking-wide leading-tight"
                       style={{ color: currentTheme.bottomLabelColor }}
                     >
-                      SCAN TO REVIEW
-                    </span>
+                      {bottomQuote}
+                    </p>
                   </div>
                 </>
               ) : (
@@ -1066,10 +1054,10 @@ export function PrintableClient() {
                   {/* Bottom Row */}
                   <div className="flex items-center justify-between text-xs leading-none z-10 pt-0.5">
                     <span
-                      className="print-scan-label tracking-wider uppercase text-[11px] sm:text-xs font-black"
+                      className="print-scan-label tracking-wide text-[11px] sm:text-xs font-bold"
                       style={{ color: currentTheme.bottomLabelColor }}
                     >
-                      SCAN TO REVIEW
+                      {bottomQuote}
                     </span>
                     <span
                       className="print-footer-text text-[10px] sm:text-[11px] font-semibold"
