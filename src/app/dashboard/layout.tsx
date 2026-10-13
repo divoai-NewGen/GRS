@@ -28,7 +28,7 @@ export default async function DashboardLayout({
     <div className="min-h-screen bg-[#E9F8E9] text-[#050505] flex flex-col">
       {/* Admin Preview Mode Notice */}
       {user.role === "ADMIN" && (
-        <div className="bg-[#006B21] text-white px-4 py-2.5 text-xs flex items-center justify-between border-b border-[#005219]">
+        <div className="no-print bg-[#006B21] text-white px-4 py-2.5 text-xs flex items-center justify-between border-b border-[#005219]">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-[#E9F8E9] animate-pulse"></span>
             <span className="text-white/90">

@@ -26,9 +26,12 @@ import {
   Mail,
   HelpCircle,
   ChevronRight,
+  Palette,
+  Printer,
 } from "lucide-react";
 import { useToast } from "@/components/ui/Toast";
 import QRCode from "qrcode";
+import { PrintableCardDesigner } from "@/components/printable/PrintableCardDesigner";
 
 export function BusinessDashboardClient({
   initialBusinesses,
@@ -37,7 +40,7 @@ export function BusinessDashboardClient({
 }) {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const urlTab = searchParams.get("tab") as "overview" | "cards" | "feedback" | "profile" | null;
+  const urlTab = searchParams.get("tab") as "overview" | "cards" | "feedback" | "profile" | "printable" | null;
   const activeTab = urlTab || "overview";
 
   const { success, error: toastError } = useToast();
@@ -49,6 +52,9 @@ export function BusinessDashboardClient({
   const [analytics, setAnalytics] = useState<any>(null);
   const [feedbacks, setFeedbacks] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Selected card for Printable Card Designer
+  const [selectedPrintCardId, setSelectedPrintCardId] = useState<string>("");
 
   // QR preview modal
   const [qrModalOpen, setQrModalOpen] = useState(false);
@@ -211,6 +217,18 @@ export function BusinessDashboardClient({
         >
           <CreditCard className={`w-4 h-4 ${activeTab === "cards" ? "text-[#E9F8E9]" : "text-[#006B21]"}`} />
           <span>My QR Cards ({businessDetail?.cards?.length || 0})</span>
+        </button>
+
+        <button
+          onClick={() => handleTabChange("printable")}
+          className={`flex items-center gap-2 py-2 px-3.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
+            activeTab === "printable"
+              ? "bg-[#006B21] text-white shadow-md shadow-[#006B21]/20 border border-[#006B21]/30"
+              : "text-[#050505]/70 hover:text-[#050505] hover:bg-[#E9F8E9]/60"
+          }`}
+        >
+          <Palette className={`w-4 h-4 ${activeTab === "printable" ? "text-[#E9F8E9]" : "text-[#006B21]"}`} />
+          <span>Card Designer & Print</span>
         </button>
 
         <button
@@ -465,11 +483,22 @@ export function BusinessDashboardClient({
 
                   <div className="flex items-center gap-2 pt-1">
                     <button
-                      onClick={() => handleOpenQrModal(c)}
+                      onClick={() => {
+                        setSelectedPrintCardId(c.id);
+                        handleTabChange("printable");
+                      }}
                       className="flex-1 py-2.5 px-3 rounded-xl bg-[#006B21] hover:bg-[#005219] text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all"
                     >
-                      <QrCode className="w-3.5 h-3.5 text-white" />
-                      View & Download QR
+                      <Palette className="w-3.5 h-3.5 text-white" />
+                      Customize & Print
+                    </button>
+                    <button
+                      onClick={() => handleOpenQrModal(c)}
+                      className="py-2.5 px-3 rounded-xl bg-white hover:bg-[#E9F8E9] text-[#006B21] border border-[#006B21]/20 font-bold text-xs flex items-center justify-center gap-1.5 transition-all"
+                      title="View standalone QR image"
+                    >
+                      <QrCode className="w-3.5 h-3.5 text-[#006B21]" />
+                      PNG
                     </button>
                     <a
                       href={`/r/${c.publicToken}`}
@@ -500,7 +529,29 @@ export function BusinessDashboardClient({
       )}
 
       {/* ==================================================== */}
-      {/* TAB 3: CUSTOMER FEEDBACK INBOX                       */}
+      {/* TAB 3: CARD DESIGNER, TEMPLATES & PRINT              */}
+      {/* ==================================================== */}
+      {activeTab === "printable" && (
+        <div className="space-y-6 animate-in fade-in duration-200">
+          <PrintableCardDesigner
+            cards={(businessDetail?.cards || []).map((c: any) => ({
+              ...c,
+              business: {
+                id: businessDetail?.id,
+                name: businessDetail?.name,
+                description: businessDetail?.description,
+              },
+            }))}
+            initialCardId={selectedPrintCardId || businessDetail?.cards?.[0]?.id}
+            defaultBusinessName={businessDetail?.name || ""}
+            defaultTagline={businessDetail?.description || "More Reviews • More Growth"}
+            portalMode={true}
+          />
+        </div>
+      )}
+
+      {/* ==================================================== */}
+      {/* TAB 4: CUSTOMER FEEDBACK INBOX                       */}
       {/* ==================================================== */}
       {activeTab === "feedback" && (
         <div className="space-y-6 animate-in fade-in duration-200">
@@ -712,16 +763,27 @@ export function BusinessDashboardClient({
             <div className="flex items-center gap-2 pt-2">
               <button
                 onClick={() => setQrModalOpen(false)}
-                className="flex-1 py-2.5 rounded-xl border border-[#006B21]/20 text-xs font-bold text-[#050505] hover:bg-[#E9F8E9]"
+                className="py-2.5 px-3 rounded-xl border border-[#006B21]/20 text-xs font-bold text-[#050505] hover:bg-[#E9F8E9]"
               >
                 Close
               </button>
               <button
                 onClick={downloadQr}
-                className="flex-1 py-2.5 rounded-xl bg-[#006B21] hover:bg-[#005219] text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm"
+                className="py-2.5 px-3 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/60 hover:bg-[#E9F8E9] text-[#006B21] text-xs font-bold flex items-center justify-center gap-1"
               >
-                <Download className="w-3.5 h-3.5 text-white" />
-                Download PNG
+                <Download className="w-3.5 h-3.5" />
+                PNG
+              </button>
+              <button
+                onClick={() => {
+                  setQrModalOpen(false);
+                  setSelectedPrintCardId(activeQrCard?.id);
+                  handleTabChange("printable");
+                }}
+                className="flex-1 py-2.5 px-3 rounded-xl bg-[#006B21] hover:bg-[#005219] text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm"
+              >
+                <Palette className="w-3.5 h-3.5 text-white" />
+                Customize & Print
               </button>
             </div>
           </div>
