@@ -17,6 +17,9 @@ import {
   Heart,
   Palette,
   Maximize2,
+  Wifi,
+  Smartphone,
+  RotateCw,
 } from "lucide-react";
 import QRCode from "qrcode";
 import { useToast } from "@/components/ui/Toast";
@@ -24,44 +27,56 @@ import { useToast } from "@/components/ui/Toast";
 export interface CardFormat {
   id: "54x86" | "60x100" | "70x115";
   label: string;
-  dimensionsMm: string;
+  portraitDimensionsMm: string;
+  landscapeDimensionsMm: string;
   ratioLabel: string;
-  widthMm: number;
-  heightMm: number;
-  previewWidthPx: number;
-  previewHeightPx: number;
+  shortMm: number; // width in portrait, height in landscape
+  longMm: number;  // height in portrait, width in landscape
+  portraitPreviewWidthPx: number;
+  portraitPreviewHeightPx: number;
+  landscapePreviewWidthPx: number;
+  landscapePreviewHeightPx: number;
 }
 
 export const CARD_FORMATS: CardFormat[] = [
   {
     id: "54x86",
     label: "54 × 86 mm (Standard CR-80)",
-    dimensionsMm: "54 × 86 mm",
+    portraitDimensionsMm: "54 × 86 mm",
+    landscapeDimensionsMm: "86 × 54 mm",
     ratioLabel: "1 : 1.59",
-    widthMm: 86,
-    heightMm: 54,
-    previewWidthPx: 380,
-    previewHeightPx: 239,
+    shortMm: 54,
+    longMm: 86,
+    portraitPreviewWidthPx: 285,
+    portraitPreviewHeightPx: 454,
+    landscapePreviewWidthPx: 380,
+    landscapePreviewHeightPx: 239,
   },
   {
     id: "60x100",
     label: "60 × 100 mm (Table Display)",
-    dimensionsMm: "60 × 100 mm",
+    portraitDimensionsMm: "60 × 100 mm",
+    landscapeDimensionsMm: "100 × 60 mm",
     ratioLabel: "3 : 5 (1 : 1.67)",
-    widthMm: 100,
-    heightMm: 60,
-    previewWidthPx: 420,
-    previewHeightPx: 252,
+    shortMm: 60,
+    longMm: 100,
+    portraitPreviewWidthPx: 300,
+    portraitPreviewHeightPx: 500,
+    landscapePreviewWidthPx: 420,
+    landscapePreviewHeightPx: 252,
   },
   {
     id: "70x115",
-    label: "70 × 115 mm (Large Display Card)",
-    dimensionsMm: "70 × 115 mm",
+    label: "70 × 115 mm (Large Counter Stand)",
+    portraitDimensionsMm: "70 × 115 mm",
+    landscapeDimensionsMm: "115 × 70 mm",
     ratioLabel: "1 : 1.64",
-    widthMm: 115,
-    heightMm: 70,
-    previewWidthPx: 460,
-    previewHeightPx: 280,
+    shortMm: 70,
+    longMm: 115,
+    portraitPreviewWidthPx: 330,
+    portraitPreviewHeightPx: 542,
+    landscapePreviewWidthPx: 460,
+    landscapePreviewHeightPx: 280,
   },
 ];
 
@@ -75,6 +90,8 @@ export interface CardTheme {
   textPrimary: string;
   textSecondary: string;
   accentColor: string;
+  cornerArcBg: string;
+  cornerArcBorder: string;
   iconBg: string;
   iconColor: string;
   qrBg: string;
@@ -86,17 +103,19 @@ export interface CardTheme {
 export const CARD_THEMES: Record<CardThemeId, CardTheme> = {
   offwhite: {
     id: "offwhite",
-    name: "Off-White (Universal Match)",
-    cardBg: "#F9FAF9",
-    cardBorder: "#DCE5DC",
+    name: "Off-White with Mint Arcs (From Reference)",
+    cardBg: "#F8FAF6",
+    cardBorder: "#22C55E",
     textPrimary: "#0F172A",
     textSecondary: "#475569",
-    accentColor: "#006B21",
-    iconBg: "#006B21",
+    accentColor: "#16A34A",
+    cornerArcBg: "#E5F7EB",
+    cornerArcBorder: "#86EFAC",
+    iconBg: "#16A34A",
     iconColor: "#FFFFFF",
     qrBg: "#FFFFFF",
     dividerColor: "#E2E8F0",
-    bottomLabelColor: "#006B21",
+    bottomLabelColor: "#16A34A",
     footerTextColor: "#64748B",
   },
   darkgreen: {
@@ -107,6 +126,8 @@ export const CARD_THEMES: Record<CardThemeId, CardTheme> = {
     textPrimary: "#FFFFFF",
     textSecondary: "#D1E7D6",
     accentColor: "#39E900",
+    cornerArcBg: "rgba(0, 107, 33, 0.2)",
+    cornerArcBorder: "rgba(57, 233, 0, 0.25)",
     iconBg: "#006B21",
     iconColor: "#39E900",
     qrBg: "#FFFFFF",
@@ -122,6 +143,8 @@ export const CARD_THEMES: Record<CardThemeId, CardTheme> = {
     textPrimary: "#09090B",
     textSecondary: "#64748B",
     accentColor: "#006B21",
+    cornerArcBg: "#F1F5F9",
+    cornerArcBorder: "#E2E8F0",
     iconBg: "#E9F8E9",
     iconColor: "#006B21",
     qrBg: "#FFFFFF",
@@ -142,19 +165,23 @@ export function PrintableClient() {
   const [qrDataUrl, setQrDataUrl] = useState<string>("");
   const [isPreparingPrint, setIsPreparingPrint] = useState(false);
 
+  // Orientation toggle: Portrait (Vertical Stand) or Landscape (Horizontal Card)
+  const [orientation, setOrientation] = useState<"portrait" | "landscape">("portrait");
+
   // Selected format and theme
-  const [selectedFormat, setSelectedFormat] = useState<"54x86" | "60x100" | "70x115">("54x86");
+  const [selectedFormat, setSelectedFormat] = useState<"54x86" | "60x100" | "70x115">("60x100");
   const [selectedTheme, setSelectedTheme] = useState<CardThemeId>("offwhite");
 
   // Print layout options: both sides (side by side), front only, back only
-  const [printMode, setPrintMode] = useState<"both" | "front" | "back">("both");
+  const [printMode, setPrintMode] = useState<"both" | "front" | "back">("front");
 
   // Template customizations (all customizable except bottom "SCAN TO REVIEW")
-  const [businessName, setBusinessName] = useState("");
-  const [tagline, setTagline] = useState("A place to feel at home.");
-  const [headline, setHeadline] = useState("Your Experience Matters.");
-  const [subline, setSubline] = useState("We'd love to hear from you.");
-  const [accentNote, setAccentNote] = useState("Your feedback helps us grow.");
+  const [businessName, setBusinessName] = useState("GrowBroo");
+  const [tagline, setTagline] = useState("More Reviews • More Growth");
+  const [headlineTop, setHeadlineTop] = useState("Scan to");
+  const [headlineMain, setHeadlineMain] = useState("Review Us");
+  const [subline, setSubline] = useState("Your feedback helps us grow");
+  const [ratingSubtitle, setRatingSubtitle] = useState("Share your honest experience.");
   const [footerNote, setFooterNote] = useState("Made with GrowBroo");
   const [backMessage, setBackMessage] = useState(
     "Thank you for supporting our local business."
@@ -199,9 +226,12 @@ export function PrintableClient() {
       setBusinessName(currentCard.business.name);
       if (currentCard.business.description) {
         setTagline(currentCard.business.description.slice(0, 50));
+      } else {
+        setTagline("More Reviews • More Growth");
       }
     } else if (currentCard) {
-      setBusinessName("Sardar Hotel");
+      setBusinessName("GrowBroo");
+      setTagline("More Reviews • More Growth");
     }
   }, [currentCard?.id, currentCard?.business?.name]);
 
@@ -251,8 +281,18 @@ export function PrintableClient() {
   };
 
   const activeFormat =
-    CARD_FORMATS.find((f) => f.id === selectedFormat) || CARD_FORMATS[0];
+    CARD_FORMATS.find((f) => f.id === selectedFormat) || CARD_FORMATS[1];
   const currentTheme = CARD_THEMES[selectedTheme] || CARD_THEMES.offwhite;
+
+  const isPortrait = orientation === "portrait";
+  const printWidthMm = isPortrait ? activeFormat.shortMm : activeFormat.longMm;
+  const printHeightMm = isPortrait ? activeFormat.longMm : activeFormat.shortMm;
+  const previewWidthPx = isPortrait
+    ? activeFormat.portraitPreviewWidthPx
+    : activeFormat.landscapePreviewWidthPx;
+  const previewHeightPx = isPortrait
+    ? activeFormat.portraitPreviewHeightPx
+    : activeFormat.landscapePreviewHeightPx;
 
   return (
     <div className="space-y-6">
@@ -310,16 +350,16 @@ export function PrintableClient() {
     box-sizing: border-box !important;
   }
 
-  /* Physical Dimensions for ${activeFormat.label} */
+  /* Physical Dimensions: ${printWidthMm}mm x ${printHeightMm}mm */
   .cr80-card-frame {
-    width: ${activeFormat.widthMm}mm !important;
-    height: ${activeFormat.heightMm}mm !important;
-    min-width: ${activeFormat.widthMm}mm !important;
-    max-width: ${activeFormat.widthMm}mm !important;
-    min-height: ${activeFormat.heightMm}mm !important;
-    max-height: ${activeFormat.heightMm}mm !important;
-    flex: 0 0 ${activeFormat.widthMm}mm !important;
-    border-radius: 3.5mm !important;
+    width: ${printWidthMm}mm !important;
+    height: ${printHeightMm}mm !important;
+    min-width: ${printWidthMm}mm !important;
+    max-width: ${printWidthMm}mm !important;
+    min-height: ${printHeightMm}mm !important;
+    max-height: ${printHeightMm}mm !important;
+    flex: 0 0 ${printWidthMm}mm !important;
+    border-radius: 4mm !important;
     overflow: hidden !important;
     box-shadow: none !important;
     break-inside: avoid !important;
@@ -328,45 +368,45 @@ export function PrintableClient() {
     display: flex !important;
     flex-direction: column !important;
     justify-content: space-between !important;
-    padding: ${activeFormat.heightMm >= 65 ? "4.5mm" : "3.8mm"} !important;
+    padding: 4mm !important;
     box-sizing: border-box !important;
     background-color: ${currentTheme.cardBg} !important;
     color: ${currentTheme.textPrimary} !important;
-    border: 0.4mm solid ${currentTheme.cardBorder} !important;
+    border: 0.5mm solid ${currentTheme.cardBorder} !important;
   }
 
   .print-qr-box {
-    width: ${Math.round(activeFormat.heightMm * 0.44)}mm !important;
-    height: ${Math.round(activeFormat.heightMm * 0.44)}mm !important;
-    padding: 1.2mm !important;
-    border-radius: 2mm !important;
+    width: ${isPortrait ? Math.round(printWidthMm * 0.52) : Math.round(printHeightMm * 0.42)}mm !important;
+    height: ${isPortrait ? Math.round(printWidthMm * 0.52) : Math.round(printHeightMm * 0.42)}mm !important;
+    padding: 1.5mm !important;
+    border-radius: 2.5mm !important;
     background-color: #ffffff !important;
     box-shadow: none !important;
   }
 
   .print-title {
-    font-size: 3.4mm !important;
-    line-height: 4mm !important;
+    font-size: 3.5mm !important;
+    line-height: 4.1mm !important;
   }
 
   .print-subtitle {
-    font-size: 2.1mm !important;
-    line-height: 2.6mm !important;
-  }
-
-  .print-headline {
-    font-size: ${activeFormat.heightMm >= 65 ? "4.2mm" : "3.6mm"} !important;
-    line-height: ${activeFormat.heightMm >= 65 ? "4.8mm" : "4.2mm"} !important;
-  }
-
-  .print-accent {
     font-size: 2.2mm !important;
     line-height: 2.7mm !important;
   }
 
+  .print-headline {
+    font-size: ${isPortrait ? "4.5mm" : "3.8mm"} !important;
+    line-height: ${isPortrait ? "5.2mm" : "4.4mm"} !important;
+  }
+
+  .print-accent {
+    font-size: 2.4mm !important;
+    line-height: 2.9mm !important;
+  }
+
   .print-scan-label {
-    font-size: 2.3mm !important;
-    line-height: 2.8mm !important;
+    font-size: 2.4mm !important;
+    line-height: 2.9mm !important;
   }
 
   .print-footer-text {
@@ -375,15 +415,15 @@ export function PrintableClient() {
   }
 
   .print-back-quote {
-    font-size: 2.8mm !important;
-    line-height: 3.4mm !important;
+    font-size: 2.9mm !important;
+    line-height: 3.5mm !important;
   }
 
   .print-back-disclaimer {
-    font-size: 1.9mm !important;
-    line-height: 2.4mm !important;
-    padding: 1.6mm !important;
-    border-radius: 1.8mm !important;
+    font-size: 2mm !important;
+    line-height: 2.5mm !important;
+    padding: 1.8mm !important;
+    border-radius: 2mm !important;
   }
 }
 `,
@@ -398,11 +438,11 @@ export function PrintableClient() {
               Printable Card Template Designer
             </h1>
             <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#E9F8E9] text-[#006B21] border border-[#006B21]/20">
-              {activeFormat.dimensionsMm} • {activeFormat.ratioLabel}
+              {isPortrait ? activeFormat.portraitDimensionsMm : activeFormat.landscapeDimensionsMm} • {isPortrait ? "Portrait" : "Landscape"}
             </span>
           </div>
           <p className="text-xs sm:text-sm text-[#050505]/60 mt-1">
-            Choose your physical card ratio, customize copy, and print directly on A4 landscape sheets.
+            Choose Portrait Stand or Landscape Card, select dimension ratio, customize branding, and print to A4 sheets.
           </p>
         </div>
 
@@ -437,13 +477,47 @@ export function PrintableClient() {
 
       {/* Configuration Controls (Hidden in Print) */}
       <div className="print:hidden p-6 rounded-3xl bg-white border border-[#006B21]/15 shadow-sm space-y-5">
-        {/* Row 1: Dimensions Ratio Selector & Theme Selector */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-4 border-b border-slate-100">
-          {/* Card Dimensions & Ratio Picker */}
+        {/* Row 1: Orientation + Ratio Dimensions + Color Theme + Layout */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pb-4 border-b border-slate-100">
+          {/* Card Orientation Toggle */}
+          <div>
+            <label className="block text-xs font-bold text-[#050505]/80 mb-1.5 flex items-center gap-1.5">
+              <RotateCw className="w-3.5 h-3.5 text-[#006B21]" />
+              Card Orientation
+            </label>
+            <div className="grid grid-cols-2 gap-1.5 bg-[#E9F8E9]/40 p-1.5 rounded-2xl border border-[#006B21]/20">
+              <button
+                type="button"
+                onClick={() => setOrientation("portrait")}
+                className={`py-2 px-2 rounded-xl text-center transition-all ${
+                  isPortrait
+                    ? "bg-[#006B21] text-white shadow-xs font-bold"
+                    : "text-[#050505]/70 hover:text-[#050505] hover:bg-white/60 font-medium"
+                }`}
+              >
+                <div className="text-[11px] leading-tight font-bold">Portrait Stand</div>
+                <div className="text-[9px] opacity-80 leading-tight mt-0.5">Vertical ↕</div>
+              </button>
+              <button
+                type="button"
+                onClick={() => setOrientation("landscape")}
+                className={`py-2 px-2 rounded-xl text-center transition-all ${
+                  !isPortrait
+                    ? "bg-[#006B21] text-white shadow-xs font-bold"
+                    : "text-[#050505]/70 hover:text-[#050505] hover:bg-white/60 font-medium"
+                }`}
+              >
+                <div className="text-[11px] leading-tight font-bold">Landscape</div>
+                <div className="text-[9px] opacity-80 leading-tight mt-0.5">Horizontal ↔</div>
+              </button>
+            </div>
+          </div>
+
+          {/* Dimension Formats */}
           <div>
             <label className="block text-xs font-bold text-[#050505]/80 mb-1.5 flex items-center gap-1.5">
               <Maximize2 className="w-3.5 h-3.5 text-[#006B21]" />
-              Card Dimension & Ratio Format
+              Dimension & Ratio Format
             </label>
             <div className="grid grid-cols-3 gap-1.5 bg-[#E9F8E9]/40 p-1.5 rounded-2xl border border-[#006B21]/20">
               {CARD_FORMATS.map((fmt) => (
@@ -451,20 +525,24 @@ export function PrintableClient() {
                   key={fmt.id}
                   type="button"
                   onClick={() => setSelectedFormat(fmt.id)}
-                  className={`py-2 px-1.5 rounded-xl text-center transition-all ${
+                  className={`py-2 px-1 rounded-xl text-center transition-all ${
                     selectedFormat === fmt.id
                       ? "bg-[#006B21] text-white shadow-xs font-bold"
                       : "text-[#050505]/70 hover:text-[#050505] hover:bg-white/60 font-medium"
                   }`}
                 >
-                  <div className="text-[11px] leading-tight font-bold">{fmt.dimensionsMm}</div>
-                  <div className="text-[9px] opacity-80 leading-tight mt-0.5">Ratio {fmt.ratioLabel}</div>
+                  <div className="text-[10px] leading-tight font-bold">
+                    {isPortrait ? fmt.portraitDimensionsMm : fmt.landscapeDimensionsMm}
+                  </div>
+                  <div className="text-[8px] opacity-80 leading-tight mt-0.5">
+                    {fmt.ratioLabel}
+                  </div>
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Theme Color Picker */}
+          {/* Color Theme */}
           <div>
             <label className="block text-xs font-bold text-[#050505]/80 mb-1.5 flex items-center gap-1.5">
               <Palette className="w-3.5 h-3.5 text-[#006B21]" />
@@ -479,21 +557,21 @@ export function PrintableClient() {
                     key={thmKey}
                     type="button"
                     onClick={() => setSelectedTheme(thmKey)}
-                    className={`py-2 px-1.5 rounded-xl text-center transition-all ${
+                    className={`py-2 px-1 rounded-xl text-center transition-all ${
                       isSelected
                         ? "bg-[#006B21] text-white shadow-xs font-bold"
                         : "text-[#050505]/70 hover:text-[#050505] hover:bg-white/60 font-medium"
                     }`}
                   >
-                    <div className="text-[11px] leading-tight font-bold">
+                    <div className="text-[10px] leading-tight font-bold">
                       {thmKey === "offwhite"
                         ? "Off-White"
                         : thmKey === "darkgreen"
                         ? "Deep Green"
                         : "Pure White"}
                     </div>
-                    <div className="text-[9px] opacity-80 leading-tight mt-0.5">
-                      {thmKey === "offwhite" ? "Matches all" : thmKey === "darkgreen" ? "Original dark" : "Minimal"}
+                    <div className="text-[8px] opacity-80 leading-tight mt-0.5">
+                      {thmKey === "offwhite" ? "Mint Arcs" : thmKey === "darkgreen" ? "Dark mode" : "Clean"}
                     </div>
                   </button>
                 );
@@ -501,24 +579,13 @@ export function PrintableClient() {
             </div>
           </div>
 
-          {/* Print Layout Mode (Both, Front, Back) */}
+          {/* Print Sheet Layout Mode (Both, Front, Back) */}
           <div>
             <label className="block text-xs font-bold text-[#050505]/80 mb-1.5 flex items-center gap-1.5">
               <Layers className="w-3.5 h-3.5 text-[#006B21]" />
-              Print Sheet Layout
+              Print Sides
             </label>
             <div className="grid grid-cols-3 gap-1.5 bg-[#E9F8E9]/40 p-1.5 rounded-2xl border border-[#006B21]/20">
-              <button
-                type="button"
-                onClick={() => setPrintMode("both")}
-                className={`py-2 px-1 rounded-xl text-[11px] font-bold transition-all ${
-                  printMode === "both"
-                    ? "bg-[#006B21] text-white shadow-xs"
-                    : "text-[#050505]/70 hover:text-[#050505] hover:bg-white/60"
-                }`}
-              >
-                Both Sides
-              </button>
               <button
                 type="button"
                 onClick={() => setPrintMode("front")}
@@ -529,6 +596,17 @@ export function PrintableClient() {
                 }`}
               >
                 Front Only
+              </button>
+              <button
+                type="button"
+                onClick={() => setPrintMode("both")}
+                className={`py-2 px-1 rounded-xl text-[11px] font-bold transition-all ${
+                  printMode === "both"
+                    ? "bg-[#006B21] text-white shadow-xs"
+                    : "text-[#050505]/70 hover:text-[#050505] hover:bg-white/60"
+                }`}
+              >
+                Both Sides
               </button>
               <button
                 type="button"
@@ -574,7 +652,7 @@ export function PrintableClient() {
               type="text"
               value={businessName}
               onChange={(e) => setBusinessName(e.target.value)}
-              placeholder="e.g. Sardar Hotel"
+              placeholder="e.g. GrowBroo or Sardar Hotel"
               className="w-full px-3 py-2 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/40 text-xs text-[#050505] font-semibold focus:outline-none"
             />
           </div>
@@ -582,77 +660,77 @@ export function PrintableClient() {
           {/* Business Tagline */}
           <div>
             <label className="block text-xs font-bold text-[#050505]/80 mb-1">
-              Business Tagline
+              Tagline Under Logo
             </label>
             <input
               type="text"
               value={tagline}
               onChange={(e) => setTagline(e.target.value)}
-              placeholder="e.g. A place to feel at home."
+              placeholder="e.g. More Reviews • More Growth"
               className="w-full px-3 py-2 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/40 text-xs text-[#050505] focus:outline-none"
             />
           </div>
 
-          {/* Headline */}
+          {/* Main Headline Line 1 */}
           <div>
             <label className="block text-xs font-bold text-[#050505]/80 mb-1">
-              Main Headline
+              Headline Top Line
             </label>
             <input
               type="text"
-              value={headline}
-              onChange={(e) => setHeadline(e.target.value)}
-              placeholder="e.g. Your Experience Matters."
-              className="w-full px-3 py-2 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/40 text-xs text-[#050505] font-bold focus:outline-none"
+              value={headlineTop}
+              onChange={(e) => setHeadlineTop(e.target.value)}
+              placeholder="e.g. Scan to"
+              className="w-full px-3 py-2 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/40 text-xs text-[#050505] focus:outline-none"
             />
           </div>
         </div>
 
-        {/* Row 3: Subline, Accent Note, Footer Note & Back Message */}
+        {/* Row 3: Headline Main, Subline, Rating Subtitle & Action Label */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Main Headline Line 2 */}
+          <div>
+            <label className="block text-xs font-bold text-[#050505]/80 mb-1">
+              Headline Main Words
+            </label>
+            <input
+              type="text"
+              value={headlineMain}
+              onChange={(e) => setHeadlineMain(e.target.value)}
+              placeholder="e.g. Review Us"
+              className="w-full px-3 py-2 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/40 text-xs text-[#050505] font-black focus:outline-none"
+            />
+          </div>
+
           {/* Sub-headline */}
           <div>
             <label className="block text-xs font-bold text-[#050505]/80 mb-1">
-              Sub-headline
+              Sub-headline Under Review
             </label>
             <input
               type="text"
               value={subline}
               onChange={(e) => setSubline(e.target.value)}
-              placeholder="e.g. We'd love to hear from you."
+              placeholder="e.g. Your feedback helps us grow"
               className="w-full px-3 py-2 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/40 text-xs text-[#050505] focus:outline-none"
             />
           </div>
 
-          {/* Heart Accent Note */}
+          {/* Rating Subtitle */}
           <div>
             <label className="block text-xs font-bold text-[#050505]/80 mb-1">
-              Heart Accent Note
+              Rating Callout Subtitle
             </label>
             <input
               type="text"
-              value={accentNote}
-              onChange={(e) => setAccentNote(e.target.value)}
-              placeholder="e.g. Your feedback helps us grow."
+              value={ratingSubtitle}
+              onChange={(e) => setRatingSubtitle(e.target.value)}
+              placeholder="e.g. Share your honest experience."
               className="w-full px-3 py-2 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/40 text-xs text-[#050505] focus:outline-none"
             />
           </div>
 
-          {/* Bottom Right Footer Note */}
-          <div>
-            <label className="block text-xs font-bold text-[#050505]/80 mb-1">
-              Bottom Footer Note
-            </label>
-            <input
-              type="text"
-              value={footerNote}
-              onChange={(e) => setFooterNote(e.target.value)}
-              placeholder="e.g. Made with GrowBroo"
-              className="w-full px-3 py-2 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/40 text-xs text-[#050505] focus:outline-none"
-            />
-          </div>
-
-          {/* Bottom Left Scan Text (Notice: Locked to SCAN TO REVIEW per user request) */}
+          {/* Bottom Action Label (Fixed) */}
           <div>
             <label className="block text-xs font-bold text-[#050505]/80 mb-1">
               Bottom Action Label
@@ -703,7 +781,13 @@ export function PrintableClient() {
               </strong>
             </div>
             <div>
-              Selected Ratio: <strong>{activeFormat.dimensionsMm} ({activeFormat.ratioLabel})</strong>
+              Selected Ratio:{" "}
+              <strong>
+                {isPortrait ? activeFormat.portraitDimensionsMm : activeFormat.landscapeDimensionsMm} ({activeFormat.ratioLabel})
+              </strong>
+            </div>
+            <div>
+              Orientation: <strong>{isPortrait ? "Portrait Vertical Stand" : "Landscape Horizontal Card"}</strong>
             </div>
             <div>
               Theme: <strong>{currentTheme.name}</strong>
@@ -714,111 +798,290 @@ export function PrintableClient() {
 
       {/* 
         CARD ARTWORK CONTAINER
-        Screen: Exact visual preview with the chosen dimensions, theme, and customizable copy.
-        Print: Exact .cr80-print-sheet (297mm x 210mm A4 landscape) with .cr80-card-frame (${activeFormat.widthMm}mm x ${activeFormat.heightMm}mm).
+        Screen: Realistic display preview matching exact selected ratio and theme.
+        Print: Exact .cr80-print-sheet (297mm x 210mm A4 landscape) with .cr80-card-frame (${printWidthMm}mm x ${printHeightMm}mm).
       */}
       <div className="cr80-print-sheet flex flex-col xl:flex-row items-center justify-center gap-8 py-6">
         {/* ==================== FRONT SIDE ==================== */}
         {(printMode === "both" || printMode === "front") && (
           <div className="flex flex-col items-center">
             <span className="print:hidden text-xs font-bold uppercase tracking-wider text-[#050505]/60 mb-3">
-              Card Front ({activeFormat.dimensionsMm})
+              Front Side ({isPortrait ? activeFormat.portraitDimensionsMm : activeFormat.landscapeDimensionsMm})
             </span>
 
             <div
-              className="cr80-card-frame rounded-3xl p-5 sm:p-6 shadow-2xl relative flex flex-col justify-between overflow-hidden transition-all"
+              className="cr80-card-frame rounded-[24px] p-5 sm:p-6 shadow-2xl relative flex flex-col justify-between overflow-hidden transition-all"
               style={{
-                width: `${activeFormat.previewWidthPx}px`,
-                height: `${activeFormat.previewHeightPx}px`,
+                width: `${previewWidthPx}px`,
+                height: `${previewHeightPx}px`,
                 backgroundColor: currentTheme.cardBg,
                 color: currentTheme.textPrimary,
                 borderColor: currentTheme.cardBorder,
-                borderWidth: "1px",
+                borderWidth: "2px",
                 borderStyle: "solid",
               }}
             >
-              {/* Top Row: Business Name & Tagline */}
-              <div className="flex items-center justify-between z-10 leading-none">
-                <div className="flex items-center gap-2.5 print:gap-[2mm] max-w-full">
-                  <div
-                    className="w-8 h-8 print:w-[6mm] print:h-[6mm] rounded-xl print:rounded-[1.5mm] flex items-center justify-center shadow-xs shrink-0"
-                    style={{
-                      backgroundColor: currentTheme.iconBg,
-                      color: currentTheme.iconColor,
-                    }}
-                  >
-                    <Building2 className="w-4 h-4 print:w-[3.5mm] print:h-[3.5mm]" />
-                  </div>
-                  <div className="min-w-0 pr-2">
-                    <div className="text-sm sm:text-base print-title font-black tracking-tight leading-tight truncate">
-                      {businessName || "Sardar Hotel"}
-                    </div>
-                    <div
-                      className="text-[10px] sm:text-[11px] print-subtitle leading-tight truncate mt-0.5"
-                      style={{ color: currentTheme.textSecondary }}
-                    >
-                      {tagline || "A place to feel at home."}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Center Content: Headline, Subtitle, Heart Note & QR code */}
-              <div className="flex items-center justify-between gap-4 z-10 my-auto">
-                <div className="flex-1 space-y-1 sm:space-y-1.5 min-w-0 pr-1">
-                  <h3 className="print-headline text-base sm:text-lg font-black leading-tight tracking-tight">
-                    {headline}
-                  </h3>
-                  <p
-                    className="print-subtitle text-[11px] sm:text-xs leading-snug"
-                    style={{ color: currentTheme.textSecondary }}
-                  >
-                    {subline}
-                  </p>
-                  <div
-                    className="print-accent pt-1 flex items-center gap-1.5 text-[11px] font-bold leading-none"
-                    style={{ color: currentTheme.accentColor }}
-                  >
-                    <Heart className="w-3.5 h-3.5 print:w-[2.5mm] print:h-[2.5mm] fill-current" />
-                    <span>{accentNote}</span>
-                  </div>
-                </div>
-
-                {/* High Contrast QR Code Box */}
-                <div className="print-qr-box p-1.5 sm:p-2 bg-white rounded-2xl shadow-md shrink-0 flex items-center justify-center border border-slate-200/80">
-                  {qrDataUrl ? (
-                    <img
-                      src={qrDataUrl}
-                      alt="Physical card QR"
-                      className="w-20 h-20 sm:w-24 sm:h-24 print:w-full print:h-full object-contain block"
-                    />
-                  ) : (
-                    <Loader2 className="w-6 h-6 animate-spin text-[#006B21]" />
-                  )}
-                </div>
-              </div>
-
-              {/* Divider Line */}
+              {/* Organic Soft Mint Curved Wave Arcs (from reference image) */}
               <div
-                className="border-t my-1 print:my-[1.2mm]"
-                style={{ borderColor: currentTheme.dividerColor }}
+                className="absolute -top-12 -right-12 w-36 h-36 rounded-full pointer-events-none transition-all"
+                style={{ backgroundColor: currentTheme.cornerArcBg }}
+              />
+              <div
+                className="absolute -top-7 -right-7 w-28 h-28 rounded-full border-[1.5px] pointer-events-none transition-all"
+                style={{ borderColor: currentTheme.cornerArcBorder }}
               />
 
-              {/* Bottom Row: SCAN TO REVIEW (Left) & Footer Note (Right) */}
-              <div className="flex items-center justify-between text-xs leading-none z-10 pt-0.5">
-                <span
-                  className="print-scan-label tracking-wider uppercase text-[11px] sm:text-xs font-black"
-                  style={{ color: currentTheme.bottomLabelColor }}
-                >
-                  SCAN TO REVIEW
-                </span>
-                <span
-                  className="print-footer-text text-[10px] sm:text-[11px] font-semibold"
-                  style={{ color: currentTheme.footerTextColor }}
-                >
-                  {footerNote}
-                </span>
-              </div>
+              <div
+                className="absolute -bottom-14 -right-14 w-40 h-40 rounded-full pointer-events-none transition-all"
+                style={{ backgroundColor: currentTheme.cornerArcBg }}
+              />
+              <div
+                className="absolute -bottom-8 -right-8 w-28 h-28 rounded-full border-[1.5px] pointer-events-none transition-all"
+                style={{ borderColor: currentTheme.cornerArcBorder }}
+              />
+
+              {/* ----------------- PORTRAIT VERTICAL LAYOUT ----------------- */}
+              {isPortrait ? (
+                <>
+                  {/* Top Branding Section */}
+                  <div className="text-center pt-1 z-10">
+                    <div className="inline-flex items-center justify-center gap-1 font-black text-xl sm:text-2xl tracking-tight leading-none">
+                      {businessName.toLowerCase() === "growbroo" ? (
+                        <span>
+                          Grow<span style={{ color: currentTheme.accentColor }}>Broo</span>
+                        </span>
+                      ) : (
+                        <span>{businessName}</span>
+                      )}
+                    </div>
+                    <div
+                      className="text-[10px] sm:text-[11px] font-semibold tracking-wide mt-1"
+                      style={{ color: currentTheme.textSecondary }}
+                    >
+                      {tagline}
+                    </div>
+                  </div>
+
+                  {/* Headline Hero Section */}
+                  <div className="text-center py-1.5 z-10 my-auto">
+                    <h2 className="print-headline text-xl sm:text-2xl font-black leading-tight tracking-tight">
+                      <span>{headlineTop}</span>
+                      <br />
+                      <span>{headlineMain.split(" ")[0]}</span>{" "}
+                      <span style={{ color: currentTheme.accentColor }}>
+                        {headlineMain.split(" ").slice(1).join(" ") || "Us"}
+                      </span>
+                    </h2>
+                    <p
+                      className="text-[11px] sm:text-xs font-medium mt-1 leading-snug"
+                      style={{ color: currentTheme.textSecondary }}
+                    >
+                      {subline}
+                    </p>
+                  </div>
+
+                  {/* QR Code Container with Vibrant Green Camera Brackets */}
+                  <div className="relative inline-block mx-auto p-2.5 z-10 my-auto">
+                    {/* Viewfinder 4 Corner Brackets */}
+                    <div
+                      className="absolute top-0 left-0 w-5 h-5 border-t-[3px] border-l-[3px] rounded-tl-xl pointer-events-none"
+                      style={{ borderColor: currentTheme.accentColor }}
+                    />
+                    <div
+                      className="absolute top-0 right-0 w-5 h-5 border-t-[3px] border-r-[3px] rounded-tr-xl pointer-events-none"
+                      style={{ borderColor: currentTheme.accentColor }}
+                    />
+                    <div
+                      className="absolute bottom-0 left-0 w-5 h-5 border-b-[3px] border-l-[3px] rounded-bl-xl pointer-events-none"
+                      style={{ borderColor: currentTheme.accentColor }}
+                    />
+                    <div
+                      className="absolute bottom-0 right-0 w-5 h-5 border-b-[3px] border-r-[3px] rounded-br-xl pointer-events-none"
+                      style={{ borderColor: currentTheme.accentColor }}
+                    />
+
+                    {/* QR Code Canvas */}
+                    <div className="print-qr-box w-28 h-28 sm:w-36 sm:h-36 bg-white p-2 rounded-2xl shadow-md border border-slate-200/60 flex items-center justify-center relative">
+                      {qrDataUrl ? (
+                        <img
+                          src={qrDataUrl}
+                          alt="Physical card QR"
+                          className="w-full h-full object-contain block"
+                        />
+                      ) : (
+                        <Loader2 className="w-6 h-6 animate-spin text-[#006B21]" />
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Google Rating Wordmark & Stars */}
+                  <div className="text-center z-10 pt-1">
+                    <div className="flex items-center justify-center gap-1.5">
+                      <span className="font-bold text-xs sm:text-sm tracking-tight flex items-center">
+                        <span className="text-[#4285F4]">G</span>
+                        <span className="text-[#EA4335]">o</span>
+                        <span className="text-[#FBBC05]">o</span>
+                        <span className="text-[#4285F4]">g</span>
+                        <span className="text-[#34A853]">l</span>
+                        <span className="text-[#EA4335]">e</span>
+                      </span>
+                      <span
+                        className="font-bold text-xs sm:text-sm tracking-wider"
+                        style={{ color: currentTheme.accentColor }}
+                      >
+                        ★★★★★
+                      </span>
+                    </div>
+                    <p
+                      className="text-[10px] sm:text-[11px] font-medium mt-0.5"
+                      style={{ color: currentTheme.textSecondary }}
+                    >
+                      {ratingSubtitle}
+                    </p>
+                  </div>
+
+                  {/* Bottom NFC & Action Bar */}
+                  <div
+                    className="flex items-center justify-between z-10 pt-2 border-t mt-auto"
+                    style={{ borderColor: currentTheme.dividerColor }}
+                  >
+                    <div className="flex items-center gap-1.5">
+                      <Wifi
+                        className="w-4 h-4 rotate-90 shrink-0"
+                        style={{ color: currentTheme.accentColor }}
+                      />
+                      <div className="border-l border-slate-300 pl-1.5 leading-none text-left">
+                        <span className="text-[8px] text-slate-400 font-semibold uppercase block">
+                          Tap for
+                        </span>
+                        <span className="text-[10px] font-black tracking-wider block">
+                          NFC
+                        </span>
+                      </div>
+                    </div>
+                    <span
+                      className="print-scan-label tracking-wider uppercase text-[10px] sm:text-[11px] font-black"
+                      style={{ color: currentTheme.bottomLabelColor }}
+                    >
+                      SCAN TO REVIEW
+                    </span>
+                  </div>
+                </>
+              ) : (
+                /* ----------------- LANDSCAPE HORIZONTAL LAYOUT ----------------- */
+                <>
+                  {/* Top Row: Business Name & Tagline */}
+                  <div className="flex items-center justify-between z-10 leading-none">
+                    <div className="flex items-center gap-2.5 print:gap-[2mm] max-w-full">
+                      <div
+                        className="w-8 h-8 print:w-[6mm] print:h-[6mm] rounded-xl print:rounded-[1.5mm] flex items-center justify-center shadow-xs shrink-0"
+                        style={{
+                          backgroundColor: currentTheme.iconBg,
+                          color: currentTheme.iconColor,
+                        }}
+                      >
+                        <Building2 className="w-4 h-4 print:w-[3.5mm] print:h-[3.5mm]" />
+                      </div>
+                      <div className="min-w-0 pr-2">
+                        <div className="text-sm sm:text-base print-title font-black tracking-tight leading-tight truncate">
+                          {businessName}
+                        </div>
+                        <div
+                          className="text-[10px] sm:text-[11px] print-subtitle leading-tight truncate mt-0.5"
+                          style={{ color: currentTheme.textSecondary }}
+                        >
+                          {tagline}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Center Content: Headline & QR */}
+                  <div className="flex items-center justify-between gap-4 z-10 my-auto">
+                    <div className="flex-1 space-y-1.5 min-w-0 pr-1">
+                      <h3 className="print-headline text-base sm:text-lg font-black leading-tight tracking-tight">
+                        {headlineTop} {headlineMain}
+                      </h3>
+                      <p
+                        className="print-subtitle text-[11px] sm:text-xs leading-snug"
+                        style={{ color: currentTheme.textSecondary }}
+                      >
+                        {subline}
+                      </p>
+                      <div className="flex items-center gap-1.5 pt-0.5">
+                        <span className="font-bold text-xs tracking-tight flex items-center">
+                          <span className="text-[#4285F4]">G</span>
+                          <span className="text-[#EA4335]">o</span>
+                          <span className="text-[#FBBC05]">o</span>
+                          <span className="text-[#4285F4]">g</span>
+                          <span className="text-[#34A853]">l</span>
+                          <span className="text-[#EA4335]">e</span>
+                        </span>
+                        <span
+                          className="font-bold text-xs tracking-wider"
+                          style={{ color: currentTheme.accentColor }}
+                        >
+                          ★★★★★
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* QR Code Box with Corner Brackets */}
+                    <div className="relative p-1.5 shrink-0">
+                      <div
+                        className="absolute top-0 left-0 w-3.5 h-3.5 border-t-2 border-l-2 rounded-tl-lg pointer-events-none"
+                        style={{ borderColor: currentTheme.accentColor }}
+                      />
+                      <div
+                        className="absolute top-0 right-0 w-3.5 h-3.5 border-t-2 border-r-2 rounded-tr-lg pointer-events-none"
+                        style={{ borderColor: currentTheme.accentColor }}
+                      />
+                      <div
+                        className="absolute bottom-0 left-0 w-3.5 h-3.5 border-b-2 border-l-2 rounded-bl-lg pointer-events-none"
+                        style={{ borderColor: currentTheme.accentColor }}
+                      />
+                      <div
+                        className="absolute bottom-0 right-0 w-3.5 h-3.5 border-b-2 border-r-2 rounded-br-lg pointer-events-none"
+                        style={{ borderColor: currentTheme.accentColor }}
+                      />
+
+                      <div className="print-qr-box p-1.5 bg-white rounded-xl shadow-md border border-slate-200/80 flex items-center justify-center">
+                        {qrDataUrl ? (
+                          <img
+                            src={qrDataUrl}
+                            alt="Physical card QR"
+                            className="w-20 h-20 sm:w-24 sm:h-24 print:w-full print:h-full object-contain block"
+                          />
+                        ) : (
+                          <Loader2 className="w-6 h-6 animate-spin text-[#006B21]" />
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Divider */}
+                  <div
+                    className="border-t my-1 print:my-[1.2mm]"
+                    style={{ borderColor: currentTheme.dividerColor }}
+                  />
+
+                  {/* Bottom Row */}
+                  <div className="flex items-center justify-between text-xs leading-none z-10 pt-0.5">
+                    <span
+                      className="print-scan-label tracking-wider uppercase text-[11px] sm:text-xs font-black"
+                      style={{ color: currentTheme.bottomLabelColor }}
+                    >
+                      SCAN TO REVIEW
+                    </span>
+                    <span
+                      className="print-footer-text text-[10px] sm:text-[11px] font-semibold"
+                      style={{ color: currentTheme.footerTextColor }}
+                    >
+                      {footerNote}
+                    </span>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         )}
@@ -827,38 +1090,54 @@ export function PrintableClient() {
         {(printMode === "both" || printMode === "back") && (
           <div className="flex flex-col items-center">
             <span className="print:hidden text-xs font-bold uppercase tracking-wider text-[#050505]/60 mb-3">
-              Card Back ({activeFormat.dimensionsMm})
+              Back Side ({isPortrait ? activeFormat.portraitDimensionsMm : activeFormat.landscapeDimensionsMm})
             </span>
 
             <div
-              className="cr80-card-frame rounded-3xl p-5 sm:p-6 shadow-2xl relative flex flex-col justify-between overflow-hidden transition-all"
+              className="cr80-card-frame rounded-[24px] p-5 sm:p-6 shadow-2xl relative flex flex-col justify-between overflow-hidden transition-all"
               style={{
-                width: `${activeFormat.previewWidthPx}px`,
-                height: `${activeFormat.previewHeightPx}px`,
+                width: `${previewWidthPx}px`,
+                height: `${previewHeightPx}px`,
                 backgroundColor: currentTheme.cardBg,
                 color: currentTheme.textPrimary,
                 borderColor: currentTheme.cardBorder,
-                borderWidth: "1px",
+                borderWidth: "2px",
                 borderStyle: "solid",
               }}
             >
-              {/* Top Row: Authentic Customer Feedback (Clean, No Token ID) */}
-              <div className="flex items-center justify-between text-xs print-meta-text leading-none">
+              {/* Organic Soft Mint Curved Wave Arcs */}
+              <div
+                className="absolute -top-12 -left-12 w-36 h-36 rounded-full pointer-events-none"
+                style={{ backgroundColor: currentTheme.cornerArcBg }}
+              />
+              <div
+                className="absolute -bottom-14 -left-14 w-40 h-40 rounded-full pointer-events-none"
+                style={{ backgroundColor: currentTheme.cornerArcBg }}
+              />
+
+              {/* Top Row: Authentic Customer Feedback */}
+              <div className="flex items-center justify-between text-xs print-meta-text leading-none z-10">
                 <span
                   className="font-bold tracking-wider uppercase text-[11px] print:text-[2.2mm]"
                   style={{ color: currentTheme.textSecondary }}
                 >
                   Authentic Customer Feedback
                 </span>
+                <span
+                  className="font-bold tracking-wider uppercase text-[11px] print:text-[2.2mm]"
+                  style={{ color: currentTheme.accentColor }}
+                >
+                  ★★★★★
+                </span>
               </div>
 
               {/* Center Content: Back Message & Policy Compliance */}
-              <div className="space-y-3 my-auto text-center px-3">
+              <div className="space-y-3 my-auto text-center px-3 z-10">
                 <p className="print-back-quote text-sm sm:text-base font-bold leading-snug">
                   &ldquo;{backMessage}&rdquo;
                 </p>
                 <div
-                  className="print-back-disclaimer p-2.5 rounded-xl text-[10px] sm:text-[11px] leading-relaxed font-normal"
+                  className="print-back-disclaimer p-2.5 rounded-xl text-[10px] sm:text-[11px] leading-relaxed font-normal shadow-2xs"
                   style={{
                     backgroundColor:
                       currentTheme.id === "darkgreen" ? "#10251A" : "#FFFFFF",
@@ -872,10 +1151,10 @@ export function PrintableClient() {
 
               {/* Bottom Row: Footer Branding */}
               <div
-                className="text-center text-[10px] print-meta-text font-bold tracking-wide leading-none pt-1"
+                className="text-center text-[10px] print-meta-text font-bold tracking-wide leading-none pt-1 z-10"
                 style={{ color: currentTheme.bottomLabelColor }}
               >
-                Powered by GrowBroo • Dynamic Review Network
+                {businessName ? `${businessName} • Verified Reviews` : "Authentic Customer Reviews"}
               </div>
             </div>
           </div>
