@@ -926,8 +926,7 @@ export function PrintableClient() {
                         <span className="text-[#EA4335]">e</span>
                       </span>
                       <span
-                        className="font-bold text-xs sm:text-sm tracking-wider"
-                        style={{ color: currentTheme.accentColor }}
+                        className="font-bold text-xs sm:text-sm tracking-wider text-[#FBBC04]"
                       >
                         ★★★★★
                       </span>
@@ -1018,8 +1017,7 @@ export function PrintableClient() {
                           <span className="text-[#EA4335]">e</span>
                         </span>
                         <span
-                          className="font-bold text-xs tracking-wider"
-                          style={{ color: currentTheme.accentColor }}
+                          className="font-bold text-xs tracking-wider text-[#FBBC04]"
                         >
                           ★★★★★
                         </span>
@@ -1124,8 +1122,7 @@ export function PrintableClient() {
                   Authentic Customer Feedback
                 </span>
                 <span
-                  className="font-bold tracking-wider uppercase text-[11px] print:text-[2.2mm]"
-                  style={{ color: currentTheme.accentColor }}
+                  className="font-bold tracking-wider uppercase text-[11px] print:text-[2.2mm] text-[#FBBC04]"
                 >
                   ★★★★★
                 </span>
