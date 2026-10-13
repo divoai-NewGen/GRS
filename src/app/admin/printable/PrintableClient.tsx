@@ -80,11 +80,20 @@ export const CARD_FORMATS: CardFormat[] = [
   },
 ];
 
-export type CardThemeId = "offwhite" | "darkgreen" | "minimalwhite";
+export type CardThemeId =
+  | "offwhite"
+  | "royalblue"
+  | "luxuryamber"
+  | "midnightpurple"
+  | "rubycrimson"
+  | "cyberslate"
+  | "darkgreen";
 
 export interface CardTheme {
   id: CardThemeId;
   name: string;
+  shortName: string;
+  badgeLabel: string;
   cardBg: string;
   cardBorder: string;
   textPrimary: string;
@@ -100,10 +109,23 @@ export interface CardTheme {
   footerTextColor: string;
 }
 
+export const PRESET_BORDER_COLORS = [
+  { name: "Emerald", hex: "#22C55E" },
+  { name: "Sapphire", hex: "#2563EB" },
+  { name: "Gold", hex: "#D97706" },
+  { name: "Ruby", hex: "#E11D48" },
+  { name: "Purple", hex: "#7C3AED" },
+  { name: "Orange", hex: "#EA580C" },
+  { name: "Teal", hex: "#0D9488" },
+  { name: "Obsidian", hex: "#0F172A" },
+];
+
 export const CARD_THEMES: Record<CardThemeId, CardTheme> = {
   offwhite: {
     id: "offwhite",
-    name: "Off-White with Mint Arcs (From Reference)",
+    name: "Emerald Mint (Primary)",
+    shortName: "Emerald Mint",
+    badgeLabel: "Primary",
     cardBg: "#F8FAF6",
     cardBorder: "#22C55E",
     textPrimary: "#0F172A",
@@ -118,9 +140,106 @@ export const CARD_THEMES: Record<CardThemeId, CardTheme> = {
     bottomLabelColor: "#16A34A",
     footerTextColor: "#64748B",
   },
+  royalblue: {
+    id: "royalblue",
+    name: "Sapphire Royal Blue",
+    shortName: "Royal Blue",
+    badgeLabel: "Sapphire",
+    cardBg: "#F8FAFD",
+    cardBorder: "#2563EB",
+    textPrimary: "#0F172A",
+    textSecondary: "#475569",
+    accentColor: "#1D4ED8",
+    cornerArcBg: "#EFF6FF",
+    cornerArcBorder: "#BFDBFE",
+    iconBg: "#2563EB",
+    iconColor: "#FFFFFF",
+    qrBg: "#FFFFFF",
+    dividerColor: "#E2E8F0",
+    bottomLabelColor: "#1D4ED8",
+    footerTextColor: "#64748B",
+  },
+  luxuryamber: {
+    id: "luxuryamber",
+    name: "Luxury Gold & Amber",
+    shortName: "Luxury Gold",
+    badgeLabel: "Warm Amber",
+    cardBg: "#FAF8F5",
+    cardBorder: "#D97706",
+    textPrimary: "#1C1917",
+    textSecondary: "#57534E",
+    accentColor: "#B45309",
+    cornerArcBg: "#FEF3C7",
+    cornerArcBorder: "#FDE68A",
+    iconBg: "#D97706",
+    iconColor: "#FFFFFF",
+    qrBg: "#FFFFFF",
+    dividerColor: "#E7E5E4",
+    bottomLabelColor: "#B45309",
+    footerTextColor: "#78716C",
+  },
+  midnightpurple: {
+    id: "midnightpurple",
+    name: "Royal Violet & Purple",
+    shortName: "Royal Violet",
+    badgeLabel: "Purple",
+    cardBg: "#FAF7FD",
+    cardBorder: "#7C3AED",
+    textPrimary: "#1E1B4B",
+    textSecondary: "#475569",
+    accentColor: "#6D28D9",
+    cornerArcBg: "#F3E8FF",
+    cornerArcBorder: "#DDD6FE",
+    iconBg: "#7C3AED",
+    iconColor: "#FFFFFF",
+    qrBg: "#FFFFFF",
+    dividerColor: "#E2E8F0",
+    bottomLabelColor: "#6D28D9",
+    footerTextColor: "#64748B",
+  },
+  rubycrimson: {
+    id: "rubycrimson",
+    name: "Ruby Crimson & Rose",
+    shortName: "Ruby Crimson",
+    badgeLabel: "Rose",
+    cardBg: "#FFF8F9",
+    cardBorder: "#E11D48",
+    textPrimary: "#0F172A",
+    textSecondary: "#475569",
+    accentColor: "#BE123C",
+    cornerArcBg: "#FFE4E6",
+    cornerArcBorder: "#FECDD3",
+    iconBg: "#E11D48",
+    iconColor: "#FFFFFF",
+    qrBg: "#FFFFFF",
+    dividerColor: "#F1F5F9",
+    bottomLabelColor: "#BE123C",
+    footerTextColor: "#64748B",
+  },
+  cyberslate: {
+    id: "cyberslate",
+    name: "Obsidian & Modern Slate",
+    shortName: "Obsidian",
+    badgeLabel: "Slate Black",
+    cardBg: "#F8FAFC",
+    cardBorder: "#0F172A",
+    textPrimary: "#020617",
+    textSecondary: "#475569",
+    accentColor: "#0F172A",
+    cornerArcBg: "#F1F5F9",
+    cornerArcBorder: "#CBD5E1",
+    iconBg: "#0F172A",
+    iconColor: "#FFFFFF",
+    qrBg: "#FFFFFF",
+    dividerColor: "#E2E8F0",
+    bottomLabelColor: "#0F172A",
+    footerTextColor: "#64748B",
+  },
   darkgreen: {
     id: "darkgreen",
-    name: "Deep Emerald Green",
+    name: "Deep Emerald Dark Mode",
+    shortName: "Deep Emerald",
+    badgeLabel: "Dark Mode",
     cardBg: "#0C2317",
     cardBorder: "#194D2C",
     textPrimary: "#FFFFFF",
@@ -133,23 +252,6 @@ export const CARD_THEMES: Record<CardThemeId, CardTheme> = {
     qrBg: "#FFFFFF",
     dividerColor: "rgba(0, 107, 33, 0.4)",
     bottomLabelColor: "#39E900",
-    footerTextColor: "#94A3B8",
-  },
-  minimalwhite: {
-    id: "minimalwhite",
-    name: "Pure Clean White",
-    cardBg: "#FFFFFF",
-    cardBorder: "#E2E8F0",
-    textPrimary: "#09090B",
-    textSecondary: "#64748B",
-    accentColor: "#006B21",
-    cornerArcBg: "#F1F5F9",
-    cornerArcBorder: "#E2E8F0",
-    iconBg: "#E9F8E9",
-    iconColor: "#006B21",
-    qrBg: "#FFFFFF",
-    dividerColor: "#F1F5F9",
-    bottomLabelColor: "#006B21",
     footerTextColor: "#94A3B8",
   },
 };
@@ -168,9 +270,15 @@ export function PrintableClient() {
   // Orientation toggle: Portrait (Vertical Stand) or Landscape (Horizontal Card)
   const [orientation, setOrientation] = useState<"portrait" | "landscape">("portrait");
 
-  // Selected format and theme
+  // Selected format, theme, and custom border color
   const [selectedFormat, setSelectedFormat] = useState<"54x86" | "60x100" | "70x115">("60x100");
   const [selectedTheme, setSelectedTheme] = useState<CardThemeId>("offwhite");
+  const [customBorderColor, setCustomBorderColor] = useState<string>("#22C55E");
+
+  const handleSelectTheme = (thmKey: CardThemeId) => {
+    setSelectedTheme(thmKey);
+    setCustomBorderColor(CARD_THEMES[thmKey].cardBorder);
+  };
 
   // Print layout options: both sides (side by side), front only, back only
   const [printMode, setPrintMode] = useState<"both" | "front" | "back">("front");
@@ -284,6 +392,7 @@ export function PrintableClient() {
   const activeFormat =
     CARD_FORMATS.find((f) => f.id === selectedFormat) || CARD_FORMATS[1];
   const currentTheme = CARD_THEMES[selectedTheme] || CARD_THEMES.offwhite;
+  const effectiveBorderColor = customBorderColor || currentTheme.cardBorder;
 
   const isPortrait = orientation === "portrait";
   const printWidthMm = isPortrait ? activeFormat.shortMm : activeFormat.longMm;
@@ -373,7 +482,7 @@ export function PrintableClient() {
     box-sizing: border-box !important;
     background-color: ${currentTheme.cardBg} !important;
     color: ${currentTheme.textPrimary} !important;
-    border: 0.5mm solid ${currentTheme.cardBorder} !important;
+    border: 0.6mm solid ${effectiveBorderColor} !important;
   }
 
   .print-qr-box {
@@ -478,8 +587,8 @@ export function PrintableClient() {
 
       {/* Configuration Controls (Hidden in Print) */}
       <div className="print:hidden p-6 rounded-3xl bg-white border border-[#006B21]/15 shadow-sm space-y-5">
-        {/* Row 1: Orientation + Ratio Dimensions + Color Theme + Layout */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pb-4 border-b border-slate-100">
+        {/* Row 1: Layout & Sheet Settings */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pb-4 border-b border-slate-100">
           {/* Card Orientation Toggle */}
           <div>
             <label className="block text-xs font-bold text-[#050505]/80 mb-1.5 flex items-center gap-1.5">
@@ -543,43 +652,6 @@ export function PrintableClient() {
             </div>
           </div>
 
-          {/* Color Theme */}
-          <div>
-            <label className="block text-xs font-bold text-[#050505]/80 mb-1.5 flex items-center gap-1.5">
-              <Palette className="w-3.5 h-3.5 text-[#006B21]" />
-              Card Color Theme
-            </label>
-            <div className="grid grid-cols-3 gap-1.5 bg-[#E9F8E9]/40 p-1.5 rounded-2xl border border-[#006B21]/20">
-              {(Object.keys(CARD_THEMES) as CardThemeId[]).map((thmKey) => {
-                const thm = CARD_THEMES[thmKey];
-                const isSelected = selectedTheme === thmKey;
-                return (
-                  <button
-                    key={thmKey}
-                    type="button"
-                    onClick={() => setSelectedTheme(thmKey)}
-                    className={`py-2 px-1 rounded-xl text-center transition-all ${
-                      isSelected
-                        ? "bg-[#006B21] text-white shadow-xs font-bold"
-                        : "text-[#050505]/70 hover:text-[#050505] hover:bg-white/60 font-medium"
-                    }`}
-                  >
-                    <div className="text-[10px] leading-tight font-bold">
-                      {thmKey === "offwhite"
-                        ? "Off-White"
-                        : thmKey === "darkgreen"
-                        ? "Deep Green"
-                        : "Pure White"}
-                    </div>
-                    <div className="text-[8px] opacity-80 leading-tight mt-0.5">
-                      {thmKey === "offwhite" ? "Mint Arcs" : thmKey === "darkgreen" ? "Dark mode" : "Clean"}
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
           {/* Print Sheet Layout Mode (Both, Front, Back) */}
           <div>
             <label className="block text-xs font-bold text-[#050505]/80 mb-1.5 flex items-center gap-1.5">
@@ -620,6 +692,134 @@ export function PrintableClient() {
               >
                 Back Only
               </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Row 2: Theme Palettes (7 Total) & Border Color Customizer */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 p-4 rounded-2xl bg-white border border-[#006B21]/15 shadow-2xs">
+          {/* Column 1: Card Themes (7 Palettes) */}
+          <div className="lg:col-span-7 space-y-2">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-bold text-[#050505] flex items-center gap-1.5">
+                <Palette className="w-3.5 h-3.5 text-[#006B21]" />
+                Card Color Theme (7 Palettes)
+              </label>
+              <span className="text-[10px] text-slate-500 font-medium">
+                Primary: Emerald Mint
+              </span>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              {(Object.keys(CARD_THEMES) as CardThemeId[]).map((thmKey) => {
+                const thm = CARD_THEMES[thmKey];
+                const isSelected = selectedTheme === thmKey;
+                return (
+                  <button
+                    key={thmKey}
+                    type="button"
+                    onClick={() => handleSelectTheme(thmKey)}
+                    className={`flex items-center gap-2 p-2 rounded-xl text-left border transition-all ${
+                      isSelected
+                        ? "border-[#006B21] bg-[#E9F8E9]/70 ring-1 ring-[#006B21] shadow-xs"
+                        : "border-slate-200 hover:border-slate-300 bg-slate-50/60"
+                    }`}
+                  >
+                    <div
+                      className="w-4 h-4 rounded-full border shrink-0 shadow-2xs flex items-center justify-center overflow-hidden"
+                      style={{
+                        backgroundColor: thm.cardBg,
+                        borderColor: thm.cardBorder,
+                      }}
+                    >
+                      <div
+                        className="w-2 h-2 rounded-full"
+                        style={{ backgroundColor: thm.cardBorder }}
+                      />
+                    </div>
+                    <div className="min-w-0 flex-1 leading-tight">
+                      <div className="text-[11px] font-bold text-[#050505] truncate">
+                        {thm.shortName}
+                      </div>
+                      <div className="text-[9px] text-slate-500 truncate">
+                        {thm.badgeLabel}
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Column 2: Custom Border Color Palette Picker */}
+          <div className="lg:col-span-5 space-y-2 border-t lg:border-t-0 lg:border-l lg:pl-4 pt-3 lg:pt-0 border-slate-100">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-bold text-[#050505] flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-[#006B21]" />
+                Border Color Customizer
+              </label>
+              <button
+                type="button"
+                onClick={() => setCustomBorderColor(currentTheme.cardBorder)}
+                className="text-[10px] text-[#006B21] hover:underline font-bold"
+              >
+                Reset to Theme Default
+              </button>
+            </div>
+
+            {/* Interactive Color Swatch + Hex Input */}
+            <div className="flex items-center gap-2.5">
+              <div className="relative shrink-0">
+                <div
+                  className="w-9 h-9 rounded-xl border-2 border-slate-300 shadow-xs flex items-center justify-center cursor-pointer transition-transform hover:scale-105"
+                  style={{ backgroundColor: effectiveBorderColor }}
+                  title="Click to open full color palette"
+                >
+                  <Palette className="w-4 h-4 text-white drop-shadow-md pointer-events-none" />
+                </div>
+                <input
+                  type="color"
+                  value={effectiveBorderColor}
+                  onChange={(e) => setCustomBorderColor(e.target.value)}
+                  className="absolute inset-0 opacity-0 w-full h-full cursor-pointer"
+                  title="Choose border color from palette"
+                />
+              </div>
+
+              <div className="flex-1">
+                <div className="flex items-center rounded-xl border border-slate-200 bg-slate-50/70 px-2.5 py-1.5 focus-within:border-[#006B21] focus-within:ring-1 focus-within:ring-[#006B21]">
+                  <span className="text-slate-400 text-xs font-mono mr-1">#</span>
+                  <input
+                    type="text"
+                    value={effectiveBorderColor.replace("#", "")}
+                    onChange={(e) => {
+                      const val = e.target.value.trim();
+                      setCustomBorderColor(val.startsWith("#") ? val : `#${val}`);
+                    }}
+                    placeholder="22C55E"
+                    maxLength={7}
+                    className="w-full text-xs font-mono font-bold text-[#050505] bg-transparent focus:outline-none"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Preset Color Chips */}
+            <div className="flex items-center gap-1.5 flex-wrap pt-0.5">
+              <span className="text-[10px] font-semibold text-slate-500 mr-1">Presets:</span>
+              {PRESET_BORDER_COLORS.map((clr) => (
+                <button
+                  key={clr.name}
+                  type="button"
+                  onClick={() => setCustomBorderColor(clr.hex)}
+                  title={clr.name}
+                  className={`w-5 h-5 rounded-full border-2 transition-transform hover:scale-115 ${
+                    effectiveBorderColor.toLowerCase() === clr.hex.toLowerCase()
+                      ? "ring-2 ring-offset-1 ring-[#006B21] scale-110 border-white shadow-xs"
+                      : "border-white shadow-2xs"
+                  }`}
+                  style={{ backgroundColor: clr.hex }}
+                />
+              ))}
             </div>
           </div>
         </div>
@@ -818,8 +1018,8 @@ export function PrintableClient() {
                 height: `${previewHeightPx}px`,
                 backgroundColor: currentTheme.cardBg,
                 color: currentTheme.textPrimary,
-                borderColor: currentTheme.cardBorder,
-                borderWidth: "2px",
+                borderColor: effectiveBorderColor,
+                borderWidth: "2.5px",
                 borderStyle: "solid",
               }}
             >
@@ -850,7 +1050,7 @@ export function PrintableClient() {
                     <div className="inline-flex items-center justify-center gap-1 font-black text-xl sm:text-2xl tracking-tight leading-none">
                       {businessName.toLowerCase() === "growbroo" ? (
                         <span>
-                          Grow<span style={{ color: currentTheme.accentColor }}>Broo</span>
+                          Grow<span style={{ color: effectiveBorderColor }}>Broo</span>
                         </span>
                       ) : (
                         <span>{businessName}</span>
@@ -870,7 +1070,7 @@ export function PrintableClient() {
                       <span>{headlineTop}</span>
                       <br />
                       <span>{headlineMain.split(" ")[0]}</span>{" "}
-                      <span style={{ color: currentTheme.accentColor }}>
+                      <span style={{ color: effectiveBorderColor }}>
                         {headlineMain.split(" ").slice(1).join(" ") || "Us"}
                       </span>
                     </h2>
@@ -887,19 +1087,19 @@ export function PrintableClient() {
                     {/* Viewfinder 4 Corner Brackets */}
                     <div
                       className="absolute top-0 left-0 w-5 h-5 border-t-[3px] border-l-[3px] rounded-tl-xl pointer-events-none"
-                      style={{ borderColor: currentTheme.accentColor }}
+                      style={{ borderColor: effectiveBorderColor }}
                     />
                     <div
                       className="absolute top-0 right-0 w-5 h-5 border-t-[3px] border-r-[3px] rounded-tr-xl pointer-events-none"
-                      style={{ borderColor: currentTheme.accentColor }}
+                      style={{ borderColor: effectiveBorderColor }}
                     />
                     <div
                       className="absolute bottom-0 left-0 w-5 h-5 border-b-[3px] border-l-[3px] rounded-bl-xl pointer-events-none"
-                      style={{ borderColor: currentTheme.accentColor }}
+                      style={{ borderColor: effectiveBorderColor }}
                     />
                     <div
                       className="absolute bottom-0 right-0 w-5 h-5 border-b-[3px] border-r-[3px] rounded-br-xl pointer-events-none"
-                      style={{ borderColor: currentTheme.accentColor }}
+                      style={{ borderColor: effectiveBorderColor }}
                     />
 
                     {/* QR Code Canvas */}
@@ -948,7 +1148,7 @@ export function PrintableClient() {
                   >
                     <p
                       className="print-scan-label text-xs sm:text-[13px] font-bold tracking-wide leading-tight"
-                      style={{ color: currentTheme.bottomLabelColor }}
+                      style={{ color: effectiveBorderColor }}
                     >
                       {bottomQuote}
                     </p>
@@ -1016,19 +1216,19 @@ export function PrintableClient() {
                     <div className="relative p-1.5 shrink-0">
                       <div
                         className="absolute top-0 left-0 w-3.5 h-3.5 border-t-2 border-l-2 rounded-tl-lg pointer-events-none"
-                        style={{ borderColor: currentTheme.accentColor }}
+                        style={{ borderColor: effectiveBorderColor }}
                       />
                       <div
                         className="absolute top-0 right-0 w-3.5 h-3.5 border-t-2 border-r-2 rounded-tr-lg pointer-events-none"
-                        style={{ borderColor: currentTheme.accentColor }}
+                        style={{ borderColor: effectiveBorderColor }}
                       />
                       <div
                         className="absolute bottom-0 left-0 w-3.5 h-3.5 border-b-2 border-l-2 rounded-bl-lg pointer-events-none"
-                        style={{ borderColor: currentTheme.accentColor }}
+                        style={{ borderColor: effectiveBorderColor }}
                       />
                       <div
                         className="absolute bottom-0 right-0 w-3.5 h-3.5 border-b-2 border-r-2 rounded-br-lg pointer-events-none"
-                        style={{ borderColor: currentTheme.accentColor }}
+                        style={{ borderColor: effectiveBorderColor }}
                       />
 
                       <div className="print-qr-box p-1.5 bg-white rounded-xl shadow-md border border-slate-200/80 flex items-center justify-center">
@@ -1055,7 +1255,7 @@ export function PrintableClient() {
                   <div className="flex items-center justify-between text-xs leading-none z-10 pt-0.5">
                     <span
                       className="print-scan-label tracking-wide text-[11px] sm:text-xs font-bold"
-                      style={{ color: currentTheme.bottomLabelColor }}
+                      style={{ color: effectiveBorderColor }}
                     >
                       {bottomQuote}
                     </span>
@@ -1086,8 +1286,8 @@ export function PrintableClient() {
                 height: `${previewHeightPx}px`,
                 backgroundColor: currentTheme.cardBg,
                 color: currentTheme.textPrimary,
-                borderColor: currentTheme.cardBorder,
-                borderWidth: "2px",
+                borderColor: effectiveBorderColor,
+                borderWidth: "2.5px",
                 borderStyle: "solid",
               }}
             >
