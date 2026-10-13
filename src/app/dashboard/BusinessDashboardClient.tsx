@@ -28,6 +28,8 @@ import {
   ChevronRight,
   Palette,
   Printer,
+  Edit2,
+  X,
 } from "lucide-react";
 import { useToast } from "@/components/ui/Toast";
 import QRCode from "qrcode";
@@ -60,6 +62,87 @@ export function BusinessDashboardClient({
   const [qrModalOpen, setQrModalOpen] = useState(false);
   const [activeQrCard, setActiveQrCard] = useState<any>(null);
   const [activeQrDataUrl, setActiveQrDataUrl] = useState<string>("");
+
+  // Edit Store Details Modal State
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [savingDetails, setSavingDetails] = useState(false);
+  const [editFormData, setEditFormData] = useState({
+    name: "",
+    businessType: "RESTAURANT",
+    description: "",
+    logoUrl: "",
+    phone: "",
+    email: "",
+    website: "",
+    address: "",
+    city: "",
+    state: "",
+    country: "USA",
+    googleBusinessName: "",
+    googleReviewUrl: "",
+  });
+
+  const handleOpenEditModal = () => {
+    if (!businessDetail) return;
+    setEditFormData({
+      name: businessDetail.name || "",
+      businessType: businessDetail.businessType || "RESTAURANT",
+      description: businessDetail.description || "",
+      logoUrl: businessDetail.logoUrl || "",
+      phone: businessDetail.phone || "",
+      email: businessDetail.email || "",
+      website: businessDetail.website || "",
+      address: businessDetail.address || "",
+      city: businessDetail.city || "",
+      state: businessDetail.state || "",
+      country: businessDetail.country || "USA",
+      googleBusinessName: businessDetail.googleBusinessName || "",
+      googleReviewUrl: businessDetail.googleReviewUrl || "",
+    });
+    setEditModalOpen(true);
+  };
+
+  const handleSaveDetails = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedBusinessId) return;
+    setSavingDetails(true);
+    try {
+      const payload: any = {
+        ...editFormData,
+        email: editFormData.email.trim() || null,
+        website: editFormData.website.trim() || null,
+        logoUrl: editFormData.logoUrl.trim() || null,
+        phone: editFormData.phone.trim() || null,
+        description: editFormData.description.trim() || null,
+        address: editFormData.address.trim() || null,
+        city: editFormData.city.trim() || null,
+        state: editFormData.state.trim() || null,
+        country: editFormData.country.trim() || null,
+        googleBusinessName: editFormData.googleBusinessName.trim() || null,
+      };
+
+      const res = await fetch(`/api/businesses/${selectedBusinessId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        toastError(data.error || "Failed to update store details");
+        setSavingDetails(false);
+        return;
+      }
+
+      success("Store details updated successfully!");
+      setEditModalOpen(false);
+      fetchBusinessData(selectedBusinessId);
+    } catch {
+      toastError("Network error while saving details");
+    } finally {
+      setSavingDetails(false);
+    }
+  };
 
   const fetchBusinessData = async (bId: string) => {
     if (!bId) return;
@@ -647,14 +730,23 @@ export function BusinessDashboardClient({
       {/* ==================================================== */}
       {activeTab === "profile" && (
         <div className="space-y-6 animate-in fade-in duration-200">
-          <div>
-            <h2 className="text-xl font-black text-[#050505] tracking-tight flex items-center gap-2">
-              <Building2 className="w-5 h-5 text-[#006B21]" />
-              Store Profile & Connection Settings
-            </h2>
-            <p className="text-xs text-[#050505]/60 mt-0.5">
-              Verified business details, active plan type, and destination review configuration.
-            </p>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 className="text-xl font-black text-[#050505] tracking-tight flex items-center gap-2">
+                <Building2 className="w-5 h-5 text-[#006B21]" />
+                Store Profile & Connection Settings
+              </h2>
+              <p className="text-xs text-[#050505]/60 mt-0.5">
+                Verified business details, active plan type, and destination review configuration.
+              </p>
+            </div>
+            <button
+              onClick={handleOpenEditModal}
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#006B21] hover:bg-[#005219] text-white font-bold text-xs shadow-md shadow-[#006B21]/20 transition-all self-start sm:self-auto"
+            >
+              <Edit2 className="w-4 h-4 text-white" />
+              Edit Store Details
+            </button>
           </div>
 
           <div className="p-6 rounded-3xl bg-white border border-[#006B21]/15 shadow-sm space-y-5">
@@ -786,6 +878,248 @@ export function BusinessDashboardClient({
                 Customize & Print
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Store Details Modal */}
+      {editModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-[#006B21]/20 overflow-hidden flex flex-col max-h-[90vh] text-[#050505]">
+            <div className="p-6 border-b border-[#006B21]/15 flex items-center justify-between bg-[#E9F8E9]/60">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 rounded-xl bg-[#006B21]/10 text-[#006B21]">
+                  <Edit2 className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-[#050505]">
+                    Edit Store Details
+                  </h3>
+                  <p className="text-xs text-[#050505]/60 mt-0.5">
+                    Update your business contact info, location address, and Google Review URL.
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setEditModalOpen(false)}
+                className="p-2 rounded-xl text-[#050505]/50 hover:text-[#050505]"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveDetails} className="p-6 overflow-y-auto space-y-4 flex-1">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-[#050505]/80 mb-1">
+                    Store / Business Name *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={editFormData.name}
+                    onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })}
+                    placeholder="e.g. Royal Salon"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/40 text-xs text-[#050505] focus:outline-none focus:ring-2 focus:ring-[#006B21]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-[#050505]/80 mb-1">
+                    Category *
+                  </label>
+                  <select
+                    value={editFormData.businessType}
+                    onChange={(e) => setEditFormData({ ...editFormData, businessType: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/40 text-xs text-[#050505] focus:outline-none"
+                  >
+                    <option value="SALON">Salon / Spa</option>
+                    <option value="RESTAURANT">Restaurant</option>
+                    <option value="CAFE">Cafe / Bakery</option>
+                    <option value="HOTEL">Hotel / Hospitality</option>
+                    <option value="GYM">Gym / Fitness</option>
+                    <option value="CLINIC">Clinic / Healthcare</option>
+                    <option value="DENTIST">Dentist</option>
+                    <option value="RETAIL">Retail Store</option>
+                    <option value="AUTO_SERVICE">Auto Service</option>
+                    <option value="REAL_ESTATE">Real Estate</option>
+                    <option value="OTHER">Other Local Business</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Google Review Request Link */}
+              <div className="p-4 rounded-2xl bg-[#E9F8E9]/60 border border-[#006B21]/20">
+                <label className="block text-xs font-bold text-[#006B21] mb-1">
+                  Google Review Request URL *
+                </label>
+                <input
+                  type="url"
+                  required
+                  value={editFormData.googleReviewUrl}
+                  onChange={(e) => setEditFormData({ ...editFormData, googleReviewUrl: e.target.value })}
+                  placeholder="https://search.google.com/local/writereview?placeid=..."
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/30 bg-white text-xs text-[#050505] focus:outline-none focus:ring-2 focus:ring-[#006B21] font-mono shadow-sm"
+                />
+                <p className="text-[11px] text-[#050505]/70 mt-2 font-medium">
+                  ℹ️ Customers scanning your card or QR stand will open this official Google review destination.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-[#050505]/80 mb-1">
+                    Contact Email (Mail)
+                  </label>
+                  <input
+                    type="email"
+                    value={editFormData.email}
+                    onChange={(e) => setEditFormData({ ...editFormData, email: e.target.value })}
+                    placeholder="contact@business.com"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/40 text-xs text-[#050505]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-[#050505]/80 mb-1">
+                    Phone Number (Number)
+                  </label>
+                  <input
+                    type="tel"
+                    value={editFormData.phone}
+                    onChange={(e) => setEditFormData({ ...editFormData, phone: e.target.value })}
+                    placeholder="+1 (555) 000-0000"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/40 text-xs text-[#050505]"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-[#050505]/80 mb-1">
+                    Website URL (Optional)
+                  </label>
+                  <input
+                    type="url"
+                    value={editFormData.website}
+                    onChange={(e) => setEditFormData({ ...editFormData, website: e.target.value })}
+                    placeholder="https://mybusiness.com"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/40 text-xs text-[#050505]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-[#050505]/80 mb-1">
+                    Google Maps Business Name
+                  </label>
+                  <input
+                    type="text"
+                    value={editFormData.googleBusinessName}
+                    onChange={(e) => setEditFormData({ ...editFormData, googleBusinessName: e.target.value })}
+                    placeholder="e.g. Royal Salon - Downtown"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/40 text-xs text-[#050505]"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-[#050505]/80 mb-1">
+                  Street / Store Address
+                </label>
+                <input
+                  type="text"
+                  value={editFormData.address}
+                  onChange={(e) => setEditFormData({ ...editFormData, address: e.target.value })}
+                  placeholder="e.g. 123 Main Street, Suite 400"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/40 text-xs text-[#050505]"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-[#050505]/80 mb-1">
+                    City
+                  </label>
+                  <input
+                    type="text"
+                    value={editFormData.city}
+                    onChange={(e) => setEditFormData({ ...editFormData, city: e.target.value })}
+                    placeholder="e.g. New York"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/40 text-xs text-[#050505]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-[#050505]/80 mb-1">
+                    State / Region
+                  </label>
+                  <input
+                    type="text"
+                    value={editFormData.state}
+                    onChange={(e) => setEditFormData({ ...editFormData, state: e.target.value })}
+                    placeholder="e.g. NY"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/40 text-xs text-[#050505]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-[#050505]/80 mb-1">
+                    Country
+                  </label>
+                  <input
+                    type="text"
+                    value={editFormData.country}
+                    onChange={(e) => setEditFormData({ ...editFormData, country: e.target.value })}
+                    placeholder="USA"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/40 text-xs text-[#050505]"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-[#050505]/80 mb-1">
+                  Logo Image URL (Optional)
+                </label>
+                <input
+                  type="url"
+                  value={editFormData.logoUrl}
+                  onChange={(e) => setEditFormData({ ...editFormData, logoUrl: e.target.value })}
+                  placeholder="https://example.com/logo.png"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/40 text-xs text-[#050505]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-[#050505]/80 mb-1">
+                  Store Description / About
+                </label>
+                <textarea
+                  rows={2}
+                  value={editFormData.description}
+                  onChange={(e) => setEditFormData({ ...editFormData, description: e.target.value })}
+                  placeholder="Short description of your store or services..."
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#006B21]/20 bg-[#E9F8E9]/40 text-xs text-[#050505] focus:outline-none"
+                />
+              </div>
+
+              <div className="pt-4 border-t border-[#006B21]/15 flex justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setEditModalOpen(false)}
+                  className="px-4 py-2.5 rounded-xl border border-[#006B21]/20 text-xs font-medium text-[#050505]/70 hover:bg-[#E9F8E9]"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={savingDetails}
+                  className="px-5 py-2.5 rounded-xl bg-[#006B21] hover:bg-[#005219] text-white font-bold text-xs shadow-md shadow-[#006B21]/20 disabled:opacity-50 flex items-center gap-2"
+                >
+                  {savingDetails && <Loader2 className="w-3.5 h-3.5 animate-spin text-white" />}
+                  Save Store Details
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
