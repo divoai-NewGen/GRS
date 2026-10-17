@@ -55,9 +55,10 @@ export function QrGeneratorClient() {
     const card = cards.find((c) => c.id === selectedCardId);
     if (!card) return;
 
-    setIsGenerating(true);
     const isLocal = typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
-    const host = isLocal ? (hostMode === "network" ? networkHost : window.location.origin) : window.location.origin;
+    const currentPort = typeof window !== "undefined" && window.location.port ? `:${window.location.port}` : "";
+    const dynamicNetworkHost = `http://192.168.88.40${currentPort}`;
+    const host = isLocal ? (hostMode === "network" ? dynamicNetworkHost : window.location.origin) : window.location.origin;
     const targetUrl = `${host}/r/${card.publicToken}`;
 
     Promise.all([

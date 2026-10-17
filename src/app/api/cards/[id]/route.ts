@@ -41,7 +41,7 @@ export async function GET(
 
   const searchParams = request.nextUrl.searchParams;
   const forwardedHost = request.headers.get("x-forwarded-host") || request.headers.get("host");
-  const forwardedProto = request.headers.get("x-forwarded-proto") || "https";
+  const forwardedProto = request.headers.get("x-forwarded-proto") || (forwardedHost?.includes("localhost") || forwardedHost?.includes("127.0.0.1") ? "http" : "https");
   const inferredOrigin = forwardedHost ? `${forwardedProto}://${forwardedHost}` : (process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000");
   const customHost = searchParams.get("host") || inferredOrigin;
   const publicUrl = getPublicCardUrl(card.publicToken, customHost);

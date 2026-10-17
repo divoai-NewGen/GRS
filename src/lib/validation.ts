@@ -38,6 +38,7 @@ export const businessSchema = z.object({
   planType: z.enum(["BASIC", "PREMIUM"]).default("BASIC"),
   customTags: z.string().optional().nullable(),
   recommendedReviews: z.string().optional().nullable(),
+  menuItems: z.string().optional().nullable(),
   negativeFeedbackFilter: z.boolean().default(true),
   ownerId: z.string().optional().nullable(),
 });

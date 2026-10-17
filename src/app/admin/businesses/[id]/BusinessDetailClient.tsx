@@ -27,8 +27,12 @@ import {
   ShieldCheck,
   Clock,
   RotateCw,
+  RotateCcw,
+  Trash2,
+  X,
   Scissors,
   UtensilsCrossed,
+  Utensils,
   Coffee,
   Hotel,
   Dumbbell,
@@ -40,7 +44,7 @@ import {
   Layers,
 } from "lucide-react";
 import { useToast } from "@/components/ui/Toast";
-import { CATEGORY_PRESETS, getRotatingReviewsAndTags } from "@/lib/reviewTemplates";
+import { CATEGORY_PRESETS, CATEGORY_MENU_PRESETS, getRotatingReviewsAndTags } from "@/lib/reviewTemplates";
 const CATEGORY_LIST = [
   { id: "RESTAURANT", name: "Restaurant & Dining", icon: UtensilsCrossed, desc: "Food taste, waiter service, ambience & kitchen hygiene" },
   { id: "SALON", name: "Salon, Spa & Beauty", icon: Scissors, desc: "Stylist skills, haircuts, beard grooming & salon hygiene" },
@@ -78,6 +82,17 @@ export function BusinessDetailClient() {
   const [selectedCategory, setSelectedCategory] = useState("OTHER");
   const [savingCategory, setSavingCategory] = useState(false);
   const [previewHourOffset, setPreviewHourOffset] = useState<number>(0);
+
+  // Customize Highlights & Reviews Modal State
+  const [customizeModal, setCustomizeModal] = useState(false);
+  const [customizeTab, setCustomizeTab] = useState<"TAGS" | "REVIEWS" | "MENU">("TAGS");
+  const [customTagsList, setCustomTagsList] = useState<string[]>([]);
+  const [newTagInput, setNewTagInput] = useState("");
+  const [customReviewsList, setCustomReviewsList] = useState<string[]>([]);
+  const [newReviewInput, setNewReviewInput] = useState("");
+  const [customMenuList, setCustomMenuList] = useState<string[]>([]);
+  const [newMenuItemInput, setNewMenuItemInput] = useState("");
+  const [savingCustomContent, setSavingCustomContent] = useState(false);
 
   // Edit A to Z Business Details modal
   const [editDetailsModal, setEditDetailsModal] = useState(false);
@@ -286,6 +301,140 @@ export function BusinessDetailClient() {
     }
   };
 
+  const handleOpenCustomizeModal = (initialTab: "TAGS" | "REVIEWS" | "MENU" = "TAGS") => {
+    setCustomizeTab(initialTab);
+
+    // Parse existing customTags
+    let currentTags: string[] = [];
+    if (business?.customTags) {
+      try {
+        const parsed = typeof business.customTags === "string" ? JSON.parse(business.customTags) : business.customTags;
+        if (Array.isArray(parsed)) currentTags = parsed;
+      } catch {}
+    }
+    setCustomTagsList(currentTags);
+
+    // Parse existing recommendedReviews
+    let currentReviews: string[] = [];
+    if (business?.recommendedReviews) {
+      try {
+        const parsed = typeof business.recommendedReviews === "string" ? JSON.parse(business.recommendedReviews) : business.recommendedReviews;
+        if (Array.isArray(parsed)) currentReviews = parsed;
+      } catch {}
+    }
+    setCustomReviewsList(currentReviews);
+
+    // Parse existing menuItems
+    let currentMenu: string[] = [];
+    if (business?.menuItems) {
+      try {
+        const parsed = typeof business.menuItems === "string" ? JSON.parse(business.menuItems) : business.menuItems;
+        if (Array.isArray(parsed)) currentMenu = parsed;
+      } catch {}
+    }
+    setCustomMenuList(currentMenu);
+
+    setNewTagInput("");
+    setNewReviewInput("");
+    setNewMenuItemInput("");
+    setCustomizeModal(true);
+  };
+
+  const handleAddTag = () => {
+    const trimmed = newTagInput.replace(/^\+\s*/, "").trim();
+    if (!trimmed) return;
+    if (customTagsList.includes(trimmed)) {
+      toastError("Highlight tag already exists in list");
+      return;
+    }
+    setCustomTagsList([...customTagsList, trimmed]);
+    setNewTagInput("");
+  };
+
+  const handleRemoveTag = (index: number) => {
+    setCustomTagsList(customTagsList.filter((_, i) => i !== index));
+  };
+
+  const handleLoadDefaultTags = () => {
+    const preset = CATEGORY_PRESETS[business?.businessType || "OTHER"] || CATEGORY_PRESETS.OTHER;
+    setCustomTagsList([...preset.tags]);
+    success(`Loaded default highlights for ${preset.name}`);
+  };
+
+  const handleAddReview = () => {
+    const trimmed = newReviewInput.trim();
+    if (!trimmed) return;
+    setCustomReviewsList([...customReviewsList, trimmed]);
+    setNewReviewInput("");
+  };
+
+  const handleUpdateReview = (index: number, val: string) => {
+    const updated = [...customReviewsList];
+    updated[index] = val;
+    setCustomReviewsList(updated);
+  };
+
+  const handleRemoveReview = (index: number) => {
+    setCustomReviewsList(customReviewsList.filter((_, i) => i !== index));
+  };
+
+  const handleLoadDefaultReviews = () => {
+    const preset = CATEGORY_PRESETS[business?.businessType || "OTHER"] || CATEGORY_PRESETS.OTHER;
+    setCustomReviewsList([...preset.reviews]);
+    success(`Loaded 15 default review templates for ${preset.name}`);
+  };
+
+  const handleAddMenuItem = () => {
+    const trimmed = newMenuItemInput.trim();
+    if (!trimmed) return;
+    if (customMenuList.includes(trimmed)) {
+      toastError("Item already exists in menu");
+      return;
+    }
+    setCustomMenuList([...customMenuList, trimmed]);
+    setNewMenuItemInput("");
+  };
+
+  const handleRemoveMenuItem = (index: number) => {
+    setCustomMenuList(customMenuList.filter((_, i) => i !== index));
+  };
+
+  const handleLoadDefaultMenu = () => {
+    const presetMenu = CATEGORY_MENU_PRESETS[business?.businessType || "OTHER"] || CATEGORY_MENU_PRESETS.OTHER;
+    setCustomMenuList([...presetMenu]);
+    success(`Loaded default menu items for ${CATEGORY_PRESETS[business?.businessType]?.name || "this category"}`);
+  };
+
+  const handleSaveCustomContent = async () => {
+    setSavingCustomContent(true);
+    try {
+      const payload = {
+        customTags: customTagsList.length > 0 ? JSON.stringify(customTagsList) : null,
+        recommendedReviews: customReviewsList.length > 0 ? JSON.stringify(customReviewsList) : null,
+        menuItems: customMenuList.length > 0 ? JSON.stringify(customMenuList) : null,
+      };
+
+      const res = await fetch(`/api/businesses/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        success("Highlights, reviews & menu saved successfully!");
+        setCustomizeModal(false);
+        fetchBusinessData();
+      } else {
+        const data = await res.json();
+        toastError(data.error || "Failed to save custom content");
+      }
+    } catch {
+      toastError("Network error while saving");
+    } finally {
+      setSavingCustomContent(false);
+    }
+  };
+
   const handleAssignCard = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedCardId) return;
@@ -347,6 +496,7 @@ export function BusinessDetailClient() {
         businessId: business.id,
         customTags: business.customTags,
         customReviews: business.recommendedReviews,
+        customMenuItems: business.menuItems,
         hourOffset: previewHourOffset,
       })
     : null;
@@ -566,7 +716,14 @@ export function BusinessDetailClient() {
             </p>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex flex-wrap items-center gap-2 shrink-0">
+            <button
+              onClick={() => handleOpenCustomizeModal("TAGS")}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#E9F8E9] hover:bg-[#d8f5d8] text-[#006B21] border border-[#006B21]/30 text-xs font-bold shadow-sm transition-all"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-[#006B21]" />
+              Customize Highlights & Reviews
+            </button>
             <button
               onClick={() => {
                 setSelectedCategory(business.businessType || "OTHER");
@@ -580,24 +737,40 @@ export function BusinessDetailClient() {
           </div>
         </div>
 
-        {/* Category Details Banner */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+        {/* Category & Customization Details Banner */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
           <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between">
-            <span className="text-slate-500 font-medium">Selected Category:</span>
+            <span className="text-slate-500 font-medium">Category:</span>
             <span className="font-bold text-slate-900">
               {CATEGORY_PRESETS[business.businessType]?.name || business.businessType}
             </span>
           </div>
           <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between">
-            <span className="text-slate-500 font-medium">Master Pool Size:</span>
-            <span className="font-bold text-emerald-700">
-              {previewRotation?.totalPoolSize || 15} Unique Reviews (3/hr)
+            <span className="text-slate-500 font-medium">Review Pool:</span>
+            <span className="font-bold text-emerald-700 flex items-center gap-1">
+              {previewRotation?.totalPoolSize || 15} Reviews (3/hr)
+              {previewRotation?.isCustomReviews && (
+                <span className="text-[10px] px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-800 font-black">
+                  Custom
+                </span>
+              )}
             </span>
           </div>
           <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between">
-            <span className="text-slate-500 font-medium">Rotation Frequency:</span>
+            <span className="text-slate-500 font-medium">Tap Highlights:</span>
+            <span className="font-bold text-amber-700 flex items-center gap-1">
+              {previewRotation?.isCustomTags ? "Custom Business Tags" : "Category Default"}
+              {previewRotation?.isCustomTags && (
+                <span className="text-[10px] px-1.5 py-0.2 rounded bg-amber-100 text-amber-900 font-black">
+                  Active
+                </span>
+              )}
+            </span>
+          </div>
+          <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+            <span className="text-slate-500 font-medium">Rotation:</span>
             <span className="font-bold text-blue-700 flex items-center gap-1">
-              <Clock className="w-3.5 h-3.5 text-blue-600" /> Every 60 Minutes
+              <Clock className="w-3.5 h-3.5 text-blue-600" /> Every 60 Mins
             </span>
           </div>
         </div>
@@ -654,9 +827,21 @@ export function BusinessDetailClient() {
 
           {/* 3 Active Review Templates */}
           <div className="space-y-2">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 block">
-              3 Reviews Served to Customers for this Hour:
-            </span>
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 block">
+                3 Reviews Served to Customers for this Hour:
+              </span>
+              <button
+                type="button"
+                onClick={() => handleOpenCustomizeModal("REVIEWS")}
+                className="text-[11px] font-bold text-[#006B21] hover:underline flex items-center gap-1"
+              >
+                <Edit2 className="w-3 h-3" />
+                {previewRotation?.isCustomReviews
+                  ? `Edit Custom Reviews (${previewRotation.totalPoolSize})`
+                  : "Customize Review Comments"}
+              </button>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {previewRotation?.reviews.map((rev, idx) => (
                 <div
@@ -677,9 +862,21 @@ export function BusinessDetailClient() {
 
           {/* Active 6 Positive Tags */}
           <div className="space-y-1.5 pt-1">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 block">
-              Active &ldquo;Tap to Add&rdquo; Highlights for this Hour:
-            </span>
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 block">
+                Active &ldquo;Tap to Add&rdquo; Highlights for this Hour:
+              </span>
+              <button
+                type="button"
+                onClick={() => handleOpenCustomizeModal("TAGS")}
+                className="text-[11px] font-bold text-[#006B21] hover:underline flex items-center gap-1"
+              >
+                <Edit2 className="w-3 h-3" />
+                {previewRotation?.isCustomTags
+                  ? `Edit Custom Highlights (${customTagsList.length || "Active"})`
+                  : "Customize Highlights"}
+              </button>
+            </div>
             <div className="flex flex-wrap gap-1.5">
               {previewRotation?.tags.map((tag, idx) => (
                 <span
@@ -1369,6 +1566,434 @@ export function BusinessDetailClient() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Customize Reviews & Highlights Modal */}
+      {customizeModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-3xl bg-white rounded-3xl shadow-2xl border border-[#006B21]/20 overflow-hidden flex flex-col max-h-[90vh] text-[#050505]">
+            {/* Modal Header */}
+            <div className="p-6 border-b border-[#006B21]/15 flex items-center justify-between bg-[#E9F8E9]/60">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-2xl bg-[#006B21] text-white shadow-sm">
+                  <Sparkles className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-[#050505]">
+                    Customize Reviews & &ldquo;Tap to Add&rdquo; Highlights
+                  </h3>
+                  <p className="text-xs text-[#050505]/60 mt-0.5">
+                    Configure custom review comments and highlight tags for <strong className="text-[#006B21]">{business.name}</strong>.
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setCustomizeModal(false)}
+                className="p-2 rounded-xl text-[#050505]/50 hover:text-[#050505] hover:bg-black/5"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Modal Navigation Tabs */}
+            <div className="flex border-b border-slate-200 px-6 pt-3 bg-slate-50/50 gap-4">
+              <button
+                type="button"
+                onClick={() => setCustomizeTab("TAGS")}
+                className={`pb-3 text-xs font-bold transition-all border-b-2 flex items-center gap-2 ${
+                  customizeTab === "TAGS"
+                    ? "border-[#006B21] text-[#006B21]"
+                    : "border-transparent text-slate-500 hover:text-slate-800"
+                }`}
+              >
+                <span>🏷️ Active &ldquo;Tap to Add&rdquo; Highlights</span>
+                <span className="px-2 py-0.5 rounded-full text-[10px] bg-amber-100 text-amber-900 font-bold">
+                  {customTagsList.length > 0 ? `${customTagsList.length} Custom` : "Default"}
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setCustomizeTab("REVIEWS")}
+                className={`pb-3 text-xs font-bold transition-all border-b-2 flex items-center gap-2 ${
+                  customizeTab === "REVIEWS"
+                    ? "border-[#006B21] text-[#006B21]"
+                    : "border-transparent text-slate-500 hover:text-slate-800"
+                }`}
+              >
+                <span>💬 Curated Review Comments</span>
+                <span className="px-2 py-0.5 rounded-full text-[10px] bg-emerald-100 text-emerald-900 font-bold">
+                  {customReviewsList.length > 0 ? `${customReviewsList.length} Custom` : "Default"}
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setCustomizeTab("MENU")}
+                className={`pb-3 text-xs font-bold transition-all border-b-2 flex items-center gap-2 ${
+                  customizeTab === "MENU"
+                    ? "border-[#006B21] text-[#006B21]"
+                    : "border-transparent text-slate-500 hover:text-slate-800"
+                }`}
+              >
+                <span>🍽️ Menu & Services List</span>
+                <span className="px-2 py-0.5 rounded-full text-[10px] bg-blue-100 text-blue-900 font-bold">
+                  {customMenuList.length > 0 ? `${customMenuList.length} Custom` : "Default"}
+                </span>
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 overflow-y-auto space-y-6 flex-1">
+              {customizeTab === "TAGS" && (
+                <div className="space-y-5">
+                  <div className="p-4 rounded-2xl bg-amber-50/70 border border-amber-200 text-xs text-amber-900 space-y-1">
+                    <p className="font-bold">What are &ldquo;Tap to Add&rdquo; Highlights?</p>
+                    <p className="text-amber-800/90 leading-relaxed">
+                      These are the interactive tags (e.g. <em>Reasonable Prices</em>, <em>Delicious Snacks</em>, <em>Polite Staff</em>) that customers tap on the review page to instantly append positive feedback to their review.
+                    </p>
+                  </div>
+
+                  {/* Add New Highlight Form */}
+                  <div className="space-y-2">
+                    <label className="block text-xs font-bold text-slate-700">
+                      Add New Highlight Tag:
+                    </label>
+                    <div className="flex gap-2">
+                      <div className="relative flex-1">
+                        <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">
+                          +
+                        </span>
+                        <input
+                          type="text"
+                          value={newTagInput}
+                          onChange={(e) => setNewTagInput(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              e.preventDefault();
+                              handleAddTag();
+                            }
+                          }}
+                          placeholder="e.g. Reasonable Prices, Polite Staff, Delicious Snacks..."
+                          className="w-full pl-8 pr-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-xs text-[#050505] focus:outline-none focus:ring-2 focus:ring-[#006B21]"
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={handleAddTag}
+                        className="px-4 py-2.5 rounded-xl bg-[#006B21] hover:bg-[#005219] text-white font-bold text-xs shadow-sm flex items-center gap-1.5 shrink-0"
+                      >
+                        <Plus className="w-3.5 h-3.5" /> Add Tag
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Current Active Highlights List */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-slate-700">
+                        Configured Highlights ({customTagsList.length}):
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={handleLoadDefaultTags}
+                          className="text-[11px] font-bold text-[#006B21] hover:underline flex items-center gap-1"
+                        >
+                          <RotateCcw className="w-3 h-3" /> Load Category Defaults
+                        </button>
+                        {customTagsList.length > 0 && (
+                          <button
+                            type="button"
+                            onClick={() => setCustomTagsList([])}
+                            className="text-[11px] font-bold text-rose-600 hover:underline flex items-center gap-1"
+                          >
+                            <Trash2 className="w-3 h-3" /> Reset / Clear
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
+                    {customTagsList.length === 0 ? (
+                      <div className="p-6 rounded-2xl border-2 border-dashed border-slate-200 text-center space-y-2">
+                        <p className="text-xs text-slate-500 font-medium">
+                          No custom tags set. Currently using default category tags for {CATEGORY_PRESETS[business?.businessType]?.name || "this category"}.
+                        </p>
+                        <button
+                          type="button"
+                          onClick={handleLoadDefaultTags}
+                          className="px-3.5 py-1.5 rounded-xl bg-[#E9F8E9] text-[#006B21] font-bold text-xs hover:bg-[#d5f3d5] transition-all inline-flex items-center gap-1.5"
+                        >
+                          <RotateCcw className="w-3.5 h-3.5" /> Pre-fill from Category Presets
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex flex-wrap gap-2">
+                        {customTagsList.map((tag, idx) => (
+                          <span
+                            key={idx}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 border border-amber-300 text-amber-950 font-semibold text-xs shadow-2xs group"
+                          >
+                            <span>+ {tag}</span>
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveTag(idx)}
+                              className="text-amber-700 hover:text-rose-600 p-0.5 rounded-md hover:bg-amber-100 transition-colors"
+                              title="Remove tag"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {customizeTab === "REVIEWS" && (
+                <div className="space-y-5">
+                  <div className="p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200 text-xs text-emerald-900 space-y-1">
+                    <p className="font-bold">What are Curated Review Comments?</p>
+                    <p className="text-emerald-800/90 leading-relaxed">
+                      These are the ready-made positive review templates served to customers when they scan. Customers can choose one, tap copy, and paste it on Google. You can use <code className="bg-white/80 px-1 py-0.5 rounded font-mono text-emerald-950 font-bold">{"{businessName}"}</code> in your text to dynamically insert the business name.
+                    </p>
+                  </div>
+
+                  {/* Add New Review Input */}
+                  <div className="space-y-2">
+                    <label className="block text-xs font-bold text-slate-700">
+                      Add New Review Comment Template:
+                    </label>
+                    <div className="space-y-2">
+                      <textarea
+                        rows={3}
+                        value={newReviewInput}
+                        onChange={(e) => setNewReviewInput(e.target.value)}
+                        placeholder="e.g. Loved the cozy aesthetic vibes and delicious coffee at {businessName}! Perfect place to chill with friends..."
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-xs text-[#050505] focus:outline-none focus:ring-2 focus:ring-[#006B21]"
+                      />
+                      <div className="flex justify-between items-center">
+                        <span className="text-[11px] text-slate-400">
+                          Tip: Include &ldquo;{"{businessName}"}&rdquo; to automatically display {business.name}.
+                        </span>
+                        <button
+                          type="button"
+                          onClick={handleAddReview}
+                          className="px-4 py-2 rounded-xl bg-[#006B21] hover:bg-[#005219] text-white font-bold text-xs shadow-sm flex items-center gap-1.5 shrink-0"
+                        >
+                          <Plus className="w-3.5 h-3.5" /> Add Review Comment
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Existing Review List */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-slate-700">
+                        Custom Review Templates ({customReviewsList.length}):
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={handleLoadDefaultReviews}
+                          className="text-[11px] font-bold text-[#006B21] hover:underline flex items-center gap-1"
+                        >
+                          <RotateCcw className="w-3 h-3" /> Load 15 Category Defaults
+                        </button>
+                        {customReviewsList.length > 0 && (
+                          <button
+                            type="button"
+                            onClick={() => setCustomReviewsList([])}
+                            className="text-[11px] font-bold text-rose-600 hover:underline flex items-center gap-1"
+                          >
+                            <Trash2 className="w-3 h-3" /> Reset / Clear
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
+                    {customReviewsList.length === 0 ? (
+                      <div className="p-6 rounded-2xl border-2 border-dashed border-slate-200 text-center space-y-2">
+                        <p className="text-xs text-slate-500 font-medium">
+                          No custom review comments set. Currently rotating from the 15 standard {CATEGORY_PRESETS[business?.businessType]?.name || "category"} templates.
+                        </p>
+                        <button
+                          type="button"
+                          onClick={handleLoadDefaultReviews}
+                          className="px-3.5 py-1.5 rounded-xl bg-[#E9F8E9] text-[#006B21] font-bold text-xs hover:bg-[#d5f3d5] transition-all inline-flex items-center gap-1.5"
+                        >
+                          <RotateCcw className="w-3.5 h-3.5" /> Pre-fill from Category Presets (15 Reviews)
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="space-y-3 max-h-[340px] overflow-y-auto pr-1">
+                        {customReviewsList.map((rev, idx) => (
+                          <div
+                            key={idx}
+                            className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs space-y-2"
+                          >
+                            <div className="flex items-center justify-between text-[11px] font-bold text-slate-500">
+                              <span>Template #{idx + 1}</span>
+                              <button
+                                type="button"
+                                onClick={() => handleRemoveReview(idx)}
+                                className="text-rose-600 hover:text-rose-700 font-medium flex items-center gap-1"
+                              >
+                                <Trash2 className="w-3 h-3" /> Delete
+                              </button>
+                            </div>
+                            <textarea
+                              rows={2}
+                              value={rev}
+                              onChange={(e) => handleUpdateReview(idx, e.target.value)}
+                              className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white text-xs text-[#050505] focus:outline-none focus:ring-2 focus:ring-[#006B21]"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {customizeTab === "MENU" && (
+                <div className="space-y-5">
+                  <div className="p-4 rounded-2xl bg-blue-50/70 border border-blue-200 text-xs text-blue-900 space-y-1">
+                    <p className="font-bold">What is the Menu & Services List?</p>
+                    <p className="text-blue-800/90 leading-relaxed">
+                      These are the dishes, drinks, or services of your business (e.g. <em>Cold Coffee</em>, <em>Chocolate Truffle Cake</em>, <em>Paneer Patty</em>). When customers scan the QR card and rate 4-5 stars, a smart interactive popup asks them what they ordered, and generates a genuine, non-spam review mentioning these specific items!
+                    </p>
+                  </div>
+
+                  {/* Add New Menu Item Form */}
+                  <div className="space-y-2">
+                    <label className="block text-xs font-bold text-slate-700">
+                      Add Menu Item or Service:
+                    </label>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={newMenuItemInput}
+                        onChange={(e) => setNewMenuItemInput(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            handleAddMenuItem();
+                          }
+                        }}
+                        placeholder="e.g. Cold Coffee, Chocolate Truffle Cake, Veg Cheese Burger..."
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-xs text-[#050505] focus:outline-none focus:ring-2 focus:ring-[#006B21]"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleAddMenuItem}
+                        className="px-4 py-2.5 rounded-xl bg-[#006B21] hover:bg-[#005219] text-white font-bold text-xs shadow-sm flex items-center gap-1.5 shrink-0"
+                      >
+                        <Plus className="w-3.5 h-3.5" /> Add Item
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Current Active Menu Items */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-slate-700">
+                        Configured Menu Items ({customMenuList.length}):
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={handleLoadDefaultMenu}
+                          className="text-[11px] font-bold text-[#006B21] hover:underline flex items-center gap-1"
+                        >
+                          <RotateCcw className="w-3 h-3" /> Load Category Defaults
+                        </button>
+                        {customMenuList.length > 0 && (
+                          <button
+                            type="button"
+                            onClick={() => setCustomMenuList([])}
+                            className="text-[11px] font-bold text-rose-600 hover:underline flex items-center gap-1"
+                          >
+                            <Trash2 className="w-3 h-3" /> Reset / Clear
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
+                    {customMenuList.length === 0 ? (
+                      <div className="p-6 rounded-2xl border-2 border-dashed border-slate-200 text-center space-y-2">
+                        <p className="text-xs text-slate-500 font-medium">
+                          No custom menu items set. Currently using default items for {CATEGORY_PRESETS[business?.businessType]?.name || "this category"}.
+                        </p>
+                        <button
+                          type="button"
+                          onClick={handleLoadDefaultMenu}
+                          className="px-3.5 py-1.5 rounded-xl bg-[#E9F8E9] text-[#006B21] font-bold text-xs hover:bg-[#d5f3d5] transition-all inline-flex items-center gap-1.5"
+                        >
+                          <RotateCcw className="w-3.5 h-3.5" /> Pre-fill from Category Presets
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex flex-wrap gap-2">
+                        {customMenuList.map((item, idx) => (
+                          <span
+                            key={idx}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-50 border border-blue-200 text-blue-950 font-semibold text-xs shadow-2xs group"
+                          >
+                            <span>🍽️ {item}</span>
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveMenuItem(idx)}
+                              className="text-blue-700 hover:text-rose-600 p-0.5 rounded-md hover:bg-blue-100 transition-colors"
+                              title="Remove item"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-6 border-t border-[#006B21]/15 flex items-center justify-between bg-slate-50/50">
+              <div className="text-[11px] text-slate-500 font-medium">
+                {customTagsList.length > 0 || customReviewsList.length > 0 || customMenuList.length > 0 ? (
+                  <span className="text-emerald-700 font-bold">
+                    ✓ Custom highlights, reviews, and/or menu items will be saved for this business.
+                  </span>
+                ) : (
+                  <span>
+                    ℹ️ Default category presets will be used for empty items.
+                  </span>
+                )}
+              </div>
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setCustomizeModal(false)}
+                  className="px-4 py-2.5 rounded-xl border border-slate-300 text-xs font-semibold text-slate-700 hover:bg-slate-100"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSaveCustomContent}
+                  disabled={savingCustomContent}
+                  className="px-5 py-2.5 rounded-xl bg-[#006B21] hover:bg-[#005219] text-white font-bold text-xs shadow-md shadow-[#006B21]/20 disabled:opacity-50 flex items-center gap-2"
+                >
+                  {savingCustomContent && (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin text-white" />
+                  )}
+                  Save All Settings
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}

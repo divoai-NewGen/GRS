@@ -78,6 +78,15 @@ export default async function ReviewPage({
     parsedReviews = [];
   }
 
+  let parsedMenuItems: string[] = [];
+  try {
+    if ((card.business as any).menuItems) {
+      parsedMenuItems = JSON.parse((card.business as any).menuItems);
+    }
+  } catch {
+    parsedMenuItems = [];
+  }
+
   return (
     <ReviewClient
       cardId={card.id}
@@ -96,6 +105,7 @@ export default async function ReviewPage({
         negativeFeedbackFilter: card.business.negativeFeedbackFilter,
         customTags: parsedTags,
         recommendedReviews: parsedReviews,
+        menuItems: parsedMenuItems,
       }}
     />
   );

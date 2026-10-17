@@ -114,6 +114,7 @@ export async function POST(request: NextRequest) {
         planType: data.planType || "BASIC",
         customTags: data.customTags || null,
         recommendedReviews: data.recommendedReviews || null,
+        menuItems: (data as any).menuItems || null,
         negativeFeedbackFilter: data.negativeFeedbackFilter ?? true,
         ownerId: data.ownerId || null,
       },

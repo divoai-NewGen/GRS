@@ -61,8 +61,10 @@ export function CardDetailClient() {
       let activeHost = "";
       if (typeof window !== "undefined") {
         const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+        const currentPort = window.location.port ? `:${window.location.port}` : "";
+        const dynamicNetworkHost = `http://192.168.88.40${currentPort}`;
         if (isLocal) {
-          activeHost = mode === "network" ? networkHost : "http://localhost:3000";
+          activeHost = mode === "network" ? dynamicNetworkHost : window.location.origin;
         } else {
           // Cloud / Vercel / Production environment: ALWAYS use live origin
           activeHost = window.location.origin;

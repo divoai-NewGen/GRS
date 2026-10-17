@@ -39,6 +39,7 @@ model Business {
   planType           String            @default("BASIC") // BASIC, PREMIUM
   customTags         String? // JSON array of positive tags
   recommendedReviews String? // JSON array of template reviews
+  menuItems          String? // JSON array of menu/service items (e.g. food dishes or salon services)
   negativeFeedbackFilter Boolean       @default(true) // Filter 1-3 stars to private feedback in Premium
   ownerId            String?
   owner              User?             @relation(fields: [ownerId], references: [id], onDelete: SetNull)

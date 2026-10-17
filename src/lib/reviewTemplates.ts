@@ -462,31 +462,301 @@ export const CATEGORY_PRESETS: Record<string, CategoryPreset> = {
  * Hour H+3: Templates [10, 11, 12]
  * Hour H+4: Templates [13, 14, 15]
  */
+export const CATEGORY_MENU_PRESETS: Record<string, string[]> = {
+  CAFE: [
+    "Cold Coffee",
+    "Chocolate Truffle Cake",
+    "Paneer Patty",
+    "Cappuccino",
+    "Veg Cheese Burger",
+    "Cheese Grilled Sandwich",
+    "Blueberry Pastry",
+    "Garlic Bread",
+    "Hot Chocolate",
+    "French Fries",
+  ],
+  RESTAURANT: [
+    "Butter Chicken",
+    "Dal Makhani",
+    "Paneer Butter Masala",
+    "Garlic Naan",
+    "Veg Biryani",
+    "Chicken Biryani",
+    "Paneer Tikka",
+    "Tandoori Roti",
+    "Crispy Corn",
+    "Gulab Jamun",
+  ],
+  SALON: [
+    "Haircut & Styling",
+    "Beard Grooming & Shape",
+    "Hair Spa Treatment",
+    "Facial & Cleanup",
+    "Hair Coloring",
+    "Head Massage",
+    "De-Tan Therapy",
+    "Pedicure & Manicure",
+  ],
+  HOTEL: [
+    "Deluxe Room Stay",
+    "Buffet Breakfast",
+    "Room Service",
+    "Swimming Pool",
+    "Evening High Tea",
+    "Dinner Buffet",
+    "Airport Pickup",
+    "Spa & Wellness",
+  ],
+  GYM: [
+    "Personal Training Session",
+    "Cardio Workout",
+    "Strength & Weight Training",
+    "Crossfit & Functional",
+    "Zumba Class",
+    "Diet Consultation",
+  ],
+  CLINIC: [
+    "Doctor Consultation",
+    "General Health Checkup",
+    "Blood Test & Diagnosis",
+    "Vaccination",
+    "Prescription & Follow-up",
+  ],
+  DENTIST: [
+    "Dental Cleaning & Scaling",
+    "Teeth Whitening",
+    "Root Canal Treatment",
+    "Tooth Extraction",
+    "Dental Implants",
+    "Braces Consultation",
+  ],
+  RETAIL: [
+    "Grocery Shopping",
+    "Fresh Fruits & Vegetables",
+    "Household Essentials",
+    "Packaged Snacks",
+    "Dairy Products",
+    "Quick Billing Service",
+  ],
+  AUTO_SERVICE: [
+    "Full Car Servicing",
+    "Oil & Filter Change",
+    "Wheel Alignment & Balancing",
+    "Brake Pad Replacement",
+    "Car Wash & Detailing",
+    "AC Servicing",
+  ],
+  REAL_ESTATE: [
+    "Property Site Visit",
+    "Commercial Space Consultation",
+    "Residential Flat Tour",
+    "Documentation & Legal Support",
+    "Rental Agreement Service",
+  ],
+  OTHER: [
+    "Customer Consultation",
+    "Standard Service",
+    "Express Delivery",
+    "Quality Support",
+    "On-site Assistance",
+  ],
+};
+
+export interface SmartReviewInput {
+  businessName: string;
+  businessType?: string | null;
+  selectedItems?: string[];
+  tasteRating?: "superb" | "great" | "good" | "average";
+  cleanlinessRating?: "spotless" | "clean" | "decent";
+  staffRating?: "very_polite" | "courteous" | "helpful";
+  language?: "hinglish" | "english";
+  variationIndex?: number;
+}
+
+export function generateSmartReview({
+  businessName,
+  selectedItems = [],
+  tasteRating = "superb",
+  cleanlinessRating = "spotless",
+  staffRating = "very_polite",
+  language = "hinglish",
+  variationIndex = 0,
+}: SmartReviewInput): string {
+  const isHinglish = language === "hinglish";
+
+  // Format items string
+  let itemsStr = "";
+  if (selectedItems.length === 1) {
+    itemsStr = selectedItems[0];
+  } else if (selectedItems.length === 2) {
+    itemsStr = isHinglish
+      ? `${selectedItems[0]} aur ${selectedItems[1]}`
+      : `${selectedItems[0]} and ${selectedItems[1]}`;
+  } else if (selectedItems.length > 2) {
+    const last = selectedItems[selectedItems.length - 1];
+    const rest = selectedItems.slice(0, selectedItems.length - 1).join(", ");
+    itemsStr = isHinglish
+      ? `${rest} aur ${last}`
+      : `${rest} and ${last}`;
+  }
+
+  // Taste wording
+  let tasteWord = "";
+  if (isHinglish) {
+    if (tasteRating === "superb") tasteWord = "sach me lajawab aur ekdum fresh";
+    else if (tasteRating === "great") tasteWord = "bahut hi tasty aur badiya";
+    else if (tasteRating === "good") tasteWord = "accha aur fresh";
+    else tasteWord = "theek-thaak";
+  } else {
+    if (tasteRating === "superb") tasteWord = "absolutely superb and fresh";
+    else if (tasteRating === "great") tasteWord = "delicious and flavorful";
+    else if (tasteRating === "good") tasteWord = "really good and tasty";
+    else tasteWord = "decent";
+  }
+
+  // Cleanliness wording
+  let cleanWord = "";
+  if (isHinglish) {
+    if (cleanlinessRating === "spotless") cleanWord = "ekdum top-class aur spotless saaf";
+    else if (cleanlinessRating === "clean") cleanWord = "kaafi saaf-suthri";
+    else cleanWord = "accha maintain kiya hua";
+  } else {
+    if (cleanlinessRating === "spotless") cleanWord = "spotless and remarkably hygienic";
+    else if (cleanlinessRating === "clean") cleanWord = "neat, clean and well-kept";
+    else cleanWord = "well-maintained";
+  }
+
+  // Staff wording
+  let staffWord = "";
+  if (isHinglish) {
+    if (staffRating === "very_polite") staffWord = "bahut hi polite, welcoming aur helpful";
+    else if (staffRating === "courteous") staffWord = "kaafi vinamra aur quick service dene wala";
+    else staffWord = "friendly aur cooperative";
+  } else {
+    if (staffRating === "very_polite") staffWord = "extremely polite, welcoming and attentive";
+    else if (staffRating === "courteous") staffWord = "very courteous, smiling and prompt";
+    else staffWord = "friendly and helpful";
+  }
+
+  const vIdx = Math.abs(variationIndex) % 4;
+
+  if (isHinglish) {
+    if (itemsStr) {
+      const templates = [
+        `${businessName} par ${itemsStr} try kiya, taste ${tasteWord} tha! Yahan ki cleaning ${cleanWord} hai, aur staff ka behaviour ${staffWord} tha. Ekdum value for money experience tha, dosto aur family ke sath visit karne ke liye best jagah hai. Highly recommended!`,
+        `Aaj ${businessName} visit kiya tha aur humne ${itemsStr} order kiya. Quality aur taste ${tasteWord} tha! Jagah ${cleanWord} hai aur staff members ${staffWord} hain. Service bhi kaafi quick thi. Definitely 5 stars!`,
+        `Agar aap ${businessName} ja rahe hain to ${itemsStr} zaroor try karein, swad ${tasteWord} tha! Ambiance bahut comforting hai, safai ${cleanWord} hai aur yahan ke log ${staffWord} hain. Mujhe yahan aana bahut pasand aaya!`,
+        `Superb experience at ${businessName}! ${itemsStr} ka experience ${tasteWord} tha. Cleaning ${cleanWord} mili aur staff ka nature ${staffWord} tha. Har cheez spot on thi, zaroor visit karein!`
+      ];
+      return templates[vIdx];
+    } else {
+      const templates = [
+        `${businessName} visit karke bahut accha laga! Yahan ka overall experience ${tasteWord} tha. Jagah ${cleanWord} hai aur staff ka behaviour ${staffWord} tha. Har cheez perfect thi, definitely recommended!`,
+        `Amazing service at ${businessName}! Quality ${tasteWord} thi aur setup ${cleanWord} tha. Yahan ka staff ${staffWord} hai jo customer ka pura dhyan rakhta hai. 5/5 rating!`,
+        `${businessName} neighborhood ka ek top-tier spot hai. Environment bahut peaceful aur ${cleanWord} hai, service ${tasteWord} hai aur team ${staffWord} hai. Sabhi ko zaroor aana chahiye!`,
+        `Bahut hi shandar anubhav raha ${businessName} par! Quality ${tasteWord} aur cleaning ${cleanWord}. Staff ${staffWord} tha. Will definitely visit again!`
+      ];
+      return templates[vIdx];
+    }
+  } else {
+    if (itemsStr) {
+      const templates = [
+        `Visited ${businessName} and ordered ${itemsStr}. The taste was ${tasteWord}! The premises were ${cleanWord}, and the staff was ${staffWord}. Truly a wonderful experience, highly recommended to everyone!`,
+        `Had a fantastic time at ${businessName}! We tried their ${itemsStr} and it was ${tasteWord}. The place is ${cleanWord} with great hygiene, and the team was ${staffWord}. Prompt service and great hospitality!`,
+        `10/10 experience at ${businessName}! The ${itemsStr} was ${tasteWord} and served fresh. Loved how the atmosphere is ${cleanWord}, plus the staff is ${staffWord}. Definitely coming back soon!`,
+        `Highly satisfied with my visit to ${businessName}. We enjoyed ${itemsStr} which was ${tasteWord}. Cleanliness was ${cleanWord} and the courteous staff (${staffWord}) made our visit memorable. Five stars!`
+      ];
+      return templates[vIdx];
+    } else {
+      const templates = [
+        `Had an outstanding experience at ${businessName}! The service and quality was ${tasteWord}. The premises were ${cleanWord}, and the staff was ${staffWord}. Would definitely recommend to friends and family!`,
+        `Exceptional visit to ${businessName}! The overall ambiance was pleasant and ${cleanWord}. Quality was ${tasteWord} and the staff was ${staffWord}. 5-star service all around!`,
+        `Very happy with the hospitality at ${businessName}. Everything was ${tasteWord}, maintenance was ${cleanWord}, and the team was ${staffWord}. A great local business!`,
+        `Top-tier quality and warm service at ${businessName}! Cleanliness was ${cleanWord} and the staff was ${staffWord}. Truly worth visiting!`
+      ];
+      return templates[vIdx];
+    }
+  }
+}
+
 export function getRotatingReviewsAndTags({
   businessType,
   businessName,
   businessId,
   customTags,
   customReviews,
+  customMenuItems,
   hourOffset = 0,
 }: {
   businessType?: string | null;
   businessName: string;
   businessId?: string | null;
-  customTags?: string[] | null;
-  customReviews?: string[] | null;
+  customTags?: string[] | string | null;
+  customReviews?: string[] | string | null;
+  customMenuItems?: string[] | string | null;
   hourOffset?: number;
 }): {
   tags: string[];
   reviews: string[];
+  menuItems: string[];
   negativeTags: string[];
   presetName: string;
   totalPoolSize: number;
   currentHourNumber: number;
+  isCustomReviews: boolean;
+  isCustomTags: boolean;
+  isCustomMenu: boolean;
 } {
   // Normalize category or default to OTHER
   const typeKey = (businessType || "").toUpperCase();
   const preset = CATEGORY_PRESETS[typeKey] || CATEGORY_PRESETS.OTHER;
+
+  // Safely parse customReviews if string
+  let safeCustomReviews: string[] | null = null;
+  if (Array.isArray(customReviews)) {
+    safeCustomReviews = customReviews.filter((r) => typeof r === "string" && r.trim().length > 0);
+  } else if (typeof customReviews === "string" && customReviews.trim().length > 0) {
+    try {
+      const parsed = JSON.parse(customReviews);
+      if (Array.isArray(parsed)) {
+        safeCustomReviews = parsed.filter((r) => typeof r === "string" && r.trim().length > 0);
+      }
+    } catch {}
+  }
+
+  // Safely parse customTags if string
+  let safeCustomTags: string[] | null = null;
+  if (Array.isArray(customTags)) {
+    safeCustomTags = customTags
+      .filter((t) => typeof t === "string" && t.trim().length > 0)
+      .map((t) => t.replace(/^\+\s*/, "").trim());
+  } else if (typeof customTags === "string" && customTags.trim().length > 0) {
+    try {
+      const parsed = JSON.parse(customTags);
+      if (Array.isArray(parsed)) {
+        safeCustomTags = parsed
+          .filter((t) => typeof t === "string" && t.trim().length > 0)
+          .map((t) => t.replace(/^\+\s*/, "").trim());
+      }
+    } catch {}
+  }
+
+  // Safely parse customMenuItems if string
+  let safeCustomMenu: string[] | null = null;
+  if (Array.isArray(customMenuItems)) {
+    safeCustomMenu = customMenuItems.filter((m) => typeof m === "string" && m.trim().length > 0);
+  } else if (typeof customMenuItems === "string" && customMenuItems.trim().length > 0) {
+    try {
+      const parsed = JSON.parse(customMenuItems);
+      if (Array.isArray(parsed)) {
+        safeCustomMenu = parsed.filter((m) => typeof m === "string" && m.trim().length > 0);
+      }
+    } catch {}
+  }
+
+  const isCustomReviews = !!(safeCustomReviews && safeCustomReviews.length > 0);
+  const isCustomTags = !!(safeCustomTags && safeCustomTags.length > 0);
+  const isCustomMenu = !!(safeCustomMenu && safeCustomMenu.length > 0);
 
   // Determine current hour seed (changes every 60 minutes)
   const currentHourNumber = Math.floor(Date.now() / (1000 * 60 * 60)) + (hourOffset || 0);
@@ -496,16 +766,17 @@ export function getRotatingReviewsAndTags({
     .split("")
     .reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
 
-  // 1. REVIEWS SELECTION (Contiguous block of 3 shifts every hour)
+  // 1. REVIEWS SELECTION (Rotates every hour)
   let selectedReviews: string[] = [];
 
-  // If business owner explicitly configured custom reviews in Admin, use them
-  if (customReviews && customReviews.length >= 3) {
-    const poolLen = customReviews.length;
+  if (isCustomReviews && safeCustomReviews && safeCustomReviews.length > 0) {
+    const poolLen = safeCustomReviews.length;
+    const countToPick = Math.min(3, poolLen);
     const offset = Math.abs((currentHourNumber + businessSeed) * 3) % poolLen;
-    for (let i = 0; i < 3; i++) {
+
+    for (let i = 0; i < countToPick; i++) {
       const idx = (offset + i) % poolLen;
-      selectedReviews.push(customReviews[idx].replaceAll("{businessName}", businessName));
+      selectedReviews.push(safeCustomReviews[idx].replaceAll("{businessName}", businessName));
     }
   } else {
     // Use the industry master pool (15+ reviews)
@@ -526,8 +797,9 @@ export function getRotatingReviewsAndTags({
 
   // 2. TAGS SELECTION (Shuffle and pick top 6 based on hour)
   let selectedTags: string[] = [];
-  const baseTags =
-    customTags && customTags.length > 0 ? customTags : preset.tags;
+  const baseTags = isCustomTags && safeCustomTags && safeCustomTags.length > 0
+    ? safeCustomTags
+    : preset.tags;
 
   if (baseTags.length <= 6) {
     selectedTags = [...baseTags];
@@ -541,12 +813,22 @@ export function getRotatingReviewsAndTags({
     selectedTags = rotated.slice(0, 6);
   }
 
+  // 3. MENU / OFFERINGS SELECTION
+  const defaultMenu = CATEGORY_MENU_PRESETS[typeKey] || CATEGORY_MENU_PRESETS.OTHER;
+  const menuItems = isCustomMenu && safeCustomMenu && safeCustomMenu.length > 0
+    ? safeCustomMenu
+    : defaultMenu;
+
   return {
     tags: selectedTags,
     reviews: selectedReviews,
+    menuItems,
     negativeTags: preset.negativeTags,
     presetName: preset.name,
-    totalPoolSize: preset.reviews.length,
+    totalPoolSize: isCustomReviews && safeCustomReviews ? safeCustomReviews.length : preset.reviews.length,
     currentHourNumber,
+    isCustomReviews,
+    isCustomTags,
+    isCustomMenu,
   };
 }

@@ -110,6 +110,7 @@ export async function PATCH(
         ...(data.planType && { planType: data.planType }),
         ...(data.customTags !== undefined && { customTags: data.customTags }),
         ...(data.recommendedReviews !== undefined && { recommendedReviews: data.recommendedReviews }),
+        ...((data as any).menuItems !== undefined && { menuItems: (data as any).menuItems }),
         ...(data.negativeFeedbackFilter !== undefined && { negativeFeedbackFilter: data.negativeFeedbackFilter }),
         // Only admin can change status or owner
         ...(user.role === "ADMIN" && data.status && { status: data.status }),
